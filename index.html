@@ -40,7 +40,7 @@
         </div>
 
         <!-- The Interactive Network Brain -->
-<div class="brain-map-wrapper reveal active z-10">
+    <div class="brain-map-wrapper reveal active z-10 relative">
             <!-- ViewBox matches the coordinate system (approx 0-400) -->
             <svg id="brainMapSVG" viewBox="0 0 450 400" xmlns="http://www.w3.org/2000/svg">
                 <g transform="translate(40, 0)">
@@ -264,8 +264,152 @@
                 </g>
                 </g>
             </svg>
+
+            <!-- Mobile facet legend -->
+            <div class="mt-6 w-full md:hidden space-y-3">
+                <div class="text-center text-xs uppercase tracking-[0.15em] text-cyan-200">Tap a facet to open</div>
+                <div id="mobile-constellation" class="mobile-constellation grid grid-cols-2 gap-3 text-sm">
+                    <a href="education-culture.html" class="constellation-card">
+                        <div class="text-cyan-200 font-semibold">Education</div>
+                        <div class="text-slate-400 text-xs">Informative, engaging, scholarly.</div>
+                    </a>
+                    <a href="counselling.html" class="constellation-card">
+                        <div class="text-orange-300 font-semibold">Counselling</div>
+                        <div class="text-slate-400 text-xs">Empathic, warm, accessible.</div>
+                    </a>
+                    <a href="project-management.html" class="constellation-card">
+                        <div class="text-rose-300 font-semibold">Project Mgmt</div>
+                        <div class="text-slate-400 text-xs">Structured, efficient, clear.</div>
+                    </a>
+                    <a href="technology.html" class="constellation-card">
+                        <div class="text-purple-300 font-semibold">Technology</div>
+                        <div class="text-slate-400 text-xs">Modern, sleek, innovative.</div>
+                    </a>
+                </div>
+            </div>
         </div>
     </section>
+
+    <!-- Floating CTA - Testimonials (fixed to viewport bottom-right) -->
+    <a href="#" id="testimonials-trigger" class="group fixed bottom-4 right-4 flex items-center gap-3 pr-3 z-20">
+        <svg width="78" height="78" viewBox="0 0 78 78" class="overflow-visible animate-[pulse_2.6s_ease-in-out_infinite]" aria-hidden="true">
+            <defs>
+                <linearGradient id="cometTail" x1="0%" y1="50%" x2="100%" y2="50%">
+                    <stop offset="0%" stop-color="#22d3ee" stop-opacity="0" />
+                    <stop offset="40%" stop-color="#22d3ee" stop-opacity="0.35" />
+                    <stop offset="100%" stop-color="#67e8f9" stop-opacity="0.9" />
+                </linearGradient>
+                <radialGradient id="cometCore" cx="50%" cy="50%" r="55%">
+                    <stop offset="0%" stop-color="#e0f2fe" />
+                    <stop offset="55%" stop-color="#67e8f9" />
+                    <stop offset="100%" stop-color="#0ea5e9" />
+                </radialGradient>
+            </defs>
+            <path d="M10 48 C26 44 42 36 60 22" fill="none" stroke="url(#cometTail)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" class="opacity-90" />
+            <path d="M18 52 C34 48 50 38 68 24" fill="none" stroke="url(#cometTail)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="opacity-80" />
+            <circle cx="62" cy="22" r="11" fill="url(#cometCore)" />
+            <circle cx="62" cy="22" r="5" class="fill-white" />
+            <circle cx="62" cy="22" r="3" class="fill-cyan-50" />
+        </svg>
+        <div class="flex flex-col text-left text-slate-100">
+            <span class="text-[11px] uppercase tracking-[0.18em] text-cyan-200">Hear Voices of Others</span>
+            <span class="text-sm font-semibold text-cyan-50">Testimonials</span>
+        </div>
+        <svg width="28" height="28" viewBox="0 0 24 24" class="text-cyan-200">
+            <path fill="currentColor" d="M5 12h11.17l-3.58-3.59L14 7l6 6-6 6-1.41-1.41L16.17 13H5z" />
+        </svg>
+    </a>
+
+
+    <!-- Testimonials Modal -->
+    <div id="testimonials-modal" class="fixed inset-0 z-30 hidden items-center justify-center px-4 py-8">
+        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur" aria-hidden="true"></div>
+        <div class="relative z-10 w-full max-w-5xl rounded-3xl border border-cyan-500/30 bg-slate-900/90 shadow-[0_0_40px_rgba(34,211,238,0.18)] overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/80">
+                <div class="space-y-1">
+                    <p class="text-cyan-300 text-xs uppercase tracking-[0.25em]">Voices of Others</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-slate-50">Testimonials</h2>
+                </div>
+                <button id="testimonials-close" class="text-slate-300 hover:text-white" aria-label="Close">
+                    <svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M18.3 5.71 12 12l6.3 6.29-1.41 1.42L10.59 13.4 4.3 19.71 2.89 18.3 9.17 12 2.89 5.71 4.3 4.3 10.59 10.6 16.89 4.3z"/></svg>
+                </button>
+            </div>
+            <div class="max-h-[76vh] px-6 pb-6 pt-4 flex flex-col gap-4">
+                <div class="flex items-center justify-between text-slate-300 text-sm">
+                    <div class="flex gap-3">
+                        <button id="testimonial-prev" class="px-3 py-1.5 rounded-full border border-cyan-400/40 bg-slate-800/60 hover:bg-slate-800 text-cyan-100">Prev</button>
+                        <button id="testimonial-next" class="px-3 py-1.5 rounded-full border border-cyan-400/40 bg-slate-800/60 hover:bg-slate-800 text-cyan-100">Next</button>
+                        <button id="testimonial-play-pause" class="px-3 py-1.5 rounded-full border border-cyan-400/40 bg-slate-800/60 hover:bg-slate-800 text-cyan-100">Pause</button>
+                        <span id="testimonial-countdown" class="px-3 py-1.5 rounded-full border border-slate-700 bg-slate-800/50 text-cyan-200 text-xs">10s</span>
+                    </div>
+                    <div class="text-xs text-slate-400">Auto-scroll carousel</div>
+                </div>
+                <div class="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/70 shadow-lg">
+                    <div id="testimonial-track" class="flex transition-transform duration-700 ease-in-out">
+                        <div class="min-w-full grid gap-4 md:grid-cols-2 p-5">
+                            <article class="flex gap-4 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-lg">
+                                <img src="resources/photos/Hastings.jpg" alt="Dr CHIM Ho Yeung, Hastings" class="h-16 w-16 rounded-full object-cover ring-2 ring-cyan-300/50" />
+                                <div class="space-y-2">
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-slate-100">Dr CHIM Ho Yeung, Hastings</h3>
+                                        <p class="text-sm text-slate-400">Senior Lecturer II, The Education University of Hong Kong</p>
+                                    </div>
+                                    <p class="text-slate-200 text-sm leading-relaxed whitespace-pre-line">...a passionate, industrious and independent colleague who is willing to devote himself into tasks.
+
+Herman's interpersonal skills and work qualities as well as diligence are impressive. He is always resourceful and conscientious in his work, prompt with assignments and active in discussions. He has a pleasant and helpful disposition who can manage to stay calm and ever-tempered under situations of stress, and is well-liked by colleagues and students. He communicates competently and confidently in both Mandarin and English. He gets along well with other colleagues and is a good team member. He also relates well to others and is always very well presented.
+
+Herman has always carried out duties assigned to him responsibly and efficiently. He sets good standards for his work but never draws attention to himself. The materials that he has developed are of more than outstanding levels. He is always enthusiastic about his duties and ad hoc assignments duly designated by me or other supervisors.</p>
+                                </div>
+                            </article>
+                            <article class="flex gap-4 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-lg">
+                                <img src="resources/photos/Polly.jpg" alt="Ms LAU Shuk Han, Polly" class="h-16 w-16 rounded-full object-cover ring-2 ring-cyan-300/50" />
+                                <div class="space-y-2">
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-slate-100">Ms LAU Shuk Han, Polly</h3>
+                                        <p class="text-sm text-slate-400">Qualified Speech Therapist and Audiologist; Senior Lecturer I, The Education University of Hong Kong</p>
+                                    </div>
+                                    <p class="text-slate-200 text-sm leading-relaxed whitespace-pre-line">Herman has always impressed me in a number of ways. He was a creative and innovative person. He is patient to listen to the needs and concerns of colleagues and then comes up with creative ideas to solve the problems. Most importantly, he would integrate his ideas with the needs of his team members, and through his hard work and perseverance, he could put things into practical reality...
+
+...We have had various opportunities to exchange our views on technological advances in the education field, I am still impressed by his dedication to putting in long hours when he has to and his devotion to his work.</p>
+                                </div>
+                            </article>
+                        </div>
+                        <div class="min-w-full grid gap-4 md:grid-cols-2 p-5">
+                            <article class="flex gap-4 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-lg">
+                                <img src="resources/photos/Hui King Fai.jpg" alt="Dr King Fai HUI, Sammy" class="h-16 w-16 rounded-full object-cover ring-2 ring-cyan-300/50" />
+                                <div class="space-y-2">
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-slate-100">Dr King Fai HUI, Sammy</h3>
+                                        <p class="text-sm text-slate-400">Principal Lecturer cum Associate Vice-President (Student Learning), The Education University of Hong Kong</p>
+                                    </div>
+                                    <p class="text-slate-200 text-sm leading-relaxed whitespace-pre-line">...a responsible, hardworking and committed colleague...I was particularly impressed by Herman's work efficiency and creativity, which was beyond possible doubt.
+
+Herman has a good command of both English and Chinese language ability. He has too a very nice personality and be able to build up a professional relationship with anyone who comes into contact. Herman is a valuable asset to any organization.</p>
+                                </div>
+                            </article>
+                            <article class="flex gap-4 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-lg">
+                                <div class="h-16 w-16 rounded-full bg-slate-800 ring-2 ring-cyan-300/40 flex items-center justify-center text-[10px] text-slate-200">Photo
+soon</div>
+                                <div class="space-y-2">
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-slate-100">Ms May Lin</h3>
+                                        <p class="text-sm text-slate-400">Project Manager, KeySteps@JC Phase II Team, The Education University of Hong Kong</p>
+                                    </div>
+                                    <p class="text-slate-200 text-sm leading-relaxed whitespace-pre-line">...essential role in establishing various protocols and mechanisms essential for the project's commencement, in addition to providing support in staff training, daily operations, and research activities.
+
+Herman has been instrumental in ensuring the smooth day-to-day functioning of our team. His responsibilities encompass coordinating interventions, managing project documentation, liaising with external stakeholders, and overseeing logistical arrangements for meetings and events. He consistently demonstrates exceptional skills in utilizing various tools to facilitate efficient data handling and verification processes. His technical expertise has been invaluable in bridging gaps within our team, enabling us to effectively achieve our research objectives. Notably, he has played a crucial role in preparing detailed reports and presentations for various committees and stakeholders who may not possess a technical research background.
+
+Herman's ability to transition seamlessly between administrative and research tasks highlights his versatility and dedication. His eagerness to embrace new challenges has made him an indispensable member of our team.
+
+In summary, I highly recommend Herman for any position that requires a skilled, adaptable, and dedicated professional.</p>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- SCRIPTS -->
     <script>
@@ -393,6 +537,112 @@
 
         initParticles();
         animate();
+
+        // Highlight brain on touch/mobile (no hover)
+        function syncBrainHighlight() {
+            const prefersCoarse = window.matchMedia('(pointer: coarse)').matches;
+            const isNarrow = window.innerWidth < 768;
+            document.body.classList.toggle('mobile-brain', prefersCoarse || isNarrow);
+        }
+        syncBrainHighlight();
+        window.addEventListener('resize', syncBrainHighlight);
+
+        // Testimonials modal
+        const testimonialTrigger = document.getElementById('testimonials-trigger');
+        const testimonialModal = document.getElementById('testimonials-modal');
+        const testimonialClose = document.getElementById('testimonials-close');
+        const testimonialTrack = document.getElementById('testimonial-track');
+        const testimonialPrev = document.getElementById('testimonial-prev');
+        const testimonialNext = document.getElementById('testimonial-next');
+        const testimonialPlayPause = document.getElementById('testimonial-play-pause');
+
+        const testimonialCountdown = document.getElementById('testimonial-countdown');
+        const AUTOPLAY_MS = 10000;
+        const COUNTDOWN_SECONDS = AUTOPLAY_MS / 1000;
+
+        let slideIndex = 0;
+        const slideCount = testimonialTrack ? testimonialTrack.children.length : 0;
+        let autoplay = true;
+        let countdownRemaining = COUNTDOWN_SECONDS;
+        let countdownTimer;
+
+        function updateCountdownLabel(text) {
+            if (!testimonialCountdown) return;
+            testimonialCountdown.textContent = text;
+        }
+
+        function updateSlide(index) {
+            if (!testimonialTrack) return;
+            slideIndex = (index + slideCount) % slideCount;
+            testimonialTrack.style.transform = `translateX(-${slideIndex * 100}%)`;
+        }
+
+        function nextSlide() {
+            updateSlide(slideIndex + 1);
+        }
+
+        function prevSlide() {
+            updateSlide(slideIndex - 1);
+        }
+
+        function startAutoplay() {
+            clearInterval(countdownTimer);
+            countdownRemaining = COUNTDOWN_SECONDS;
+            updateCountdownLabel(`${countdownRemaining}s`);
+            countdownTimer = setInterval(() => {
+                countdownRemaining -= 1;
+                if (countdownRemaining <= 0) {
+                    nextSlide();
+                    countdownRemaining = COUNTDOWN_SECONDS;
+                }
+                updateCountdownLabel(`${countdownRemaining}s`);
+            }, 1000);
+            autoplay = true;
+            if (testimonialPlayPause) testimonialPlayPause.textContent = 'Pause';
+        }
+
+        function stopAutoplay() {
+            clearInterval(countdownTimer);
+            autoplay = false;
+            updateCountdownLabel('Paused');
+            if (testimonialPlayPause) testimonialPlayPause.textContent = 'Play';
+        }
+
+        function openTestimonials(e) {
+            if (e) e.preventDefault();
+            testimonialModal.classList.remove('hidden');
+            testimonialModal.classList.add('flex');
+            slideIndex = 0;
+            updateSlide(0);
+            startAutoplay();
+        }
+
+        function closeTestimonials() {
+            testimonialModal.classList.add('hidden');
+            testimonialModal.classList.remove('flex');
+            stopAutoplay();
+        }
+
+        if (testimonialTrigger) testimonialTrigger.addEventListener('click', openTestimonials);
+        if (testimonialClose) testimonialClose.addEventListener('click', closeTestimonials);
+        testimonialModal.addEventListener('click', (e) => {
+            if (e.target === testimonialModal) closeTestimonials();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !testimonialModal.classList.contains('hidden')) {
+                closeTestimonials();
+            }
+        });
+
+        if (testimonialNext) testimonialNext.addEventListener('click', () => { nextSlide(); stopAutoplay(); });
+        if (testimonialPrev) testimonialPrev.addEventListener('click', () => { prevSlide(); stopAutoplay(); });
+        if (testimonialPlayPause) testimonialPlayPause.addEventListener('click', () => {
+            if (autoplay) {
+                stopAutoplay();
+            } else {
+                startAutoplay();
+            }
+        });
 
     </script>
     <script src="js/navbar.js"></script>

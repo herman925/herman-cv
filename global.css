@@ -8,11 +8,16 @@
     --glass-bg: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
 }
 
+html, body {
+    height: 100%;
+}
+
 body {
     font-family: 'Outfit', sans-serif;
     background-color: #0f172a;
     color: #cbd5e1;
     overflow-x: hidden;
+    overflow-y: auto;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -143,15 +148,124 @@ body {
     }
 }
 
+@media (max-width: 767px) {
+    .brain-map-wrapper {
+        display: none;
+    }
+    #brainMapSVG {
+        max-width: 95%;
+    }
+}
+
+/* Mobile constellation cards */
+.mobile-constellation {
+    position: relative;
+    isolation: isolate;
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 8px 4px 0;
+}
+
+@media (min-width: 768px) {
+    .mobile-constellation {
+        display: none;
+    }
+}
+
+.mobile-constellation::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 1px dashed rgba(103, 232, 249, 0.2);
+    border-radius: 20px;
+    pointer-events: none;
+    filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.2));
+}
+
+.constellation-card {
+    position: relative;
+    border-radius: 16px;
+    border: 1px solid rgba(45, 212, 191, 0.15);
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.7));
+    padding: 14px 14px 12px;
+    display: block;
+    text-decoration: none;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+.constellation-card::before {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #67e8f9;
+    top: 10px;
+    left: 10px;
+    box-shadow: 0 0 12px rgba(103, 232, 249, 0.7);
+}
+
+.constellation-card::after {
+    content: '';
+    position: absolute;
+    height: 1px;
+    width: 40%;
+    top: 14px;
+    left: 24px;
+    background: linear-gradient(90deg, rgba(103, 232, 249, 0.6), rgba(103, 232, 249, 0));
+}
+
+.constellation-card:hover {
+    border-color: rgba(103, 232, 249, 0.5);
+    transform: translateY(-2px);
+}
+
 /* --- CYBER NETWORK BRAIN STYLES --- */
 
+/* Mobile: show container for cards, hide SVG; Desktop: show brain */
 .brain-map-wrapper {
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem 0;
-    perspective: 1000px;
+    display: block;
+    padding: 1rem 0;
+    position: relative;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    min-height: 320px;
+}
+
+#brainMapSVG {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    #brainMapSVG {
+        display: none;
+    }
+    .mobile-constellation {
+        display: grid;
+    }
+}
+
+@media (min-width: 768px) {
+    .brain-map-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem 0;
+        perspective: 1000px;
+        position: relative;
+    }
+    #brainMapSVG {
+        display: block;
+    }
+}
+
+/* Tablet range - scale brain down to fit */
+@media (min-width: 768px) and (max-width: 900px) {
+    #brainMapSVG {
+        max-width: 520px;
+    }
 }
 
 #brainMapSVG {
@@ -191,6 +305,23 @@ body {
     transition: all 0.3s ease;
     stroke-linecap: round;
     pointer-events: none;
+}
+
+/* Mobile fallback: highlight all nodes when hover is unavailable */
+.mobile-brain .network-node {
+    fill: #0ea5e9;
+    stroke: #67e8f9;
+    box-shadow: 0 0 12px rgba(103, 232, 249, 0.5);
+}
+
+.mobile-brain .network-edge {
+    stroke: #38bdf8;
+    stroke-width: 1.5;
+    opacity: 0.75;
+}
+
+.mobile-brain .brain-label-group {
+    opacity: 1;
 }
 
 /* Zone Colors */

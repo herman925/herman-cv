@@ -113,7 +113,7 @@ body {
 .navbar { position: fixed; top: 0; left: 0; width: 100%; z-index: 50; }
 .navbar-inner { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; height: 5rem; display: flex; align-items: center; justify-content: space-between; }
 
-.entry-gate { min-height: 100vh; padding-top: 6rem; padding-bottom: 4rem; display: flex; align-items: center; }
+.entry-gate { min-height: 100vh; padding-top: 6rem; padding-bottom: 4rem; display: flex; align-items: center; overflow: hidden; }
 .entry-gate-inner { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
 .entry-gate-header { max-width: 40rem; margin: 0 auto; text-align: center; }
 .entry-gate-eyebrow { font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; color: #22c1b1; }
@@ -137,11 +137,6 @@ body {
     .entry-gate-copy {
         flex: 1;
         max-width: 35rem;
-        text-align: left;
-    }
-    .entry-gate-header {
-        text-align: left;
-        margin: 0;
     }
     .entry-gate-description {
         margin-left: 0;
@@ -252,7 +247,7 @@ body {
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 2rem 0;
+        padding: 2rem 1rem;
         perspective: 1000px;
         position: relative;
     }
@@ -261,19 +256,41 @@ body {
     }
 }
 
-/* Tablet range - scale brain down to fit */
-@media (min-width: 768px) and (max-width: 900px) {
-    #brainMapSVG {
-        max-width: 520px;
-    }
-}
-
+/* Base SVG styles */
 #brainMapSVG {
     width: 100%;
-    max-width: 700px; /* Optimized size */
+    max-width: 700px;
     height: auto;
     overflow: visible;
     animation: brain-float 6s ease-in-out infinite;
+}
+
+/* Responsive brain sizing for different desktop/tablet widths */
+/* Medium desktop */
+@media (min-width: 1024px) and (max-width: 1199px) {
+    #brainMapSVG {
+        max-width: 580px;
+    }
+}
+
+/* Small desktop / large tablet */
+@media (min-width: 900px) and (max-width: 1023px) {
+    #brainMapSVG {
+        max-width: 500px;
+    }
+}
+
+/* Tablet range */
+@media (min-width: 768px) and (max-width: 899px) {
+    #brainMapSVG {
+        max-width: 420px;
+    }
+    .brain-label-title {
+        font-size: 14px;
+    }
+    .brain-label-sub {
+        font-size: 9px;
+    }
 }
 
 @keyframes brain-float {
@@ -361,7 +378,7 @@ body {
     stroke-dasharray: 300;
     stroke-dashoffset: 300; /* Hidden start */
     transition: stroke-dashoffset 0.5s ease-out; /* Fast draw */
-    opacity: 0.8;
+    opacity: 0;
     pointer-events: none;
 }
 
@@ -390,7 +407,7 @@ body {
     pointer-events: none;
 }
 
-.brain-section:hover .connector-line { stroke-dashoffset: 0; }
+.brain-section:hover .connector-line { stroke-dashoffset: 0; opacity: 0.8; }
 .brain-section:hover .connector-dot { opacity: 1; }
 .brain-section:hover .brain-label-group { opacity: 1; }
 

@@ -1,0 +1,9 @@
+# Ignore personal CV documents
+Herman CV.*
+
+# Ignore product requirement documents
+PRD/
+
+# Node / tooling (if introduced later)
+node_modules/
+.DS_Store

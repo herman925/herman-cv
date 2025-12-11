@@ -1,0 +1,39 @@
+body.facet-education {
+    /* Cream & Emerald Palette (Light Theme) */
+    --bg-void: #fffbeb;        /* Cream - Warm light background */
+    --text-main: #0f172a;      /* Slate 900 - High contrast dark text */
+    --text-muted: #475569;     /* Slate 600 - Softer reading text */
+    
+    --green-vibrant: #059669;  /* Emerald 600 - Darker green for light bg */
+    --green-glow: #10b981;     /* Emerald 500 - For glows */
+    
+    --glass-border: rgba(5, 150, 105, 0.2);
+    --glass-bg: rgba(255, 255, 255, 0.7); /* Light frosted glass */
+    
+    background: radial-gradient(circle at top right, rgba(52, 211, 153, 0.15), transparent 40%),
+                radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.1), transparent 40%)
+                var(--bg-void);
+    color: var(--text-main);
+}
+
+/* Selection color */
+body.facet-education ::selection {
+    background: var(--green-vibrant);
+    color: #ffffff;
+}
+
+/* Light Glass Card */
+body.facet-education .glass-card {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(5, 150, 105, 0.1);
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+}
+
+body.facet-education .glass-card:hover {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(5, 150, 105, 0.3);
+    box-shadow: 0 10px 30px -5px rgba(5, 150, 105, 0.1);
+}
+

@@ -1,0 +1,369 @@
+/* THEME: PROJECT MANAGEMENT */
+
+:root {
+    --bg-facet: #1E293B; /* slate-800 */
+    --accent-primary: #F43F5E;   /* rose-500 */
+    --accent-secondary: #E11D48; /* rose-600 */
+    --text-heading: #F8FAFC;    /* slate-50 */
+    --text-body: #CBD5E1;       /* slate-300 */
+    --text-muted: #94A3B8;      /* slate-400 */
+    --border-color: #334155;    /* slate-700 */
+    --glass-border: rgba(244, 63, 94, 0.4);
+    --glass-bg: linear-gradient(145deg, rgba(244, 63, 94, 0.1) 0%, rgba(30, 41, 59, 0.1) 100%);
+}
+
+body.facet-project {
+    /* Light, board-like base with warm project accent (Rose/Red) */
+    --bg-facet: #f8fafc; /* slate-50 */
+    --accent-primary: #e11d48;   /* rose-600 */
+    --accent-secondary: #be123c; /* rose-700 */
+    --text-heading: #0f172a;     /* slate-900 */
+    --text-body: #334155;        /* slate-700 */
+    --text-muted: #64748b;       /* slate-500 */
+    --border-color: #cbd5e1;     /* slate-300 */
+    --glass-border: rgba(225, 29, 72, 0.2);
+    --glass-bg: #ffffff;
+    
+    background-color: var(--bg-facet);
+    /* Technical grid pattern for "blueprint" feel */
+    background-image: 
+        linear-gradient(rgba(226, 232, 240, 0.6) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(226, 232, 240, 0.6) 1px, transparent 1px);
+    background-size: 40px 40px;
+    color: var(--text-body);
+}
+
+.facet-project .facet-header {
+    background-color: rgba(255, 255, 255, 0.9);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.facet-project .facet-eyebrow {
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    font-family: 'Space Grotesk', monospace;
+    letter-spacing: 0.25em;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.facet-project .facet-title {
+    color: var(--text-heading);
+    font-weight: 600;
+}
+
+/* Project Cards / Kanban Style */
+.facet-project .glass-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 1rem; /* Softer corners */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.facet-project .glass-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+    border-color: var(--accent-primary);
+}
+
+/* Timeline - Vertical Spine */
+.facet-project .timeline-container {
+    position: relative;
+    padding-left: 2rem;
+    border-left: 2px solid var(--accent-primary); /* The Red Spine */
+}
+
+.facet-project .timeline-item {
+    position: relative;
+    margin-bottom: 2.5rem;
+}
+
+.facet-project .timeline-dot {
+    position: absolute;
+    left: -2.4rem; /* Align with spine */
+    top: 1.5rem;
+    width: 0.8rem;
+    height: 0.8rem;
+    background-color: #fff;
+    border: 2px solid var(--accent-primary);
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.facet-project .timeline-date {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.85rem;
+    color: var(--accent-primary);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.facet-project .timeline-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 1.25rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.facet-project .timeline-title {
+    font-weight: 700;
+    color: var(--text-heading);
+    font-size: 1.1rem;
+}
+
+.facet-project .timeline-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    font-family: 'Space Grotesk', monospace;
+}
+
+/* Metric Tiles */
+.facet-project .metric-tile {
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.facet-project .metric-tile::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--accent-primary);
+    opacity: 0.5;
+}
+
+.facet-project .metric-value {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+    line-height: 1.2;
+}
+
+.facet-project .metric-label {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 0.5rem;
+}
+
+.facet-project .facet-title {
+    color: var(--text-heading);
+    font-weight: 600;
+}
+
+.facet-project .text-accent {
+    color: var(--accent-primary);
+}
+
+.facet-project .bg-accent {
+    background-color: var(--accent-primary);
+}
+
+.facet-project .border-accent {
+    border-color: var(--accent-primary);
+}
+
+.facet-project .hover\:text-accent:hover {
+    color: var(--accent-primary);
+}
+
+
+/* --- NEW TIMELINE STYLES --- */
+
+.timeline-container {
+    position: relative;
+    padding: 2rem 0;
+}
+
+/* The vertical line */
+.timeline-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 1.5rem;
+    height: 100%;
+    width: 2px;
+    background-color: var(--border-color);
+    transform: translateX(-50%);
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 4rem; /* Space for dot and date */
+    margin-bottom: 3rem;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+/* The dot on the line */
+.timeline-dot {
+    position: absolute;
+    left: 1.5rem;
+    top: 0.25rem;
+    transform: translateX(-50%);
+    width: 1rem;
+    height: 1rem;
+    border-radius: 9999px;
+    background-color: var(--accent-primary);
+    border: 3px solid var(--bg-facet);
+    box-shadow: 0 0 10px rgba(244, 63, 94, 0.5);
+}
+
+.timeline-date {
+    position: absolute;
+    left: 4rem;
+    top: 0rem;
+    font-family: 'Space Grotesk', monospace;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    width: 150px; /* Adjust as needed */
+}
+
+.timeline-card {
+    position: relative;
+    margin-left: -2rem;
+    /* Card styling */
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.timeline-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-primary);
+    box-shadow: 0 8px 25px -5px rgba(0,0,0,0.2);
+}
+
+
+.timeline-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-heading);
+}
+
+.timeline-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.timeline-body p,
+.timeline-body ul {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--text-body);
+}
+
+.timeline-body ul {
+    list-style-type: disc;
+    padding-left: 1.25rem;
+    margin-top: 0.75rem;
+}
+
+@media (min-width: 768px) {
+    .timeline-container::before {
+        left: 50%;
+    }
+    .timeline-item {
+        padding-left: 0;
+        width: 50%;
+        margin-bottom: 4rem;
+    }
+
+    /* Even items on the right */
+    .timeline-item:nth-child(even) {
+        align-self: flex-end;
+        padding-left: 4rem;
+    }
+
+    /* Odd items on the left */
+    .timeline-item:nth-child(odd) {
+        align-self: flex-start;
+        padding-right: 4rem;
+        text-align: right;
+    }
+    
+    .timeline-item:nth-child(odd) .timeline-card {
+       margin-right: -2rem;
+       margin-left: auto;
+    }
+
+    .timeline-dot {
+        left: 50%;
+    }
+
+    .timeline-date {
+        left: auto;
+        width: auto;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-date {
+        right: calc(50% + 4rem);
+        text-align: right;
+    }
+    .timeline-item:nth-child(even) .timeline-date {
+        left: calc(50% + 4rem);
+        text-align: left;
+    }
+    
+    .timeline-item:nth-child(odd) .timeline-body ul {
+        padding-left: 0;
+        padding-right: 1.25rem;
+        list-style-position: inside;
+    }
+}
+
+/* --- ANIMATIONS --- */
+
+@keyframes breathing {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.1); opacity: 0.5; }
+}
+
+.animate-breathing {
+    animation: breathing 8s ease-in-out infinite;
+}
+
+@keyframes blob {
+    0% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+    100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.animate-blob {
+    animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+    animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+    animation-delay: 4s;
+}
+
+/* --- UTILITIES --- */
+.bg-grid-pattern {
+    background-image: radial-gradient(#e11d48 1px, transparent 1px);
+    background-size: 24px 24px;
+}

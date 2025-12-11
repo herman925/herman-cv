@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herman Chan | The Digital Humanist</title>
+    
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="theme-tech.css">
+
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Configuration -->
+    <script src="js/tailwind-config.js"></script>
+</head>
+<body class="facet-tech bg-void text-slate-300 antialiased selection:bg-cyber-500 selection:text-void overflow-x-hidden">
+
+    <!-- Animated Neural Background -->
+    <canvas id="neuralCanvas"></canvas>
+
+    <!-- Navigation -->
+    <div id="navbar-container"></div>
+
+    <!-- Hero Section -->
+    <section class="relative py-32 flex items-center">
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-7 space-y-8 reveal relative">
+                    <!-- CLI Bubble Removed -->
+
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700 backdrop-blur-sm">
+                        <span class="w-2 h-2 rounded-full bg-cyber-400 animate-pulse"></span>
+                        <span class="text-xs font-mono text-cyber-300 uppercase tracking-widest">System Status: Cognitive-First</span>
+                    </div>
+                    
+                    <h1 class="text-5xl md:text-7xl font-bold font-tech leading-tight text-white">
+                        Engineering for the <br>
+                        <span class="text-gradient glitch" data-text="Human Mind">Human Mind</span>
+                    </h1>
+                    
+                    <p class="text-xl text-slate-400 max-w-2xl leading-relaxed border-l-2 border-cyber-500/30 pl-6">
+                        I am a <strong>Digital Humanist</strong>. I take pride in my work as a harmonious blend of knowledge, thoughtfulness, and a forward-thinking mindset—and <em>then</em> AI. By bridging <strong>Psychology</strong> and <strong>Technology</strong>, I build tools & systems that are not only efficient but intuitive, reducing cognitive load and empowering users.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4 pt-4">
+                        <a href="https://github.com/herman925" target="_blank" rel="noopener noreferrer" class="group relative px-6 py-3 bg-cyber-600 text-white font-semibold rounded-lg overflow-hidden transition-all hover:shadow-[0_0_20px_rgba(128,100,162,0.4)] flex-1 md:flex-none text-center min-w-[160px]">
+                            <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                            <span class="relative flex items-center justify-center gap-2">
+                                <i data-lucide="code-2" class="w-4 h-4"></i> GitHub
+                            </span>
+                        </a>
+                        <a href="#ecosystem" class="px-6 py-3 bg-slate-800 border border-slate-600 text-slate-300 font-semibold rounded-lg hover:border-cyber-400 hover:text-cyber-400 transition-colors flex items-center justify-center gap-2 flex-1 md:flex-none text-center min-w-[160px]">
+                            <i data-lucide="folder-git-2" class="w-4 h-4"></i> Projects
+                        </a>
+                        <a href="#broadcast" class="px-6 py-3 bg-slate-800 border border-slate-600 text-slate-300 font-semibold rounded-lg hover:border-cyber-400 hover:text-cyber-400 transition-colors flex items-center justify-center gap-2 flex-1 md:flex-none text-center min-w-[160px]">
+                            <i data-lucide="film" class="w-4 h-4"></i> Watch Videos
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Terminal Window (New Feature) -->
+                <div class="lg:col-span-5 relative h-[500px] w-full flex items-center justify-center">
+                    <!-- Terminal Window -->
+                    <div class="w-full max-w-md bg-slate-900/90 border border-slate-700 rounded-lg shadow-2xl overflow-hidden backdrop-blur-md transform hover:scale-[1.02] transition-transform duration-300">
+                        <!-- Terminal Header -->
+                        <div class="bg-slate-800/80 px-4 py-2 flex items-center justify-between border-b border-slate-700">
+                            <div class="flex items-center gap-2">
+                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <div class="text-xs text-slate-400 font-mono opacity-70">herman@tech-hub:~ (Live Career Log)</div>
+                        </div>
+                        <!-- Terminal Body -->
+                        <div class="p-6 font-mono text-sm h-[320px] overflow-y-auto scrollbar-hide" id="terminal-body">
+                            <div id="terminal-content" class="space-y-2 text-slate-300"></div>
+                            <div class="mt-2 flex items-center">
+                                <span class="text-green-400 mr-2">➜</span>
+                                <span class="text-blue-400 mr-2">~</span>
+                                <span id="typewriter-cursor" class="text-slate-300"></span><span class="animate-pulse text-slate-300">_</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Decorative Elements behind -->
+                    <div class="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-cyber-500/10 blur-3xl rounded-full animate-pulse-slow"></div>
+                </div>
+                    
+                    <!-- Decorative Elements behind grid -->
+                    <div class="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-cyber-500/10 blur-3xl rounded-full animate-pulse-slow"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-slate-500 animate-bounce">
+            <i data-lucide="chevrons-down" class="w-6 h-6"></i>
+        </div>
+    </section>
+
+    <!-- Digital Ecosystem & Codebase (File Explorer) -->
+    <section id="ecosystem" class="py-24 relative bg-cyber-950/50 min-h-[800px]">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12 reveal">
+                <h2 class="text-4xl font-bold text-white mb-2">Digital <span class="text-cyber-400">Ecosystem</span></h2>
+                <p class="text-slate-400 max-w-xl mx-auto">Explore the codebase. Navigate through production systems, research tools, and prototypes.</p>
+            </div>
+
+            <!-- File Explorer Interface -->
+            <div class="max-w-5xl mx-auto bg-slate-900/80 backdrop-blur-xl border border-slate-700 rounded-xl overflow-hidden shadow-2xl reveal">
+                <!-- Window Header -->
+                <div class="bg-slate-800/80 border-b border-slate-700 p-4 flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <!-- Window Controls -->
+                        <div class="flex gap-2">
+                            <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                        </div>
+                        
+                        <!-- Navigation Controls -->
+                        <div class="flex items-center gap-2 ml-4">
+                            <button id="explorer-back" aria-label="Go back" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 hover:border-slate-500 transition-all opacity-0 pointer-events-none shadow-lg">
+                                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+
+                        <!-- Breadcrumbs -->
+                        <div id="explorer-breadcrumbs" class="flex items-center gap-2 text-sm font-mono text-slate-400 ml-2">
+                            <!-- Injected via JS -->
+                        </div>
+                    </div>
+                    
+                    <!-- Search Bar (Visual Only) -->
+                    <div class="hidden md:flex items-center gap-2 bg-slate-950/50 px-3 py-1.5 rounded border border-slate-700/50">
+                        <i data-lucide="search" class="w-3 h-3 text-slate-500"></i>
+                        <span class="text-xs text-slate-600 font-mono">Search ecosystem...</span>
+                    </div>
+                </div>
+
+                <!-- Main Content Area -->
+                <div class="p-8 min-h-[400px] bg-gradient-to-b from-slate-900/50 to-slate-950/50">
+                    <div id="explorer-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 transition-all duration-300">
+                        <!-- Content Injected via JS -->
+                    </div>
+                </div>
+
+                <!-- Status Bar -->
+                <div class="bg-slate-950 border-t border-slate-800 px-4 py-2 flex justify-between items-center text-[10px] font-mono text-slate-500">
+                    <div class="flex gap-4">
+                        <span><span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-1"></span>System Online</span>
+                        <span>14 Items</span>
+                    </div>
+                    <div>
+                        UTF-8
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BROADCAST & MEDIA (New Section) -->
+    <section id="broadcast" class="py-24 relative overflow-hidden">
+        <!-- Background Glow -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-cyber-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                <!-- Text Content -->
+                <div class="lg:w-1/2 reveal">
+                    <span class="text-cyber-400 font-mono text-sm tracking-wider uppercase">Thought Leadership</span>
+                    <h2 class="text-4xl font-bold text-white mt-2 mb-6">Broadcasting the <span class="text-gradient">Future</span></h2>
+                    <p class="text-slate-400 text-lg leading-relaxed mb-8">
+                        Beyond code and systems, I believe in the power of narrative. Through live broadcasts and media production, 
+                        I explore how technology shapes our psychological landscape and cultural evolution.
+                    </p>
+                    
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center gap-4 p-4 rounded-lg bg-slate-800/50 border border-slate-700">
+                            <div class="w-10 h-10 rounded-full bg-cyber-900/50 flex items-center justify-center text-cyber-400">
+                                <i data-lucide="mic" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold">Tech-Psych Discourse</h4>
+                                <p class="text-sm text-slate-400">Bridging the gap between algorithms and human behavior.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 p-4 rounded-lg bg-slate-800/50 border border-slate-700">
+                            <div class="w-10 h-10 rounded-full bg-cyber-900/50 flex items-center justify-center text-cyber-400">
+                                <i data-lucide="video" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold">Digital Culture Analysis</h4>
+                                <p class="text-sm text-slate-400">Deconstructing trends in the digital age.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Media Card -->
+                <div class="lg:w-1/2 w-full reveal">
+                    <a href="https://live.bilibili.com/13081069" target="_blank" rel="noopener" class="block glass-card rounded-2xl overflow-hidden group cursor-pointer relative hover:border-cyber-400 transition-colors">
+                        <!-- Thumbnail -->
+                        <div class="relative aspect-video bg-slate-800 overflow-hidden"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60"></div>
+                            <!-- Play Button Overlay -->
+                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+                                <div class="w-16 h-16 rounded-full bg-cyber-500/90 flex items-center justify-center backdrop-blur-sm transform scale-50 group-hover:scale-100 transition-transform duration-300">
+                                    <i data-lucide="play" class="w-6 h-6 text-white fill-current"></i>
+                                </div>
+                            </div>
+                            <div class="absolute bottom-4 left-4 z-20">
+                                <span class="bg-red-500/80 backdrop-blur px-2 py-1 rounded text-xs text-white flex items-center gap-1">
+                                    <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span> Live
+                                </span>
+                            </div>
+                            <div class="w-full h-full bg-slate-700 flex items-center justify-center">
+                                <i data-lucide="radio" class="w-16 h-16 text-slate-600"></i>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-lg font-bold text-white mb-2 group-hover:text-cyber-400 transition-colors">Herman's Live Channel</h3>
+                            <p class="text-slate-400 text-sm line-clamp-2">Join the live discussion on Tech, Culture, and Psychology on Bilibili.</p>
+                            <div class="mt-4 flex items-center gap-4 text-xs text-slate-500">
+                                <span class="flex items-center gap-1 text-cyber-400"><i data-lucide="radio" class="w-3 h-3"></i> Live Status</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Broadcast Highlights -->
+        <div class="w-full mt-16 reveal">
+            <div class="container mx-auto px-6">
+                <h3 class="text-2xl font-bold text-white mb-8 flex items-center gap-2">
+                    <i data-lucide="film" class="text-cyber-400"></i> Broadcast Highlights
+                </h3>
+            </div>
+            <!-- Carousel Container -->
+            <div id="broadcast-carousel" class="flex gap-6 overflow-x-auto pb-8 cursor-grab scrollbar-hide select-none px-6">
+                    <!-- Video 1 -->
+                    <a href="https://www.bilibili.com/video/BV1U2KizEECu" target="_blank" rel="noopener" class="glass-card p-4 rounded-xl group hover:bg-slate-800/50 transition-all border border-transparent hover:border-cyber-500/30 min-w-[300px] md:min-w-[350px] flex-shrink-0">
+                        <div class="aspect-video bg-slate-800 rounded-lg mb-4 overflow-hidden relative">
+                             <div class="absolute inset-0 flex items-center justify-center text-slate-600 group-hover:text-cyber-400 transition-colors">
+                                <i data-lucide="play-circle" class="w-12 h-12"></i>
+                             </div>
+                        </div>
+                        <h4 class="text-white font-bold text-sm line-clamp-2 group-hover:text-cyber-400 transition-colors">《效率神器的浪漫與秩序 001》秒搜萬檔：一招擺脫搜尋煩惱！</h4>
+                        <p class="text-xs text-slate-500 mt-2">Live Tutorial</p>
+                    </a>
+
+                    <!-- Video 2 -->
+                    <a href="https://www.bilibili.com/video/BV18RgdzJE7f" target="_blank" rel="noopener" class="glass-card p-4 rounded-xl group hover:bg-slate-800/50 transition-all border border-transparent hover:border-cyber-500/30 min-w-[300px] md:min-w-[350px] flex-shrink-0">
+                        <div class="aspect-video bg-slate-800 rounded-lg mb-4 overflow-hidden relative">
+                             <div class="absolute inset-0 flex items-center justify-center text-slate-600 group-hover:text-cyber-400 transition-colors">
+                                <i data-lucide="play-circle" class="w-12 h-12"></i>
+                             </div>
+                        </div>
+                        <h4 class="text-white font-bold text-sm line-clamp-2 group-hover:text-cyber-400 transition-colors">AI：啟示與未來 - 多智能體！Genspark打破AI框架！</h4>
+                        <p class="text-xs text-slate-500 mt-2">Live Highlight 8/1</p>
+                    </a>
+
+                    <!-- Video 3 -->
+                    <a href="https://www.bilibili.com/video/BV1FETBzgEg5" target="_blank" rel="noopener" class="glass-card p-4 rounded-xl group hover:bg-slate-800/50 transition-all border border-transparent hover:border-cyber-500/30 min-w-[300px] md:min-w-[350px] flex-shrink-0">
+                        <div class="aspect-video bg-slate-800 rounded-lg mb-4 overflow-hidden relative">
+                             <div class="absolute inset-0 flex items-center justify-center text-slate-600 group-hover:text-cyber-400 transition-colors">
+                                <i data-lucide="play-circle" class="w-12 h-12"></i>
+                             </div>
+                        </div>
+                        <h4 class="text-white font-bold text-sm line-clamp-2 group-hover:text-cyber-400 transition-colors">AI：從入門到未來 - 揭秘API！AI的核心技術竟是這個！？</h4>
+                        <p class="text-xs text-slate-500 mt-2">Live Highlight 6/1</p>
+                    </a>
+
+                    <!-- Video 4 (Duplicate for Demo) -->
+                    <a href="https://www.bilibili.com/video/BV1U2KizEECu" target="_blank" rel="noopener" class="glass-card p-4 rounded-xl group hover:bg-slate-800/50 transition-all border border-transparent hover:border-cyber-500/30 min-w-[300px] md:min-w-[350px] flex-shrink-0">
+                        <div class="aspect-video bg-slate-800 rounded-lg mb-4 overflow-hidden relative">
+                             <div class="absolute inset-0 flex items-center justify-center text-slate-600 group-hover:text-cyber-400 transition-colors">
+                                <i data-lucide="play-circle" class="w-12 h-12"></i>
+                             </div>
+                        </div>
+                        <h4 class="text-white font-bold text-sm line-clamp-2 group-hover:text-cyber-400 transition-colors">《效率神器的浪漫與秩序 001》秒搜萬檔：一招擺脫搜尋煩惱！</h4>
+                        <p class="text-xs text-slate-500 mt-2">Live Tutorial</p>
+                    </a>
+
+                    <!-- Video 5 (Duplicate for Demo) -->
+                    <a href="https://www.bilibili.com/video/BV18RgdzJE7f" target="_blank" rel="noopener" class="glass-card p-4 rounded-xl group hover:bg-slate-800/50 transition-all border border-transparent hover:border-cyber-500/30 min-w-[300px] md:min-w-[350px] flex-shrink-0">
+                        <div class="aspect-video bg-slate-800 rounded-lg mb-4 overflow-hidden relative">
+                             <div class="absolute inset-0 flex items-center justify-center text-slate-600 group-hover:text-cyber-400 transition-colors">
+                                <i data-lucide="play-circle" class="w-12 h-12"></i>
+                             </div>
+                        </div>
+                        <h4 class="text-white font-bold text-sm line-clamp-2 group-hover:text-cyber-400 transition-colors">AI：啟示與未來 - 多智能體！Genspark打破AI框架！</h4>
+                        <p class="text-xs text-slate-500 mt-2">Live Highlight 8/1</p>
+                    </a>
+                </div>
+            </div>
+    </section>
+
+    <!-- NARRATIVES (Stories) -->
+    <section id="stories" class="py-24 bg-slate-900/50 border-t border-slate-800/50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-white mb-16 text-center">Narratives & <span class="text-cyber-400">Journey</span></h2>
+            
+            <div class="relative max-w-4xl mx-auto">
+                <!-- Center Line -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-px bg-gradient-to-b from-cyber-500/0 via-cyber-500/50 to-cyber-500/0 hidden md:block"></div>
+
+                <!-- Story: The 4Set Evolution -->
+                <div class="flex flex-col md:flex-row items-center gap-8 mb-16 reveal group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
+                    <div class="md:w-1/2 md:text-right">
+                        <span class="text-cyber-400 font-mono text-sm tracking-wider uppercase">2025 • Enterprise Architecture</span>
+                        <h3 class="text-2xl font-bold text-white mt-2 mb-4">The 4Set Evolution</h3>
+                        <p class="text-slate-400 leading-relaxed mb-6">
+                            A 4-generation journey from a fragile Excel monolith to a distributed hybrid-cloud infrastructure. 
+                            Born from the "Data Starvation" of Gen 0, refined by the "Sneakernet" PWA of Gen 1, 
+                            saved by the "Ghost Monitor" of Gen 2, and perfected by the async power of Gen 3.
+                        </p>
+                        <div class="flex flex-wrap justify-end gap-2">
+                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300 border border-slate-700">Gen 0: Excel</span>
+                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300 border border-slate-700">Gen 1: PWA</span>
+                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300 border border-slate-700">Gen 2: Python</span>
+                            <span class="px-3 py-1 rounded-full bg-cyber-900/50 text-xs text-cyber-300 border border-cyber-500/50">Gen 3: Server</span>
+                        </div>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-cyber-500 flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.3)] group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="layers" class="w-6 h-6 text-cyber-400"></i>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <div class="glass-card p-6 rounded-xl border border-slate-700/50 group-hover:border-cyber-500/30 transition-colors">
+                            <h4 class="text-white font-bold mb-2 flex items-center gap-2">
+                                <i data-lucide="alert-triangle" class="w-4 h-4 text-yellow-400"></i> The Catalyst
+                            </h4>
+                            <p class="text-sm text-slate-400 italic mb-4">
+                                "The Qualtrics API was horrible. 1-second polling per record. It locked the UI and made mass uploads impossible."
+                            </p>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3 text-sm text-slate-300">
+                                    <i data-lucide="x-circle" class="w-4 h-4 text-red-400"></i>
+                                    <span>Gen 2: Synchronous Polling (Fragile)</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-sm text-slate-300">
+                                    <i data-lucide="arrow-down" class="w-4 h-4 text-slate-500 ml-0.5"></i>
+                                </div>
+                                <div class="flex items-center gap-3 text-sm text-white font-medium">
+                                    <i data-lucide="check-circle" class="w-4 h-4 text-green-400"></i>
+                                    <span>Gen 3: Async Background Daemon (Robust)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Story 1: The Reality Check (2015) -->
+                <div class="flex flex-col md:flex-row items-center gap-8 mb-16 reveal group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
+                    <div class="md:w-1/2 md:text-right">
+                        <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-cyber-400 transition-colors">The Reality Check</h3>
+                        <p class="text-slate-400 text-sm mb-2">2015 · The Failed Interview</p>
+                        <p class="text-slate-400">
+                            "I thought I was tech-savvy because I could design slides. Then I failed an interview because I couldn't do a VLOOKUP. I was humbled. That failure sparked a vow: never be incompetent again. I didn't just learn Excel; I mastered its very DNA."
+                        </p>
+                        <div class="mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300">
+                            <i data-lucide="alert-triangle" class="w-3 h-3 text-yellow-400"></i> Humbled
+                        </div>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-cyber-500 flex items-center justify-center text-cyber-400 shadow-[0_0_15px_rgba(128,100,162,0.5)] group-hover:bg-cyber-500 group-hover:text-white transition-colors">
+                            1
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <div class="glass-card p-5 rounded-lg text-sm text-slate-400 italic group-hover:border-cyber-500/50 transition-colors">
+                            It wasn't about "playing games" vs "work." It was realizing I only knew the surface. That shame drove me to understand the <em>mechanisms</em> behind the tools, laying the groundwork for every system I've built since.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Story 2: The First System (ISS HK) -->
+                <div class="flex flex-col md:flex-row-reverse items-center gap-8 mb-16 reveal group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
+                    <div class="md:w-1/2">
+                        <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-cyber-400 transition-colors">The First System</h3>
+                        <p class="text-slate-400 text-sm mb-2">ISSHK · The "One-Stop Portal"</p>
+                        <p class="text-slate-400">
+                            "200 active cases. No AI. No shortcuts. Just me, Stack Overflow, and 6 months of brute-force learning."
+                        </p>
+                        <div class="mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300">
+                            <i data-lucide="hammer" class="w-3 h-3 text-red-400"></i> Grit
+                        </div>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-cyber-500 flex items-center justify-center text-cyber-400 shadow-[0_0_15px_rgba(128,100,162,0.5)] group-hover:bg-cyber-500 group-hover:text-white transition-colors">
+                            2
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 md:text-right">
+                         <div class="glass-card p-5 rounded-lg text-sm text-slate-400 italic group-hover:border-cyber-500/50 transition-colors">
+                            I built a VBA-powered "One-Stop Portal" from scratch. It required learning SQL queries and complex macros on the fly. It was the most painful learning curve of my life, but it transformed a chaotic workflow into a precision engine for my team.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Story 3: Scaling Complexity -->
+                <div class="flex flex-col md:flex-row items-center gap-8 reveal group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
+                    <div class="md:w-1/2 md:text-right">
+                        <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-cyber-400 transition-colors">Scaling Complexity</h3>
+                        <p class="text-slate-400 text-sm mb-2">From Excel to Full Stack</p>
+                        <p class="text-slate-400">
+                            "That first victory proved I could build anything if I dug deep enough. The tools just got better."
+                        </p>
+                        <div class="mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300">
+                            <i data-lucide="layers" class="w-3 h-3 text-blue-400"></i> Evolution
+                        </div>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-cyber-500 flex items-center justify-center text-cyber-400 shadow-[0_0_15px_rgba(128,100,162,0.5)] group-hover:bg-cyber-500 group-hover:text-white transition-colors">
+                            3
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                         <div class="glass-card p-5 rounded-lg text-sm text-slate-400 italic group-hover:border-cyber-500/50 transition-colors">
+                            From the <strong>SEC Departmental OSP</strong> to the <strong>4Set-Server</strong> and <strong>Video-Tagger</strong>, I applied that same rigorous "mechanism-first" mindset. I don't just use software; I engineer workflows that empower human connection.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- TIMELINE (Restored) -->
+    <section id="timeline" class="py-24 bg-slate-900/30 border-t border-slate-800/50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl font-bold text-white mb-2">Career <span class="text-cyber-400">Timeline</span></h2>
+                <p class="text-slate-400 max-w-xl mx-auto">
+                    A chronological view of roles and achievements that shape my project management practice.
+                </p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto relative">
+                <!-- Vertical Line -->
+                <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-px bg-slate-800"></div>
+
+                <!-- Item 1 -->
+                <div class="relative flex flex-col md:flex-row gap-8 mb-12 reveal group">
+                    <div class="md:w-1/2 md:text-right">
+                        <div class="inline-block px-3 py-1 rounded-full bg-cyber-900/50 border border-cyber-500/30 text-cyber-400 text-xs font-mono mb-2">
+                            Mar 2023 – Present
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-cyber-400 transition-colors">Senior Research Assistant</h3>
+                        <p class="text-slate-500 text-sm">ECE, EdUHK</p>
+                    </div>
+                    <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-slate-900 border-2 border-cyber-500 z-10 group-hover:scale-125 transition-transform"></div>
+                    <div class="md:w-1/2 pl-8 md:pl-0">
+                        <div class="glass-card p-6 rounded-xl border-l-2 border-cyber-500/50">
+                            <p class="text-slate-400 text-sm mb-3">Coordinate early-years research and project operations across multiple schools and teams.</p>
+                            <ul class="list-disc list-inside text-xs text-slate-500 space-y-1">
+                                <li>Align academic teams, schools, and funders on shared timelines.</li>
+                                <li>Support data collection and reporting structures.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="relative flex flex-col md:flex-row-reverse gap-8 mb-12 reveal group">
+                    <div class="md:w-1/2">
+                        <div class="inline-block px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-400 text-xs font-mono mb-2">
+                            Jan 2021 – Mar 2023
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-cyber-400 transition-colors">Project Officer</h3>
+                        <p class="text-slate-500 text-sm">AADO, EdUHK</p>
+                    </div>
+                    <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-slate-900 border-2 border-slate-600 z-10 group-hover:border-cyber-500 transition-colors"></div>
+                    <div class="md:w-1/2 pl-8 md:pl-0 md:text-right">
+                        <div class="glass-card p-6 rounded-xl border-r-2 border-slate-700/50">
+                            <p class="text-slate-400 text-sm mb-3">Led large-scale programmes supporting underprivileged children (KeySteps@JC).</p>
+                            <ul class="list-disc list-inside text-xs text-slate-500 space-y-1 inline-block text-left">
+                                <li>Managed recruitment and engagement of schools.</li>
+                                <li>Coordinated NGOs, school leaders, and funders.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="relative flex flex-col md:flex-row gap-8 mb-12 reveal group">
+                    <div class="md:w-1/2 md:text-right">
+                        <div class="inline-block px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-400 text-xs font-mono mb-2">
+                            Sep 2020 – Jan 2021
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-cyber-400 transition-colors">Project Officer (EOCP)</h3>
+                        <p class="text-slate-500 text-sm">SPFEO, EdUHK</p>
+                    </div>
+                    <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-slate-900 border-2 border-slate-600 z-10 group-hover:border-cyber-500 transition-colors"></div>
+                    <div class="md:w-1/2 pl-8 md:pl-0">
+                        <div class="glass-card p-6 rounded-xl border-l-2 border-slate-700/50">
+                            <p class="text-slate-400 text-sm mb-3">Supported the rollout of a university-wide online classes platform.</p>
+                            <ul class="list-disc list-inside text-xs text-slate-500 space-y-1">
+                                <li>Gathered requirements from academic & IT stakeholders.</li>
+                                <li>Translated user needs into practical workflows.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="relative flex flex-col md:flex-row-reverse gap-8 mb-12 reveal group">
+                    <div class="md:w-1/2">
+                        <div class="inline-block px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-400 text-xs font-mono mb-2">
+                            Sep 2018 – Sep 2020
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-cyber-400 transition-colors">Project Officer</h3>
+                        <p class="text-slate-500 text-sm">SEC / EPL / ELPS, EdUHK</p>
+                    </div>
+                    <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-slate-900 border-2 border-slate-600 z-10 group-hover:border-cyber-500 transition-colors"></div>
+                    <div class="md:w-1/2 pl-8 md:pl-0 md:text-right">
+                        <div class="glass-card p-6 rounded-xl border-r-2 border-slate-700/50">
+                            <p class="text-slate-400 text-sm mb-3">Managed EDB-funded initiatives and improved teacher support systems.</p>
+                            <ul class="list-disc list-inside text-xs text-slate-500 space-y-1 inline-block text-left">
+                                <li>Introduced automation reducing data processing by 85%.</li>
+                                <li>Streamlined registration across multiple programmes.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 relative">
+         <div class="container mx-auto px-6 max-w-4xl">
+            <div class="glass-card rounded-2xl p-10 border-t border-cyber-500/30 text-center reveal">
+                <i data-lucide="mail" class="w-12 h-12 text-cyber-400 mx-auto mb-6"></i>
+                <h2 class="text-4xl font-bold text-white mb-4">Initiate Connection</h2>
+                <p class="text-slate-400 mb-8 max-w-xl mx-auto">
+                    I am currently seeking opportunities to lead transformative projects. 
+                    Whether it's about platform development, AI integration, or educational strategy, let's talk.
+                </p>
+                
+                <div class="flex flex-col md:flex-row justify-center gap-6 mb-10">
+                    <a href="mailto:hermanchan_925@hotmail.com" class="flex items-center justify-center gap-2 px-6 py-3 bg-cyber-600 hover:bg-cyber-500 text-white rounded-lg font-semibold transition-all">
+                        <i data-lucide="send" class="w-4 h-4"></i> Send Email
+                    </a>
+                    <a href="#" class="flex items-center justify-center gap-2 px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-semibold transition-all">
+                        <i data-lucide="linkedin" class="w-4 h-4"></i> LinkedIn Profile
+                    </a>
+                </div>
+                
+                <div class="pt-8 border-t border-slate-700/50 flex flex-col md:flex-row justify-center gap-8 text-slate-500 text-sm">
+                    <span class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4"></i> Tai Po, Hong Kong</span>
+                    <span class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4"></i> 97278202</span>
+                    <span class="flex items-center gap-2"><i data-lucide="github" class="w-4 h-4"></i> @hermanchan</span>
+                </div>
+            </div>
+            
+            <footer class="text-center mt-12 text-slate-600 text-sm">
+                <p>&copy; 2025 Herman Koon Kiu 'Joseph' Chan. System Status: Optimal.</p>
+            </footer>
+         </div>
+    </section>
+
+    <!-- MODAL OVERLAY -->
+    <div id="project-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
+        
+        <!-- Modal Content -->
+        <div id="modal-wrapper" class="relative w-full max-w-2xl p-6 transition-none">
+            <div class="glass-card bg-slate-900 border border-cyber-500/50 rounded-2xl shadow-[0_0_50px_rgba(128,100,162,0.2)] overflow-hidden relative max-h-[90vh] overflow-y-auto scrollbar-hide">
+                <!-- Close Button -->
+                <button onclick="closeModal()" aria-label="Close project modal" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors z-50">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+
+                <div id="modal-content" class="p-2">
+                    <!-- Content injected via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="js/navbar.js"></script>
+    <script src="js/github-cards.js"></script>
+    <script src="js/explorer.js"></script>
+    <script src="js/carousel.js"></script>
+    <script>
+        function initReveal() {
+            const reveals = document.querySelectorAll('.reveal');
+            const handleReveal = () => {
+                const trigger = window.innerHeight * 0.8;
+                reveals.forEach(el => {
+                    const top = el.getBoundingClientRect().top;
+                    if (top < trigger) {
+                        el.classList.add('active');
+                    }
+                });
+            };
+            window.addEventListener('scroll', handleReveal, { passive: true });
+            handleReveal();
+        }
+
+        function initNeuralCanvas() {
+            const canvas = document.getElementById('neuralCanvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.vx = (Math.random() - 0.5) * 0.5;
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                    this.size = Math.random() * 2;
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    if (this.x < 0 || this.x > width) this.vx *= -1;
+                    if (this.y < 0 || this.y > height) this.vy *= -1;
+                }
+                draw() {
+                    ctx.fillStyle = 'rgba(45, 212, 191, 0.5)';
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            const particles = Array.from({ length: 50 }, () => new Particle());
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    p.update();
+                    p.draw();
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const q = particles[j];
+                        const dx = p.x - q.x;
+                        const dy = p.y - q.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 150) {
+                            ctx.strokeStyle = `rgba(45, 212, 191, ${0.1 - dist / 1500})`;
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(q.x, q.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+
+        function initTerminal() {
+            const content = document.getElementById('terminal-content');
+            const cursor = document.getElementById('typewriter-cursor');
+            const shell = document.getElementById('terminal-body');
+            if (!content || !cursor) return;
+
+            const lines = [
+                'boot: loading 4Set architecture...',
+                'daemon: async processor online (Gen 3)',
+                'queue: syncing Qualtrics > Supabase',
+                'watcher: VBA legacy bridge healthy',
+                'ops: cognitive stack ready'
+            ];
+
+            let lineIndex = 0;
+            let charIndex = 0;
+
+            const typeNext = () => {
+                const line = lines[lineIndex];
+                cursor.textContent = line.slice(0, charIndex);
+                charIndex += 1;
+
+                if (charIndex <= line.length) {
+                    requestAnimationFrame(typeNext);
+                } else {
+                    const div = document.createElement('div');
+                    div.className = 'text-slate-300';
+                    div.textContent = `> ${line}`;
+                    content.appendChild(div);
+                    if (shell) shell.scrollTop = shell.scrollHeight;
+                    lineIndex += 1;
+                    charIndex = 0;
+                    if (lineIndex < lines.length) {
+                        setTimeout(typeNext, 400);
+                    } else {
+                        cursor.textContent = '';
+                    }
+                }
+            };
+
+            typeNext();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initNavbar({
+                activePage: 'technology',
+                sections: [
+                    { id: 'ecosystem', label: 'Ecosystem' },
+                    { id: 'broadcast', label: 'Broadcast' },
+                    { id: 'stories', label: 'Stories' },
+                    { id: 'timeline', label: 'Timeline' },
+                    { id: 'contact', label: 'Contact' }
+                ],
+                themeColor: 'cyber',
+                isDark: true
+            });
+
+            if (window.lucide && typeof lucide.createIcons === 'function') {
+                lucide.createIcons();
+            }
+
+            initReveal();
+            initNeuralCanvas();
+            initTerminal();
+        });
+    </script>
+    <script>
+        // Ensure Lucide icons render for modal content created later
+        document.addEventListener('githubCardsLoaded', () => {
+            if (window.lucide && typeof lucide.createIcons === 'function') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

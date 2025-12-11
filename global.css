@@ -1,0 +1,322 @@
+/* GLOBAL STYLES – shared across all facets */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap');
+
+:root {
+    --scroll-thumb: #2dd4bf;
+    --scroll-track: #0f172a;
+    --glass-border: rgba(45, 212, 191, 0.1);
+    --glass-bg: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: #0f172a;
+    color: #cbd5e1;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+.font-mono {
+    font-family: 'Space Grotesk', monospace;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--scroll-track); }
+::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #14b8a6; }
+
+/* Canvas background */
+#neuralCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+/* Glass system */
+.glass-panel {
+    background: rgba(30, 41, 59, 0.7);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.glass-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-card:hover {
+    border-color: rgba(45, 212, 191, 0.5);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px -10px rgba(45, 212, 191, 0.2);
+}
+
+.glass-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom right, rgba(255,255,255,0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.glass-card:hover::after { opacity: 1; }
+
+/* Utilities */
+.text-gradient {
+    background: linear-gradient(to right, #2dd4bf, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Reveal animation */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Float / pulse / spin */
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+.animate-float { animation: float 6s ease-in-out infinite; }
+
+@keyframes pulse-slow { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+.animate-pulse-slow { animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+@keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.animate-spin-slow { animation: spin-slow 12s linear infinite; }
+
+/* Entry gate structural helpers */
+.navbar { position: fixed; top: 0; left: 0; width: 100%; z-index: 50; }
+.navbar-inner { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; height: 5rem; display: flex; align-items: center; justify-content: space-between; }
+
+.entry-gate { min-height: 100vh; padding-top: 6rem; padding-bottom: 4rem; display: flex; align-items: center; }
+.entry-gate-inner { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+.entry-gate-header { max-width: 40rem; margin: 0 auto; text-align: center; }
+.entry-gate-eyebrow { font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; color: #22c1b1; }
+.entry-gate-heading { font-size: 2.25rem; font-weight: 800; line-height: 1.1; margin-top: 0.75rem; }
+.entry-gate-description { margin-top: 1rem; margin-left: auto; margin-right: auto; max-width: 32rem; color: #94a3b8; }
+
+.entry-gate-layout {
+    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    align-items: center;
+}
+
+@media (min-width: 1024px) {
+    .entry-gate-layout {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .entry-gate-copy {
+        flex: 1;
+        max-width: 35rem;
+        text-align: left;
+    }
+    .entry-gate-header {
+        text-align: left;
+        margin: 0;
+    }
+    .entry-gate-description {
+        margin-left: 0;
+    }
+}
+
+/* --- CYBER NETWORK BRAIN STYLES --- */
+
+.brain-map-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0;
+    perspective: 1000px;
+}
+
+#brainMapSVG {
+    width: 100%;
+    max-width: 700px; /* Optimized size */
+    height: auto;
+    overflow: visible;
+    animation: brain-float 6s ease-in-out infinite;
+}
+
+@keyframes brain-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* --- The Network Parts --- */
+
+/* The Invisible Hit Area (Solves the gap hover issue) */
+.hit-area {
+    fill: transparent; /* Invisible */
+    stroke: none;
+    pointer-events: all; /* Captures mouse events */
+    transition: all 0.3s;
+}
+
+.network-node {
+    r: 5.5;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    fill: #1e293b;
+    stroke-width: 2px;
+    pointer-events: none; /* Let clicks pass to the hit area/group */
+}
+
+.network-edge {
+    stroke: #334155; /* Slate 700 */
+    stroke-width: 1;
+    transition: all 0.3s ease;
+    stroke-linecap: round;
+    pointer-events: none;
+}
+
+/* Zone Colors */
+.zone-counselling .network-node, .zone-counselling .network-edge { stroke: #4a86bf; }
+.zone-project .network-node,     .zone-project .network-edge     { stroke: #c0504d; }
+.zone-education .network-node,   .zone-education .network-edge   { stroke: #9bbb59; }
+.zone-technology .network-node,  .zone-technology .network-edge  { stroke: #8064a2; }
+
+/* --- Hover Interactions --- */
+
+/* 1. Scale up nodes */
+.brain-section:hover .network-node {
+    fill: currentColor;
+    r: 8;
+    filter: drop-shadow(0 0 6px currentColor);
+}
+
+/* 2. Brighten lines */
+.brain-section:hover .network-edge {
+    stroke-opacity: 1;
+    stroke-width: 3px;
+    filter: drop-shadow(0 0 4px currentColor);
+}
+
+/* 3. Dim others */
+#brainMapSVG:hover .brain-section:not(:hover) {
+    opacity: 0.15;
+    filter: grayscale(0.6);
+    transition: opacity 0.4s ease;
+}
+
+/* --- Connector Lines & Text --- */
+
+.connector-line {
+    fill: none;
+    stroke-width: 2px;
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300; /* Hidden start */
+    transition: stroke-dashoffset 0.5s ease-out; /* Fast draw */
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+.connector-dot {
+    opacity: 0;
+    transition: opacity 0.2s ease 0.4s; /* Delay until line is drawn */
+    fill: white;
+    pointer-events: none;
+}
+
+.brain-highlight {
+    pointer-events: none;
+}
+
+.highlight-edge {
+    stroke-width: 2px;
+    stroke-opacity: 0.35;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 6px currentColor);
+}
+
+.brain-label-group {
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s;
+    pointer-events: none;
+}
+
+.brain-section:hover .connector-line { stroke-dashoffset: 0; }
+.brain-section:hover .connector-dot { opacity: 1; }
+.brain-section:hover .brain-label-group { opacity: 1; }
+
+.brain-label-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    fill: white;
+}
+
+.brain-label-sub {
+    font-family: 'Space Grotesk', monospace;
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    fill: rgba(255,255,255,0.7);
+}
+
+/* --- Brain Map Visualization --- */
+.network-edge {
+    stroke: #334155; /* Slate 700 */
+    stroke-width: 1;
+    transition: all 0.3s ease;
+}
+
+.network-node {
+    fill: #475569; /* Slate 600 */
+    transition: all 0.3s ease;
+    r: 3;
+}
+
+.hit-area {
+    fill: transparent;
+    cursor: pointer;
+}
+
+/* Zone: Education (Green) */
+.zone-education .network-edge { stroke: rgba(34, 197, 94, 0.3); }
+.zone-education .network-node { fill: #22c55e; }
+.zone-education:hover .network-edge { stroke: #22c55e; opacity: 1; stroke-width: 1.5; }
+.zone-education:hover .network-node { fill: #4ade80; filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.6)); r: 4; }
+
+/* Zone: Counselling (Orange) */
+.zone-counselling .network-edge { stroke: rgba(249, 115, 22, 0.3); }
+.zone-counselling .network-node { fill: #f97316; }
+.zone-counselling:hover .network-edge { stroke: #f97316; opacity: 1; stroke-width: 1.5; }
+.zone-counselling:hover .network-node { fill: #fb923c; filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.6)); r: 4; }
+
+/* Zone: Technology (Purple/Cyan) - Matching SVG connector #8064a2 */
+.zone-technology .network-edge { stroke: rgba(128, 100, 162, 0.3); }
+.zone-technology .network-node { fill: #8064a2; }
+.zone-technology:hover .network-edge { stroke: #8064a2; opacity: 1; stroke-width: 1.5; }
+.zone-technology:hover .network-node { fill: #a78bfa; filter: drop-shadow(0 0 8px rgba(128, 100, 162, 0.6)); r: 4; }
+
+/* Zone: Project Management (Red) */
+.zone-project .network-edge { stroke: rgba(239, 68, 68, 0.3); }
+.zone-project .network-node { fill: #ef4444; }
+.zone-project:hover .network-edge { stroke: #ef4444; opacity: 1; stroke-width: 1.5; }
+.zone-project:hover .network-node { fill: #f87171; filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.6)); r: 4; }

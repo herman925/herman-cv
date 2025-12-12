@@ -104,11 +104,16 @@
     </section>
 
     <!-- Digital Ecosystem & Codebase (File Explorer) -->
-    <section id="ecosystem" class="py-24 relative bg-cyber-950/50 min-h-[800px]">
+    <section id="ecosystem" class="py-24 relative min-h-[800px]">
         <div class="container mx-auto px-6">
             <div class="text-center mb-12 reveal">
                 <h2 class="text-4xl font-bold text-white mb-2">Digital <span class="text-cyber-400">Ecosystem</span></h2>
                 <p class="text-slate-400 max-w-xl mx-auto">Explore the codebase. Navigate through production systems, research tools, and prototypes.</p>
+                <!-- Navigation Hint -->
+                <p class="text-cyber-400/70 text-sm mt-3 flex items-center justify-center gap-2 animate-pulse">
+                    <i data-lucide="mouse-pointer-click" class="w-4 h-4"></i>
+                    <span>Click folders to explore • Double-click files to preview</span>
+                </p>
             </div>
 
             <!-- File Explorer Interface -->
@@ -430,6 +435,43 @@
                     </div>
                 </div>
 
+                <!-- Story 4: Beyond the Workplace (Community Impact) -->
+                <div class="flex flex-col md:flex-row-reverse items-center gap-8 mt-16 reveal group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
+                    <div class="md:w-1/2">
+                        <span class="text-cyber-400 font-mono text-sm tracking-wider uppercase">2025 • Social Innovation</span>
+                        <h3 class="text-2xl font-bold text-white mt-2 mb-4 group-hover:text-cyber-400 transition-colors">Beyond the Workplace</h3>
+                        <p class="text-slate-400 leading-relaxed mb-6">
+                            For years, my systems focused on making teams faster, calmer, and more reliable. In 2025, I started pushing that same mindset outward —
+                            building for the community, not just the organisation.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 rounded-full bg-cyber-900/50 text-xs text-cyber-300 border border-cyber-500/50">Equal Play • Awardee</span>
+                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300 border border-slate-700">BESGO FoundRise</span>
+                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300 border border-slate-700">Assistive Tech</span>
+                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300 border border-slate-700">AI + Games</span>
+                        </div>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-cyber-500 flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.3)] group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="heart-handshake" class="w-6 h-6 text-cyber-400"></i>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 md:text-right">
+                        <div class="glass-card p-6 rounded-xl border border-slate-700/50 group-hover:border-cyber-500/30 transition-colors">
+                            <h4 class="text-white font-bold mb-2 flex items-center gap-2 justify-end">
+                                <i data-lucide="music" class="w-4 h-4 text-cyber-400"></i> Equal Play (2025)
+                            </h4>
+                            <p class="text-sm text-slate-400 leading-relaxed mb-4">
+                                A musical/rehab gadget: a glove with gentle air-bag guidance for hand posture, paired with an AI-powered piano score writer.
+                                The goal is to help children build piano habits through fun games, guided practice, and AI-generated learning content.
+                            </p>
+                            <p class="text-xs text-slate-500">
+                                Supported through the CUHK Business School BESGO FoundRise (GBA Youth Entrepreneurship Support Scheme).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
@@ -681,35 +723,335 @@
             if (!content || !cursor) return;
 
             const lines = [
-                'boot: loading 4Set architecture...',
-                'daemon: async processor online (Gen 3)',
-                'queue: syncing Qualtrics > Supabase',
-                'watcher: VBA legacy bridge healthy',
-                'ops: cognitive stack ready'
+                // Session start
+                { text: 'connect herman-chan --profile=full', type: 'command', thinkMs: () => 650 + Math.floor(Math.random() * 450) },
+                { text: 'Password: ', type: 'prompt', mask: true, input: 'Hrmn2025!', typo: 'Herman2025!' },
+                { text: '→ Authentication failed. Try again.', type: 'system' },
+                { text: 'Password: ', type: 'prompt', mask: true, input: 'Herman2025!' },
+                { text: '→ Authenticated. Establishing secure connection...', type: 'system' },
+                { text: '→ BSocSc (HKBU) • MASGC (CUHK) • 15+ years exp', type: 'response' },
+                { text: '→ Profile loaded. Welcome.', type: 'success' },
+                { text: '', type: 'break' },
+                
+                // Identity
+                { text: 'whois --taget', type: 'command', typo: 'whoami --target' },
+                { text: '→ Herman Chan | Digital Humanist', type: 'response' },
+                { text: '→ "Tech should serve people, not vice versa"', type: 'philosophy' },
+                { text: '→ Hong Kong • Bilingual • 90wpm', type: 'response' },
+                { text: '', type: 'break' },
+                
+                // Core programming - reordered per user's ranking
+                { text: 'list skiils --dev', type: 'command', typo: 'list skills --dev' },
+                { text: '→ Excel ........... ████████████ Master [LinkedIn Certified Expert]', type: 'skill' },
+                { text: '→ Python .......... ██████████░░ Strong', type: 'skill' },
+                { text: '→ PowerShell ...... ██████████░░ Strong', type: 'skill' },
+                { text: '→ HTML/CSS ........ █████████░░░ Proficient', type: 'skill' },
+                { text: '→ JavaScript ...... ████████░░░░ Good', type: 'skill' },
+                { text: '→ JSON/TOML ....... ████████░░░░ Good', type: 'skill' },
+                { text: '→ SQL/MySQL ....... ███████░░░░░ Competent', type: 'skill' },
+                { text: '→ VBA ............. █████░░░░░░░ Rusty (legacy)', type: 'skill' },
+                { text: '→ C#/C++ .......... ████░░░░░░░░ Basic', type: 'skill' },
+                { text: '', type: 'break' },
+                
+                // Creative Media Production - ordered by mastery
+                { text: 'list skills --media', type: 'command', thinkMs: () => 800 + Math.floor(Math.random() * 500) },
+                { text: '→ Lightroom ....... ████████████ Master', type: 'skill' },
+                { text: '→ Lovable/Stitch .. ████████████ Master', type: 'skill' },
+                { text: '→ Premiere Pro .... ██████████░░ Strong', type: 'skill' },
+                { text: '→ Photoshop ....... ██████████░░ Strong', type: 'skill' },
+                { text: '→ Figma ........... █████████░░░ Proficient', type: 'skill' },
+                { text: '→ Illustrator ..... ████████░░░░ Good', type: 'skill' },
+                { text: '', type: 'break' },
+                
+                // Certifications
+                { text: 'show certs', type: 'command', thinkMs: () => 900 + Math.floor(Math.random() * 700) },
+                { text: '→ LinkedIn: Excel (Certified)', type: 'cert' },
+                { text: '→ (Other non-IT certificates omitted)', type: 'system' },
+                { text: '', type: 'break' },
+                
+                // DevOps & Infrastructure
+                { text: 'query infra', type: 'command' },
+                { text: '→ IDEs: VSCode, Windsurf, Antigravity, Cursor, Jules', type: 'infra' },
+                { text: '→ Containers: Docker, headless daemons', type: 'infra' },
+                { text: '→ APIs: REST, OpenRouter, JotForm, Qualtrics, Supabase', type: 'infra' },
+                { text: '→ Package Managers: npm, pip, Chocolatey, winget', type: 'infra' },
+                { text: '→ Frameworks: Tailwind, React, Node', type: 'infra' },
+                { text: '', type: 'break' },
+                
+                // AI Ecosystem - comprehensive
+                { text: 'lsit ai-stack', type: 'command', typo: 'list ai-stack --all' },
+                { text: '→ LLMs: Claude, GPT, Gemini, Copilot', type: 'ai' },
+                { text: '→ Agents: Manus, Genspark, NotebookLM', type: 'ai' },
+                { text: '→ Creative: Midjourney, Suno, DALL-E', type: 'ai' },
+                { text: '→ Other: POE, NanoBanana, Ideogram', type: 'ai' },
+                { text: '→ Infra: MCP servers, RAG, embeddings', type: 'ai' },
+                { text: '', type: 'break' },
+                
+                // Data & Statistics
+                { text: 'list tols --stats', type: 'command', typo: 'list tools --stats' },
+                { text: '→ Stats: SPSS (Advanced), R, M-Plus', type: 'data' },
+                { text: '→ Python: pandas, numpy, scipy, pystats', type: 'data' },
+                { text: '→ BI: PowerBI, PowerQuery, Salesforce', type: 'data' },
+                { text: '', type: 'break' },
+                
+                // The 4Set showcase
+                { text: 'cat projects/4set.md', type: 'command' },
+                { text: '→ 4Set-Server (Gen 3)', type: 'system' },
+                { text: '→ Autonomous hybrid-local infrastructure', type: 'achievement' },
+                { text: '→ 8,000+ students • 110+ schools', type: 'achievement' },
+                { text: '→ 6 months uptime, zero crashes', type: 'achievement' },
+                { text: '', type: 'break' },
+
+                // Social-impact innovation
+                { text: 'show projects --social-impact', type: 'command', thinkMs: () => 1100 + Math.floor(Math.random() * 900) },
+                { text: '→ CUHK Business School: BESGO FoundRise (GBA Youth Entrepreneurship Support Scheme)', type: 'achievement' },
+                { text: '→ 2025 Awardee: Equal Play', type: 'achievement' },
+                { text: '→ Building a musical/rehab glove + AI piano score writer', type: 'achievement' },
+                { text: '→ Fun games + AI-generated practice content for kids', type: 'achievement' },
+                { text: '→ Gesture-forming support via gentle air-bag pressure guidance', type: 'achievement' },
+                { text: '', type: 'break' },
+                
+                // Superpower
+                { text: 'get superpwoer', type: 'command', typo: 'get superpower' },
+                { text: '→ UNIQUE COMBO:', type: 'system' },
+                { text: '→ Psychology degree + Self-taught dev', type: 'superpower' },
+                { text: '→ Trained counsellor (MASGC)', type: 'superpower' },
+                { text: '→ Speaks user, not just code', type: 'superpower' },
+                { text: '', type: 'break' },
+                
+                // Values
+                { text: 'cat values.json', type: 'command' },
+                { text: '→ { altruism, creativity, equality }', type: 'trait' },
+                { text: '→ { "perfectionist who ships" }', type: 'trait' },
+                { text: '', type: 'break' },
+                
+                // Status
+                { text: 'staus', type: 'command', typo: 'status' },
+                { text: '→ Building something meaningful', type: 'success' },
+                { text: '→ Always learning, always shipping', type: 'success' },
+                { text: '', type: 'break' },
+                
+                // Loop
+                { text: './refresh', type: 'command' },
+                { text: '→ Cycling...', type: 'system' },
+                { text: '', type: 'break' }
             ];
+
+            const typeColors = {
+                command: 'text-green-400',
+                system: 'text-slate-500 text-xs',
+                prompt: 'text-slate-300',
+                response: 'text-slate-300',
+                success: 'text-emerald-400',
+                skill: 'text-cyan-400 font-mono text-xs',
+                cert: 'text-lime-400 text-xs',
+                ai: 'text-purple-400',
+                data: 'text-indigo-400',
+                infra: 'text-orange-400',
+                creative: 'text-pink-300',
+                philosophy: 'text-pink-400 italic',
+                style: 'text-blue-400',
+                superpower: 'text-yellow-400 font-medium',
+                achievement: 'text-amber-400',
+                trait: 'text-orange-300 font-mono text-xs',
+                info: 'text-slate-400',
+                break: 'hidden'
+            };
 
             let lineIndex = 0;
             let charIndex = 0;
+            let typoPhase = 0; // 0=typing typo, 1=pausing, 2=deleting, 3=typing correct
+            let didThinkForLine = false; // track if we already paused for this line
+            let didPreTypeDelay = false; // track if we added delay before human typing
+
+            const getTypingDelay = (isHumanInput, char, lineObj) => {
+                if (isHumanInput) {
+                    const base = 80 + Math.random() * 160; // 80-240ms
+                    if (Math.random() < 0.06) return base + 350 + Math.random() * 650;
+                    if (char === ' ') return base + 80;
+                    if (lineObj && lineObj.type === 'prompt') return base + 40;
+                    return base;
+                }
+                return 12 + Math.random() * 25;
+            };
 
             const typeNext = () => {
-                const line = lines[lineIndex];
-                cursor.textContent = line.slice(0, charIndex);
-                charIndex += 1;
+                const lineObj = lines[lineIndex];
+                const isCommand = lineObj.type === 'command';
+                const isPrompt = lineObj.type === 'prompt';
+                const isHumanInput = isCommand || isPrompt;
+                const hasTypo = Boolean(lineObj.typo) && isHumanInput;
 
-                if (charIndex <= line.length) {
-                    requestAnimationFrame(typeNext);
-                } else {
-                    const div = document.createElement('div');
-                    div.className = 'text-slate-300';
-                    div.textContent = `> ${line}`;
-                    content.appendChild(div);
+                // Handle "thinking" pause before typing (only once per line)
+                const thinkMs = typeof lineObj.thinkMs === 'function' ? lineObj.thinkMs() : lineObj.thinkMs;
+                if (charIndex === 0 && !didThinkForLine && isHumanInput && typeof thinkMs === 'number' && thinkMs > 0) {
+                    didThinkForLine = true;
+                    setTimeout(typeNext, thinkMs);
+                    return;
+                }
+                
+                // Add delay before human starts typing (after prompt appears or at line start)
+                if (charIndex === 0 && !didPreTypeDelay && isHumanInput) {
+                    didPreTypeDelay = true;
+                    const preDelay = 300 + Math.random() * 400; // 300-700ms before typing starts
+                    setTimeout(typeNext, preDelay);
+                    return;
+                }
+                
+                const promptLabel = isPrompt ? (lineObj.text || '') : '';
+                const promptInput = isPrompt ? (lineObj.input || '') : '';
+                const promptTypo = isPrompt ? (lineObj.typo || '') : '';
+
+                let targetText = isPrompt ? promptInput : lineObj.text;
+                if (hasTypo && typoPhase < 2) {
+                    targetText = isPrompt ? promptInput : lineObj.text;
+                } else if (hasTypo && typoPhase >= 2) {
+                    targetText = isPrompt ? promptTypo : lineObj.typo;
+                }
+                
+                // Handle breaks (spacing)
+                if (lineObj.type === 'break') {
+                    const spacer = document.createElement('div');
+                    spacer.className = 'h-3';
+                    content.appendChild(spacer);
                     if (shell) shell.scrollTop = shell.scrollHeight;
                     lineIndex += 1;
-                    charIndex = 0;
+                    typoPhase = 0;
+                    didThinkForLine = false;
+                    didPreTypeDelay = false;
                     if (lineIndex < lines.length) {
-                        setTimeout(typeNext, 400);
+                        // Longer pause between blocks
+                        setTimeout(typeNext, 500 + Math.random() * 300);
                     } else {
-                        cursor.textContent = '';
+                        setTimeout(() => {
+                            content.innerHTML = '';
+                            lineIndex = 0;
+                            charIndex = 0;
+                            typoPhase = 0;
+                            didThinkForLine = false;
+                            didPreTypeDelay = false;
+                            typeNext();
+                        }, 4000);
+                    }
+                    return;
+                }
+                
+                // Handle typo correction phases
+                if (hasTypo) {
+                    // Find where typo and correct version diverge
+                    const typoText = isPrompt ? promptInput : lineObj.text;
+                    const correctText = isPrompt ? promptTypo : lineObj.typo;
+                    let divergePoint = 0;
+                    for (let i = 0; i < Math.min(typoText.length, correctText.length); i++) {
+                        if (typoText[i] === correctText[i]) {
+                            divergePoint = i + 1;
+                        } else {
+                            break;
+                        }
+                    }
+                    
+                    if (typoPhase === 0) {
+                        // Phase 0: Typing the typo
+                        const prefix = isCommand ? '<span class="text-slate-500 mr-1">$</span> ' : '';
+                        const promptPrefix = isPrompt ? '<span class="text-slate-400">' + promptLabel + '</span>' : '';
+                        const rendered = isPrompt
+                            ? (lineObj.mask ? '*'.repeat(Math.max(0, charIndex)) : typoText.slice(0, charIndex))
+                            : (isCommand ? typoText.slice(0, charIndex) : typoText.slice(0, charIndex));
+                        cursor.innerHTML = prefix + promptPrefix + '<span class="text-green-400">' + rendered + '</span>';
+                        charIndex += 1;
+                        
+                        if (charIndex > typoText.length) {
+                            typoPhase = 1;
+                            charIndex = typoText.length;
+                            // Pause longer - "noticing the mistake", sometimes longer
+                            setTimeout(typeNext, 400 + Math.random() * 500);
+                            return;
+                        }
+                        const typedChar = typoText[charIndex - 1] || '';
+                        setTimeout(typeNext, getTypingDelay(true, typedChar, lineObj));
+                        return;
+                    } else if (typoPhase === 1) {
+                        // Phase 1: Deleting ONLY the typo part (backspace to diverge point)
+                        const prefix = isCommand ? '<span class="text-slate-500 mr-1">$</span> ' : '';
+                        const promptPrefix = isPrompt ? '<span class="text-slate-400">' + promptLabel + '</span>' : '';
+                        const rendered = isPrompt
+                            ? (lineObj.mask ? '*'.repeat(Math.max(0, charIndex)) : typoText.slice(0, charIndex))
+                            : (isCommand ? typoText.slice(0, charIndex) : typoText.slice(0, charIndex));
+                        cursor.innerHTML = prefix + promptPrefix + '<span class="text-green-400">' + rendered + '</span>';
+                        charIndex -= 1;
+                        
+                        // Stop backspacing when we reach the point where typo and correct text match
+                        if (charIndex < divergePoint) {
+                            typoPhase = 2;
+                            charIndex = divergePoint;
+                            // Brief pause before retyping the corrected portion
+                            setTimeout(typeNext, 150 + Math.random() * 100);
+                            return;
+                        }
+                        // Backspace is faster than typing
+                        setTimeout(typeNext, 35 + Math.random() * 20);
+                        return;
+                    } else {
+                        // Phase 2+: Typing the correct version (from diverge point onward)
+                        targetText = correctText;
+                    }
+                }
+                
+                // Normal typing
+                const prefix = isCommand ? '<span class="text-slate-500 mr-1">$</span> ' : '';
+                const promptPrefix = isPrompt ? '<span class="text-slate-400">' + promptLabel + '</span>' : '';
+                const textClass = isCommand || isPrompt ? 'text-green-400' : (typeColors[lineObj.type] || 'text-slate-300');
+                const rendered = isPrompt
+                    ? (lineObj.mask ? '*'.repeat(Math.max(0, charIndex)) : targetText.slice(0, charIndex))
+                    : targetText.slice(0, charIndex);
+                cursor.innerHTML = prefix + promptPrefix + '<span class="' + textClass + '">' + rendered + '</span>';
+                charIndex += 1;
+
+                if (charIndex <= targetText.length) {
+                    const char = targetText[charIndex - 1] || '';
+                    setTimeout(typeNext, getTypingDelay(isHumanInput, char, lineObj));
+                } else {
+                    // Line complete - commit to content
+                    const div = document.createElement('div');
+                    div.className = 'flex items-start gap-1 transition-all duration-200';
+                    
+                    if (isCommand) {
+                        div.innerHTML = '<span class="text-slate-500 select-none">$</span> <span class="text-green-400">' + (hasTypo ? lineObj.typo : lineObj.text) + '</span>';
+                    } else if (isPrompt) {
+                        const committed = (hasTypo ? promptTypo : promptInput);
+                        const committedRendered = lineObj.mask ? '*'.repeat(committed.length) : committed;
+                        div.innerHTML = '<span class="text-slate-400">' + promptLabel + '</span><span class="text-green-400">' + committedRendered + '</span>';
+                    } else {
+                        div.className = typeColors[lineObj.type] || 'text-slate-300';
+                        div.textContent = lineObj.text;
+                    }
+                    
+                    content.appendChild(div);
+                    if (shell) shell.scrollTop = shell.scrollHeight;
+                    
+                    // Reset for next line
+                    lineIndex += 1;
+                    charIndex = 0;
+                    typoPhase = 0;
+                    didThinkForLine = false;
+                    didPreTypeDelay = false;
+                    cursor.innerHTML = '';
+                    
+                    if (lineIndex < lines.length) {
+                        const nextIsCommand = lines[lineIndex].type === 'command';
+                        // Much longer pause before commands (user thinking what to type)
+                        const delay = nextIsCommand ? 1200 + Math.random() * 800 : 100 + Math.random() * 50;
+                        setTimeout(typeNext, delay);
+                    } else {
+                        setTimeout(() => {
+                            content.innerHTML = '';
+                            lineIndex = 0;
+                            charIndex = 0;
+                            typoPhase = 0;
+                            didThinkForLine = false;
+                            didPreTypeDelay = false;
+                            typeNext();
+                        }, 4000);
                     }
                 }
             };

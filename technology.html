@@ -18,7 +18,7 @@
     <!-- Tailwind Configuration -->
     <script src="js/tailwind-config.js"></script>
 </head>
-<body class="facet-tech bg-void text-slate-300 antialiased selection:bg-cyber-500 selection:text-void overflow-x-hidden">
+<body class="facet-tech bg-void text-cyber-400 antialiased selection:bg-cyber-500 selection:text-void overflow-x-hidden">
 
     <!-- Animated Neural Background -->
     <canvas id="neuralCanvas"></canvas>
@@ -29,6 +29,14 @@
     <!-- Hero Section -->
     <section class="relative py-32 flex items-center">
         <div class="container mx-auto px-6 relative z-10">
+            
+            <!-- Core Identity Statement - Full Width -->
+            <div class="mb-10 px-6 py-4 rounded-2xl bg-gradient-to-r from-cyber-900/40 via-slate-800/30 to-orange-900/20 border border-cyber-400/20 backdrop-blur-sm reveal">
+                <p class="text-center text-base md:text-lg text-slate-200 italic font-light tracking-wide">
+                    "A technologist whose skill was born from <span class="text-cyber-400 font-semibold">humility</span>, and whose goal is to lead with <span class="text-orange-400 font-semibold">empathy</span>."
+                </p>
+            </div>
+
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 
                 <div class="lg:col-span-7 space-y-8 reveal relative">
@@ -36,12 +44,11 @@
 
                     <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700 backdrop-blur-sm">
                         <span class="w-2 h-2 rounded-full bg-cyber-400 animate-pulse"></span>
-                        <span class="text-xs font-mono text-cyber-300 uppercase tracking-widest">System Status: Cognitive-First</span>
+                        <span class="text-xs font-mono text-cyber-400 uppercase tracking-widest">System Status: Cognitive-First</span>
                     </div>
                     
-                    <h1 class="text-5xl md:text-7xl font-bold font-tech leading-tight text-white">
-                        Engineering for the <br>
-                        <span class="text-gradient glitch" data-text="Human Mind">Human Mind</span>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold font-tech leading-tight text-white">
+                        Engineering for the <span class="text-gradient glitch" data-text="Human Mind">Human Mind</span>
                     </h1>
                     
                     <p class="text-xl text-slate-400 max-w-2xl leading-relaxed border-l-2 border-cyber-500/30 pl-6">
@@ -55,10 +62,10 @@
                                 <i data-lucide="code-2" class="w-4 h-4"></i> GitHub
                             </span>
                         </a>
-                        <a href="#ecosystem" class="px-6 py-3 bg-slate-800 border border-slate-600 text-slate-300 font-semibold rounded-lg hover:border-cyber-400 hover:text-cyber-400 transition-colors flex items-center justify-center gap-2 flex-1 md:flex-none text-center min-w-[160px]">
+                        <a href="#ecosystem" class="px-6 py-3 bg-slate-800 border border-slate-600 text-cyber-400 font-semibold rounded-lg hover:border-cyber-400 hover:text-cyber-400 transition-colors flex items-center justify-center gap-2 flex-1 md:flex-none text-center min-w-[160px]">
                             <i data-lucide="folder-git-2" class="w-4 h-4"></i> Projects
                         </a>
-                        <a href="#broadcast" class="px-6 py-3 bg-slate-800 border border-slate-600 text-slate-300 font-semibold rounded-lg hover:border-cyber-400 hover:text-cyber-400 transition-colors flex items-center justify-center gap-2 flex-1 md:flex-none text-center min-w-[160px]">
+                        <a href="#broadcast" class="px-6 py-3 bg-slate-800 border border-slate-600 text-cyber-400 font-semibold rounded-lg hover:border-cyber-400 hover:text-cyber-400 transition-colors flex items-center justify-center gap-2 flex-1 md:flex-none text-center min-w-[160px]">
                             <i data-lucide="film" class="w-4 h-4"></i> Watch Videos
                         </a>
                     </div>
@@ -79,11 +86,11 @@
                         </div>
                         <!-- Terminal Body -->
                         <div class="p-6 font-mono text-sm h-[320px] overflow-y-auto scrollbar-hide" id="terminal-body">
-                            <div id="terminal-content" class="space-y-2 text-slate-300"></div>
+                            <div id="terminal-content" class="space-y-2 text-cyber-400"></div>
                             <div class="mt-2 flex items-center">
                                 <span class="text-green-400 mr-2">➜</span>
                                 <span class="text-blue-400 mr-2">~</span>
-                                <span id="typewriter-cursor" class="text-slate-300"></span><span class="animate-pulse text-slate-300">_</span>
+                                <span id="typewriter-cursor" class="text-cyber-400"></span><span class="animate-pulse text-cyber-400">_</span>
                             </div>
                         </div>
                     </div>
@@ -98,7 +105,7 @@
             </div>
         </div>
         
-        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-slate-500 animate-bounce">
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-slate-400 animate-bounce">
             <i data-lucide="chevrons-down" class="w-6 h-6"></i>
         </div>
     </section>
@@ -143,7 +150,7 @@
                     
                     <!-- Search Bar (Visual Only) -->
                     <div class="hidden md:flex items-center gap-2 bg-slate-950/50 px-3 py-1.5 rounded border border-slate-700/50">
-                        <i data-lucide="search" class="w-3 h-3 text-slate-500"></i>
+                        <i data-lucide="search" class="w-3 h-3 text-slate-400"></i>
                         <span class="text-xs text-slate-600 font-mono">Search ecosystem...</span>
                     </div>
                 </div>
@@ -156,7 +163,7 @@
                 </div>
 
                 <!-- Status Bar -->
-                <div class="bg-slate-950 border-t border-slate-800 px-4 py-2 flex justify-between items-center text-[10px] font-mono text-slate-500">
+                <div class="bg-slate-950 border-t border-slate-800 px-4 py-2 flex justify-between items-center text-[10px] font-mono text-slate-400">
                     <div class="flex gap-4">
                         <span><span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-1"></span>System Online</span>
                         <span>14 Items</span>
@@ -231,7 +238,7 @@
                         <div class="p-6">
                             <h3 class="text-lg font-bold text-white mb-2 group-hover:text-cyber-400 transition-colors">Herman's Live Channel</h3>
                             <p class="text-slate-400 text-sm line-clamp-2">Join the live discussion on Tech, Culture, and Psychology on Bilibili.</p>
-                            <div class="mt-4 flex items-center gap-4 text-xs text-slate-500">
+                            <div class="mt-4 flex items-center gap-4 text-xs text-slate-400">
                                 <span class="flex items-center gap-1 text-cyber-400"><i data-lucide="radio" class="w-3 h-3"></i> Live Status</span>
                             </div>
                         </div>
@@ -257,7 +264,7 @@
                              </div>
                         </div>
                         <h4 class="text-white font-bold text-sm line-clamp-2 group-hover:text-cyber-400 transition-colors">《效率神器的浪漫與秩序 001》秒搜萬檔：一招擺脫搜尋煩惱！</h4>
-                        <p class="text-xs text-slate-500 mt-2">Live Tutorial</p>
+                        <p class="text-xs text-slate-400 mt-2">Live Tutorial</p>
                     </a>
 
                     <!-- Video 2 -->
@@ -268,7 +275,7 @@
                              </div>
                         </div>
                         <h4 class="text-white font-bold text-sm line-clamp-2 group-hover:text-cyber-400 transition-colors">AI：啟示與未來 - 多智能體！Genspark打破AI框架！</h4>
-                        <p class="text-xs text-slate-500 mt-2">Live Highlight 8/1</p>
+                        <p class="text-xs text-slate-400 mt-2">Live Highlight 8/1</p>
                     </a>
 
                     <!-- Video 3 -->
@@ -279,7 +286,7 @@
                              </div>
                         </div>
                         <h4 class="text-white font-bold text-sm line-clamp-2 group-hover:text-cyber-400 transition-colors">AI：從入門到未來 - 揭秘API！AI的核心技術竟是這個！？</h4>
-                        <p class="text-xs text-slate-500 mt-2">Live Highlight 6/1</p>
+                        <p class="text-xs text-slate-400 mt-2">Live Highlight 6/1</p>
                     </a>
 
                     <!-- Video 4 (Duplicate for Demo) -->
@@ -290,7 +297,7 @@
                              </div>
                         </div>
                         <h4 class="text-white font-bold text-sm line-clamp-2 group-hover:text-cyber-400 transition-colors">《效率神器的浪漫與秩序 001》秒搜萬檔：一招擺脫搜尋煩惱！</h4>
-                        <p class="text-xs text-slate-500 mt-2">Live Tutorial</p>
+                        <p class="text-xs text-slate-400 mt-2">Live Tutorial</p>
                     </a>
 
                     <!-- Video 5 (Duplicate for Demo) -->
@@ -301,7 +308,7 @@
                              </div>
                         </div>
                         <h4 class="text-white font-bold text-sm line-clamp-2 group-hover:text-cyber-400 transition-colors">AI：啟示與未來 - 多智能體！Genspark打破AI框架！</h4>
-                        <p class="text-xs text-slate-500 mt-2">Live Highlight 8/1</p>
+                        <p class="text-xs text-slate-400 mt-2">Live Highlight 8/1</p>
                     </a>
                 </div>
             </div>
@@ -316,62 +323,15 @@
                 <!-- Center Line -->
                 <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-px bg-gradient-to-b from-cyber-500/0 via-cyber-500/50 to-cyber-500/0 hidden md:block"></div>
 
-                <!-- Story: The 4Set Evolution -->
+                <!-- Story 1: The Reality Check (2015) - ORIGIN -->
                 <div class="flex flex-col md:flex-row items-center gap-8 mb-16 reveal group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
                     <div class="md:w-1/2 md:text-right">
-                        <span class="text-cyber-400 font-mono text-sm tracking-wider uppercase">2025 • Enterprise Architecture</span>
-                        <h3 class="text-2xl font-bold text-white mt-2 mb-4">The 4Set Evolution</h3>
+                        <span class="text-cyber-400 font-mono text-sm tracking-wider uppercase">2015 • Origin Story</span>
+                        <h3 class="text-2xl font-bold text-white mt-2 mb-4 group-hover:text-cyber-400 transition-colors">The Reality Check</h3>
                         <p class="text-slate-400 leading-relaxed mb-6">
-                            A 4-generation journey from a fragile Excel monolith to a distributed hybrid-cloud infrastructure. 
-                            Born from the "Data Starvation" of Gen 0, refined by the "Sneakernet" PWA of Gen 1, 
-                            saved by the "Ghost Monitor" of Gen 2, and perfected by the async power of Gen 3.
-                        </p>
-                        <div class="flex flex-wrap justify-end gap-2">
-                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300 border border-slate-700">Gen 0: Excel</span>
-                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300 border border-slate-700">Gen 1: PWA</span>
-                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300 border border-slate-700">Gen 2: Python</span>
-                            <span class="px-3 py-1 rounded-full bg-cyber-900/50 text-xs text-cyber-300 border border-cyber-500/50">Gen 3: Server</span>
-                        </div>
-                    </div>
-                    <div class="relative z-10">
-                        <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-cyber-500 flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.3)] group-hover:scale-110 transition-transform duration-300">
-                            <i data-lucide="layers" class="w-6 h-6 text-cyber-400"></i>
-                        </div>
-                    </div>
-                    <div class="md:w-1/2">
-                        <div class="glass-card p-6 rounded-xl border border-slate-700/50 group-hover:border-cyber-500/30 transition-colors">
-                            <h4 class="text-white font-bold mb-2 flex items-center gap-2">
-                                <i data-lucide="alert-triangle" class="w-4 h-4 text-yellow-400"></i> The Catalyst
-                            </h4>
-                            <p class="text-sm text-slate-400 italic mb-4">
-                                "The Qualtrics API was horrible. 1-second polling per record. It locked the UI and made mass uploads impossible."
-                            </p>
-                            <div class="space-y-3">
-                                <div class="flex items-center gap-3 text-sm text-slate-300">
-                                    <i data-lucide="x-circle" class="w-4 h-4 text-red-400"></i>
-                                    <span>Gen 2: Synchronous Polling (Fragile)</span>
-                                </div>
-                                <div class="flex items-center gap-3 text-sm text-slate-300">
-                                    <i data-lucide="arrow-down" class="w-4 h-4 text-slate-500 ml-0.5"></i>
-                                </div>
-                                <div class="flex items-center gap-3 text-sm text-white font-medium">
-                                    <i data-lucide="check-circle" class="w-4 h-4 text-green-400"></i>
-                                    <span>Gen 3: Async Background Daemon (Robust)</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Story 1: The Reality Check (2015) -->
-                <div class="flex flex-col md:flex-row items-center gap-8 mb-16 reveal group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
-                    <div class="md:w-1/2 md:text-right">
-                        <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-cyber-400 transition-colors">The Reality Check</h3>
-                        <p class="text-slate-400 text-sm mb-2">2015 · The Failed Interview</p>
-                        <p class="text-slate-400">
                             "I thought I was tech-savvy because I could design slides. Then I failed an interview because I couldn't do a VLOOKUP. I was humbled. That failure sparked a vow: never be incompetent again. I didn't just learn Excel; I mastered its very DNA."
                         </p>
-                        <div class="mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-xs text-cyber-400">
                             <i data-lucide="alert-triangle" class="w-3 h-3 text-yellow-400"></i> Humbled
                         </div>
                     </div>
@@ -387,15 +347,15 @@
                     </div>
                 </div>
 
-                <!-- Story 2: The First System (ISS HK) -->
+                <!-- Story 2: The First System (2017 - ISS HK) -->
                 <div class="flex flex-col md:flex-row-reverse items-center gap-8 mb-16 reveal group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
                     <div class="md:w-1/2">
-                        <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-cyber-400 transition-colors">The First System</h3>
-                        <p class="text-slate-400 text-sm mb-2">ISSHK · The "One-Stop Portal"</p>
-                        <p class="text-slate-400">
+                        <span class="text-cyber-400 font-mono text-sm tracking-wider uppercase">2017 • First Build</span>
+                        <h3 class="text-2xl font-bold text-white mt-2 mb-4 group-hover:text-cyber-400 transition-colors">The First System</h3>
+                        <p class="text-slate-400 leading-relaxed mb-6">
                             "200 active cases. No AI. No shortcuts. Just me, Stack Overflow, and 6 months of brute-force learning."
                         </p>
-                        <div class="mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-xs text-cyber-400">
                             <i data-lucide="hammer" class="w-3 h-3 text-red-400"></i> Grit
                         </div>
                     </div>
@@ -406,20 +366,20 @@
                     </div>
                     <div class="md:w-1/2 md:text-right">
                          <div class="glass-card p-5 rounded-lg text-sm text-slate-400 italic group-hover:border-cyber-500/50 transition-colors">
-                            I built a VBA-powered "One-Stop Portal" from scratch. It required learning SQL queries and complex macros on the fly. It was the most painful learning curve of my life, but it transformed a chaotic workflow into a precision engine for my team.
+                            I built a VBA-powered "One-Stop Portal" from scratch at ISSHK. It required learning SQL queries and complex macros on the fly. It was the most painful learning curve of my life, but it transformed a chaotic workflow into a precision engine for my team.
                         </div>
                     </div>
                 </div>
 
-                <!-- Story 3: Scaling Complexity -->
-                <div class="flex flex-col md:flex-row items-center gap-8 reveal group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
+                <!-- Story 3: Scaling Complexity (2018-2020 - EdUHK SEC) -->
+                <div class="flex flex-col md:flex-row items-center gap-8 mb-16 reveal group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
                     <div class="md:w-1/2 md:text-right">
-                        <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-cyber-400 transition-colors">Scaling Complexity</h3>
-                        <p class="text-slate-400 text-sm mb-2">From Excel to Full Stack</p>
-                        <p class="text-slate-400">
+                        <span class="text-cyber-400 font-mono text-sm tracking-wider uppercase">2018–2020 • Levelling Up</span>
+                        <h3 class="text-2xl font-bold text-white mt-2 mb-4 group-hover:text-cyber-400 transition-colors">Scaling Complexity</h3>
+                        <p class="text-slate-400 leading-relaxed mb-6">
                             "That first victory proved I could build anything if I dug deep enough. The tools just got better."
                         </p>
-                        <div class="mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-xs text-cyber-400">
                             <i data-lucide="layers" class="w-3 h-3 text-blue-400"></i> Evolution
                         </div>
                     </div>
@@ -430,42 +390,89 @@
                     </div>
                     <div class="md:w-1/2">
                          <div class="glass-card p-5 rounded-lg text-sm text-slate-400 italic group-hover:border-cyber-500/50 transition-colors">
-                            From the <strong>SEC Departmental OSP</strong> to the <strong>4Set-Server</strong> and <strong>Video-Tagger</strong>, I applied that same rigorous "mechanism-first" mindset. I don't just use software; I engineer workflows that empower human connection.
+                            At EdUHK's SEC Department, I built the <strong>SEC Departmental OSP</strong> — a full workflow automation suite for teacher training programmes. Same "mechanism-first" mindset, but now with Python, PowerQuery, and proper database design.
                         </div>
                     </div>
                 </div>
 
-                <!-- Story 4: Beyond the Workplace (Community Impact) -->
-                <div class="flex flex-col md:flex-row-reverse items-center gap-8 mt-16 reveal group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
+                <!-- Story 4: The 4Set Evolution (2023-2025) -->
+                <div class="flex flex-col md:flex-row-reverse items-center gap-8 mb-16 reveal group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
                     <div class="md:w-1/2">
+                        <span class="text-cyber-400 font-mono text-sm tracking-wider uppercase">2023–2025 • Enterprise Architecture</span>
+                        <h3 class="text-2xl font-bold text-white mt-2 mb-4">The 4Set Evolution</h3>
+                        <p class="text-slate-400 leading-relaxed mb-6">
+                            A 4-generation journey from a fragile Excel monolith to a distributed hybrid-cloud infrastructure.
+                            Born from the "Data Starvation" of Gen 0, refined by the "Sneakernet" PWA of Gen 1,
+                            saved by the "Ghost Monitor" of Gen 2, and perfected by the async power of Gen 3.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-cyber-400 border border-slate-700">Gen 0: Excel</span>
+                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-cyber-400 border border-slate-700">Gen 1: PWA</span>
+                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-cyber-400 border border-slate-700">Gen 2: Python</span>
+                            <span class="px-3 py-1 rounded-full bg-cyber-900/50 text-xs text-cyber-400 border border-cyber-500/50">Gen 3: Server</span>
+                        </div>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-cyber-500 flex items-center justify-center text-cyber-400 shadow-[0_0_20px_rgba(139,92,246,0.3)] group-hover:scale-110 transition-transform duration-300">
+                            4
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 md:text-right">
+                        <div class="glass-card p-6 rounded-xl border border-slate-700/50 group-hover:border-cyber-500/30 transition-colors">
+                            <h4 class="text-white font-bold mb-2 flex items-center gap-2 justify-end">
+                                <i data-lucide="alert-triangle" class="w-4 h-4 text-yellow-400"></i> The Catalyst
+                            </h4>
+                            <p class="text-sm text-slate-400 italic mb-4">
+                                "The Qualtrics API was horrible. 1-second polling per record. It locked the UI and made mass uploads impossible."
+                            </p>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3 text-sm text-cyber-400 justify-end">
+                                    <span>Gen 2: Synchronous Polling (Fragile)</span>
+                                    <i data-lucide="x-circle" class="w-4 h-4 text-red-400"></i>
+                                </div>
+                                <div class="flex items-center gap-3 text-sm text-cyber-400 justify-end">
+                                    <i data-lucide="arrow-down" class="w-4 h-4 text-slate-400"></i>
+                                </div>
+                                <div class="flex items-center gap-3 text-sm text-white font-medium justify-end">
+                                    <span>Gen 3: Async Background Daemon (Robust)</span>
+                                    <i data-lucide="check-circle" class="w-4 h-4 text-green-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Story 5: Beyond the Workplace (2025 - Community Impact) -->
+                <div class="flex flex-col md:flex-row items-center gap-8 reveal group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
+                    <div class="md:w-1/2 md:text-right">
                         <span class="text-cyber-400 font-mono text-sm tracking-wider uppercase">2025 • Social Innovation</span>
                         <h3 class="text-2xl font-bold text-white mt-2 mb-4 group-hover:text-cyber-400 transition-colors">Beyond the Workplace</h3>
                         <p class="text-slate-400 leading-relaxed mb-6">
                             For years, my systems focused on making teams faster, calmer, and more reliable. In 2025, I started pushing that same mindset outward —
                             building for the community, not just the organisation.
                         </p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-1 rounded-full bg-cyber-900/50 text-xs text-cyber-300 border border-cyber-500/50">Equal Play • Awardee</span>
-                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300 border border-slate-700">BESGO FoundRise</span>
-                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300 border border-slate-700">Assistive Tech</span>
-                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300 border border-slate-700">AI + Games</span>
+                        <div class="flex flex-wrap justify-end gap-2">
+                            <span class="px-3 py-1 rounded-full bg-cyber-900/50 text-xs text-cyber-400 border border-cyber-500/50">Equal Play • Awardee</span>
+                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-cyber-400 border border-slate-700">BESGO FoundRise</span>
+                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-cyber-400 border border-slate-700">Assistive Tech</span>
+                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-cyber-400 border border-slate-700">AI + Games</span>
                         </div>
                     </div>
                     <div class="relative z-10">
-                        <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-cyber-500 flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.3)] group-hover:scale-110 transition-transform duration-300">
-                            <i data-lucide="heart-handshake" class="w-6 h-6 text-cyber-400"></i>
+                        <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-cyber-500 flex items-center justify-center text-cyber-400 shadow-[0_0_20px_rgba(139,92,246,0.3)] group-hover:scale-110 transition-transform duration-300">
+                            5
                         </div>
                     </div>
-                    <div class="md:w-1/2 md:text-right">
+                    <div class="md:w-1/2">
                         <div class="glass-card p-6 rounded-xl border border-slate-700/50 group-hover:border-cyber-500/30 transition-colors">
-                            <h4 class="text-white font-bold mb-2 flex items-center gap-2 justify-end">
+                            <h4 class="text-white font-bold mb-2 flex items-center gap-2">
                                 <i data-lucide="music" class="w-4 h-4 text-cyber-400"></i> Equal Play (2025)
                             </h4>
                             <p class="text-sm text-slate-400 leading-relaxed mb-4">
                                 A musical/rehab gadget: a glove with gentle air-bag guidance for hand posture, paired with an AI-powered piano score writer.
                                 The goal is to help children build piano habits through fun games, guided practice, and AI-generated learning content.
                             </p>
-                            <p class="text-xs text-slate-500">
+                            <p class="text-xs text-slate-400">
                                 Supported through the CUHK Business School BESGO FoundRise (GBA Youth Entrepreneurship Support Scheme).
                             </p>
                         </div>
@@ -482,7 +489,7 @@
             <div class="text-center mb-16 reveal">
                 <h2 class="text-4xl font-bold text-white mb-2">Career <span class="text-cyber-400">Timeline</span></h2>
                 <p class="text-slate-400 max-w-xl mx-auto">
-                    A chronological view of roles and achievements that shape my project management practice.
+                    A chronological view of roles where technology amplified delivery, reduced risk, and created reusable assets.
                 </p>
             </div>
             
@@ -497,15 +504,16 @@
                             Mar 2023 – Present
                         </div>
                         <h3 class="text-xl font-bold text-white group-hover:text-cyber-400 transition-colors">Senior Research Assistant</h3>
-                        <p class="text-slate-500 text-sm">ECE, EdUHK</p>
+                        <p class="text-slate-400 text-sm">ECE, EdUHK</p>
                     </div>
                     <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-slate-900 border-2 border-cyber-500 z-10 group-hover:scale-125 transition-transform"></div>
                     <div class="md:w-1/2 pl-8 md:pl-0">
                         <div class="glass-card p-6 rounded-xl border-l-2 border-cyber-500/50">
-                            <p class="text-slate-400 text-sm mb-3">Coordinate early-years research and project operations across multiple schools and teams.</p>
-                            <ul class="list-disc list-inside text-xs text-slate-500 space-y-1">
-                                <li>Align academic teams, schools, and funders on shared timelines.</li>
-                                <li>Support data collection and reporting structures.</li>
+                            <p class="text-slate-400 text-sm mb-3">Run multi-school research operations with tech-enabled tracking, reporting, and stakeholder alignment.</p>
+                            <ul class="list-disc list-inside text-xs text-slate-400 space-y-1">
+                                <li>Translate field needs into lightweight tooling and repeatable workflows.</li>
+                                <li>Standardise data collection + reporting to reduce friction across sites.</li>
+                                <li>Ship internal utilities (Python/PowerQuery/Excel) that save hours every cycle.</li>
                             </ul>
                         </div>
                     </div>
@@ -517,16 +525,19 @@
                         <div class="inline-block px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-400 text-xs font-mono mb-2">
                             Jan 2021 – Mar 2023
                         </div>
-                        <h3 class="text-xl font-bold text-white group-hover:text-cyber-400 transition-colors">Project Officer</h3>
-                        <p class="text-slate-500 text-sm">AADO, EdUHK</p>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h3 class="text-xl font-bold text-white group-hover:text-cyber-400 transition-colors">Project Officer</h3>
+                        </div>
+                        <p class="text-slate-400 text-sm">AADO, EdUHK</p>
                     </div>
                     <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-slate-900 border-2 border-slate-600 z-10 group-hover:border-cyber-500 transition-colors"></div>
                     <div class="md:w-1/2 pl-8 md:pl-0 md:text-right">
                         <div class="glass-card p-6 rounded-xl border-r-2 border-slate-700/50">
-                            <p class="text-slate-400 text-sm mb-3">Led large-scale programmes supporting underprivileged children (KeySteps@JC).</p>
-                            <ul class="list-disc list-inside text-xs text-slate-500 space-y-1 inline-block text-left">
-                                <li>Managed recruitment and engagement of schools.</li>
-                                <li>Coordinated NGOs, school leaders, and funders.</li>
+                            <p class="text-slate-400 text-sm mb-3">Acted as an internal tech/ops consultant — turning messy requirements into clear systems, standards, and usable outputs.</p>
+                            <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 inline-block text-left">
+                                <li>Website revamp work that improved information clarity and reduced staff back-and-forth on routine enquiries.</li>
+                                <li>Salesforce CRM vendor support: clarified requirements, QAd features, and pushed for scalable standards (not one-off fixes).</li>
+                                <li>Supported the EdFlix platform by translating user pain points into prioritized fixes and operational guidance.</li>
                             </ul>
                         </div>
                     </div>
@@ -539,15 +550,16 @@
                             Sep 2020 – Jan 2021
                         </div>
                         <h3 class="text-xl font-bold text-white group-hover:text-cyber-400 transition-colors">Project Officer (EOCP)</h3>
-                        <p class="text-slate-500 text-sm">SPFEO, EdUHK</p>
+                        <p class="text-slate-400 text-sm">SPFEO, EdUHK</p>
                     </div>
                     <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-slate-900 border-2 border-slate-600 z-10 group-hover:border-cyber-500 transition-colors"></div>
                     <div class="md:w-1/2 pl-8 md:pl-0">
                         <div class="glass-card p-6 rounded-xl border-l-2 border-slate-700/50">
-                            <p class="text-slate-400 text-sm mb-3">Supported the rollout of a university-wide online classes platform.</p>
-                            <ul class="list-disc list-inside text-xs text-slate-500 space-y-1">
-                                <li>Gathered requirements from academic & IT stakeholders.</li>
-                                <li>Translated user needs into practical workflows.</li>
+                            <p class="text-slate-400 text-sm mb-3">Drove adoption of a university-wide online classes platform by turning requirements into usable flows.</p>
+                            <ul class="list-disc list-inside text-xs text-slate-400 space-y-1">
+                                <li>Bridged academics + IT to reduce rollout risk and support load.</li>
+                                <li>Codified process steps, edge-cases, and training materials for scale.</li>
+                                <li>Protected delivery timelines through clear triage and issue routing.</li>
                             </ul>
                         </div>
                     </div>
@@ -559,16 +571,45 @@
                         <div class="inline-block px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-400 text-xs font-mono mb-2">
                             Sep 2018 – Sep 2020
                         </div>
-                        <h3 class="text-xl font-bold text-white group-hover:text-cyber-400 transition-colors">Project Officer</h3>
-                        <p class="text-slate-500 text-sm">SEC / EPL / ELPS, EdUHK</p>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h3 class="text-xl font-bold text-white group-hover:text-cyber-400 transition-colors">Project Officer</h3>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold border border-cyber-500/40 bg-cyber-500/10 text-cyber-400">
+                                Smart Work Practice Award (2018/19, 2019/20)
+                            </span>
+                        </div>
+                        <p class="text-slate-400 text-sm">SEC, EdUHK</p>
                     </div>
                     <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-slate-900 border-2 border-slate-600 z-10 group-hover:border-cyber-500 transition-colors"></div>
                     <div class="md:w-1/2 pl-8 md:pl-0 md:text-right">
                         <div class="glass-card p-6 rounded-xl border-r-2 border-slate-700/50">
-                            <p class="text-slate-400 text-sm mb-3">Managed EDB-funded initiatives and improved teacher support systems.</p>
-                            <ul class="list-disc list-inside text-xs text-slate-500 space-y-1 inline-block text-left">
-                                <li>Introduced automation reducing data processing by 85%.</li>
-                                <li>Streamlined registration across multiple programmes.</li>
+                            <p class="text-slate-400 text-sm mb-3">Built departmental systems and led 2020 pandemic-era upskilling so staff could teach online confidently.</p>
+                            <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 inline-block text-left">
+                                <li>Built the <span class="text-cyber-400">SEC Departmental OSP</span> (Excel/VBA) as a “department operating system” covering guest speaker workflows (JotForm ingestion + payment), course mass timetables, part-time records/pay tracking, equipment loan tracking, staff directory, and reference lists.</li>
+                                <li>Shipped the <span class="text-cyber-400">SEC Publication Records System</span> (Excel/VBA + JCR/SJR lookups) to quantify research output and support reporting decisions.</li>
+                                <li>Built internal automation/templates that reduced manual processing time (up to 85%) and improved consistency across staff workflows.</li>
+                                <li>Recognised as the department’s go-to tech lead; later invited to serve as a judge. Led training on Google Workspace, online teaching tools, and Zoom.</li>
+                                <li>Authored the <span class="text-cyber-400">SEC Zoom guidebook</span> (based on Zoom client 4.6.11; by Herman CHAN, PO/SEC), later adopted 100% by LTTC for wider teaching and learning rollout.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 5 -->
+                <div class="relative flex flex-col md:flex-row gap-8 mb-12 reveal group">
+                    <div class="md:w-1/2 md:text-right">
+                        <div class="inline-block px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-400 text-xs font-mono mb-2">
+                            Jan 2018 – Sep 2018
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-cyber-400 transition-colors">Project Officer</h3>
+                        <p class="text-slate-400 text-sm">EPL / ELPS, EdUHK – CUHK</p>
+                    </div>
+                    <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-slate-900 border-2 border-slate-600 z-10 group-hover:border-cyber-500 transition-colors"></div>
+                    <div class="md:w-1/2 pl-8 md:pl-0">
+                        <div class="glass-card p-6 rounded-xl border-l-2 border-slate-700/50">
+                            <p class="text-slate-400 text-sm mb-3">Supported cross-institution delivery by turning field requirements into clear processes and reliable tracking.</p>
+                            <ul class="list-disc list-inside text-xs text-slate-400 space-y-1">
+                                <li>Standardised data capture + reporting for multi-party coordination (schools, partners, and internal teams).</li>
+                                <li>Created reusable checklists and templates that reduced admin friction and improved handover quality.</li>
                             </ul>
                         </div>
                     </div>
@@ -598,10 +639,10 @@
                     </a>
                 </div>
                 
-                <div class="pt-8 border-t border-slate-700/50 flex flex-col md:flex-row justify-center gap-8 text-slate-500 text-sm">
+                <div class="pt-8 border-t border-slate-700/50 flex flex-col md:flex-row justify-center gap-8 text-slate-400 text-sm">
                     <span class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4"></i> Tai Po, Hong Kong</span>
                     <span class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4"></i> 97278202</span>
-                    <span class="flex items-center gap-2"><i data-lucide="github" class="w-4 h-4"></i> @hermanchan</span>
+                    <span class="flex items-center gap-2"><i data-lucide="github" class="w-4 h-4"></i> @herman925</span>
                 </div>
             </div>
             
@@ -612,13 +653,13 @@
     </section>
 
     <!-- MODAL OVERLAY -->
-    <div id="project-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center">
+    <div id="project-modal" role="dialog" aria-modal="true" class="fixed inset-0 z-[100] hidden flex items-start md:items-center justify-center px-4 py-6 md:py-10 overflow-y-auto">
         <!-- Backdrop -->
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
         
         <!-- Modal Content -->
-        <div id="modal-wrapper" class="relative w-full max-w-2xl p-6 transition-none">
-            <div class="glass-card bg-slate-900 border border-cyber-500/50 rounded-2xl shadow-[0_0_50px_rgba(128,100,162,0.2)] overflow-hidden relative max-h-[90vh] overflow-y-auto scrollbar-hide">
+        <div id="modal-wrapper" class="relative w-full max-w-[95vw] sm:max-w-3xl lg:max-w-4xl p-4 sm:p-6 transition-none">
+            <div class="glass-card bg-slate-900 border border-cyber-500/50 rounded-2xl shadow-[0_0_50px_rgba(128,100,162,0.2)] overflow-hidden relative max-h-[90vh] overflow-y-auto">
                 <!-- Close Button -->
                 <button onclick="closeModal()" aria-label="Close project modal" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors z-50">
                     <i data-lucide="x" class="w-6 h-6"></i>
@@ -626,6 +667,31 @@
 
                 <div id="modal-content" class="p-2">
                     <!-- Content injected via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KEYWORD MODAL (Lore Dictionary) -->
+    <div id="keyword-modal" role="dialog" aria-modal="true" aria-labelledby="keyword-modal-title" class="fixed inset-0 z-[95] hidden items-start md:items-center justify-center px-4 py-6 md:py-10 overflow-y-auto">
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeKeywordModal()"></div>
+        <div class="relative w-full max-w-xl p-4 sm:p-5">
+            <div class="glass-card bg-slate-900 border border-cyber-500/40 rounded-2xl shadow-[0_0_40px_rgba(37,166,221,0.25)] max-h-[85vh] overflow-y-auto">
+                <button onclick="closeKeywordModal()" aria-label="Close keyword modal" class="absolute top-3 right-3 text-slate-400 hover:text-white transition-colors z-10">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+                <div class="p-5 space-y-3" id="keyword-modal-content">
+                    <div class="flex items-start gap-3">
+                        <div class="p-2 rounded-lg bg-cyber-500/10 border border-cyber-500/30">
+                            <i data-lucide="sparkles" class="w-5 h-5 text-cyber-300"></i>
+                        </div>
+                        <div>
+                            <h3 id="keyword-modal-title" class="text-xl font-bold text-white">Keyword</h3>
+                            <p class="text-sm text-slate-400">Tap a highlighted keyword to read the quick lore entry.</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 text-slate-300 text-sm leading-relaxed" id="keyword-modal-body"></div>
+                    <div class="pt-2 text-xs text-slate-500">Click outside or press Esc to close.</div>
                 </div>
             </div>
         </div>
@@ -779,7 +845,7 @@
                 { text: '', type: 'break' },
                 
                 // AI Ecosystem - comprehensive
-                { text: 'lsit ai-stack', type: 'command', typo: 'list ai-stack --all' },
+                { text: 'lsit ai-stack', type: 'command', typo: 'list ai-skills --all' },
                 { text: '→ LLMs: Claude, GPT, Gemini, Copilot', type: 'ai' },
                 { text: '→ Agents: Manus, Genspark, NotebookLM', type: 'ai' },
                 { text: '→ Creative: Midjourney, Suno, DALL-E', type: 'ai' },
@@ -788,7 +854,7 @@
                 { text: '', type: 'break' },
                 
                 // Data & Statistics
-                { text: 'list tols --stats', type: 'command', typo: 'list tools --stats' },
+                { text: 'list tolls --stats', type: 'command', typo: 'list tools --stats' },
                 { text: '→ Stats: SPSS (Advanced), R, M-Plus', type: 'data' },
                 { text: '→ Python: pandas, numpy, scipy, pystats', type: 'data' },
                 { text: '→ BI: PowerBI, PowerQuery, Salesforce', type: 'data' },
@@ -839,9 +905,9 @@
 
             const typeColors = {
                 command: 'text-green-400',
-                system: 'text-slate-500 text-xs',
-                prompt: 'text-slate-300',
-                response: 'text-slate-300',
+                system: 'text-slate-400 text-xs',
+                prompt: 'text-cyber-400',
+                response: 'text-cyber-400',
                 success: 'text-emerald-400',
                 skill: 'text-cyan-400 font-mono text-xs',
                 cert: 'text-lime-400 text-xs',
@@ -952,7 +1018,7 @@
                     
                     if (typoPhase === 0) {
                         // Phase 0: Typing the typo
-                        const prefix = isCommand ? '<span class="text-slate-500 mr-1">$</span> ' : '';
+                        const prefix = isCommand ? '<span class="text-slate-400 mr-1">$</span> ' : '';
                         const promptPrefix = isPrompt ? '<span class="text-slate-400">' + promptLabel + '</span>' : '';
                         const rendered = isPrompt
                             ? (lineObj.mask ? '*'.repeat(Math.max(0, charIndex)) : typoText.slice(0, charIndex))
@@ -972,7 +1038,7 @@
                         return;
                     } else if (typoPhase === 1) {
                         // Phase 1: Deleting ONLY the typo part (backspace to diverge point)
-                        const prefix = isCommand ? '<span class="text-slate-500 mr-1">$</span> ' : '';
+                        const prefix = isCommand ? '<span class="text-slate-400 mr-1">$</span> ' : '';
                         const promptPrefix = isPrompt ? '<span class="text-slate-400">' + promptLabel + '</span>' : '';
                         const rendered = isPrompt
                             ? (lineObj.mask ? '*'.repeat(Math.max(0, charIndex)) : typoText.slice(0, charIndex))
@@ -998,9 +1064,9 @@
                 }
                 
                 // Normal typing
-                const prefix = isCommand ? '<span class="text-slate-500 mr-1">$</span> ' : '';
+                const prefix = isCommand ? '<span class="text-slate-400 mr-1">$</span> ' : '';
                 const promptPrefix = isPrompt ? '<span class="text-slate-400">' + promptLabel + '</span>' : '';
-                const textClass = isCommand || isPrompt ? 'text-green-400' : (typeColors[lineObj.type] || 'text-slate-300');
+                const textClass = isCommand || isPrompt ? 'text-green-400' : (typeColors[lineObj.type] || 'text-cyber-400');
                 const rendered = isPrompt
                     ? (lineObj.mask ? '*'.repeat(Math.max(0, charIndex)) : targetText.slice(0, charIndex))
                     : targetText.slice(0, charIndex);
@@ -1016,13 +1082,13 @@
                     div.className = 'flex items-start gap-1 transition-all duration-200';
                     
                     if (isCommand) {
-                        div.innerHTML = '<span class="text-slate-500 select-none">$</span> <span class="text-green-400">' + (hasTypo ? lineObj.typo : lineObj.text) + '</span>';
+                        div.innerHTML = '<span class="text-slate-400 select-none">$</span> <span class="text-green-400">' + (hasTypo ? lineObj.typo : lineObj.text) + '</span>';
                     } else if (isPrompt) {
                         const committed = (hasTypo ? promptTypo : promptInput);
                         const committedRendered = lineObj.mask ? '*'.repeat(committed.length) : committed;
                         div.innerHTML = '<span class="text-slate-400">' + promptLabel + '</span><span class="text-green-400">' + committedRendered + '</span>';
                     } else {
-                        div.className = typeColors[lineObj.type] || 'text-slate-300';
+                        div.className = typeColors[lineObj.type] || 'text-cyber-400';
                         div.textContent = lineObj.text;
                     }
                     

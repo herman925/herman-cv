@@ -590,6 +590,45 @@ const githubCardData = {
     }
 };
 
+// Keyword Lore Dictionary (for clickable tags)
+const keywordLore = {
+    'VBA (540KB+)': {
+        title: 'VBA (540KB+)',
+        body: [
+            'A dense legacy codebase of Visual Basic for Applications that runs mission-critical workflows without a modern backend.',
+            'It combines user forms, class modules, and macros to automate contracts, timetables, and payroll inside Excel.'
+        ]
+    },
+    'Power Query': {
+        title: 'Power Query',
+        body: [
+            'Excel\'s ETL engine for ingesting, cleaning, and reshaping messy CSVs and web sources into structured tables.',
+            'Used here to pull JotForm data, normalize it, and keep downstream dashboards consistent.'
+        ]
+    },
+    'Payroll Automation': {
+        title: 'Payroll Automation',
+        body: [
+            'Logic that calculates complex part-time pay rules, consolidates semester schedules, and generates ready-to-sign PDFs.',
+            'Removes manual cross-checks and prevents conflict errors during peak admin periods.'
+        ]
+    },
+    'UserForms': {
+        title: 'UserForms',
+        body: [
+            'VBA-driven dialog windows that collect inputs, validate data, and trigger the underlying macros safely.',
+            'They provide a guided UI so non-technical staff can run heavy automations without touching the code.'
+        ]
+    },
+    'Legacy Monolith': {
+        title: 'Legacy Monolith',
+        body: [
+            'A single, tightly coupled application that predates modular services but still powers daily operations.',
+            'Stable, battle-tested, and optimized for environments where introducing new cloud stacks is not an option.'
+        ]
+    }
+};
+
 /**
  * Renders the HTML for a complex split-panel card.
  * @param {Object} data - The card data object.
@@ -643,11 +682,6 @@ function renderComplexCard(data) {
                     </ul>
                 </div>
 
-                <!-- Trigger Button -->
-                <div onclick="toggleValuation()" class="w-full py-4 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg flex items-center justify-center gap-2 cursor-pointer transition-all group">
-                    <span id="valuation-btn-text" class="text-base font-bold text-green-400 group-hover:text-green-300">View "Real Judgment" Breakdown</span>
-                    <i id="valuation-btn-icon" data-lucide="chevron-right" class="w-5 h-5 text-green-400 transition-transform duration-300"></i>
-                </div>
             </div>
 
             <!-- RIGHT PANEL: Valuation (Hidden by default) -->
@@ -668,7 +702,7 @@ function renderComplexCard(data) {
                 </div>
 
                 <!-- Scrollable Content -->
-                <div class="flex-1 overflow-y-auto scrollbar-hide space-y-6 pr-2">
+                <div class="flex-1 overflow-y-auto space-y-6 pr-2">
                     ${valuationItemsHtml}
                 </div>
 
@@ -703,6 +737,50 @@ function renderComplexCard(data) {
 }
 
 /**
+ * Keeps body scroll locked if any modal is open
+ */
+function syncBodyScrollLock() {
+    const projectModal = document.getElementById('project-modal');
+    const keywordModal = document.getElementById('keyword-modal');
+    const projectOpen = projectModal && !projectModal.classList.contains('hidden');
+    const keywordOpen = keywordModal && !keywordModal.classList.contains('hidden');
+    document.body.style.overflow = (projectOpen || keywordOpen) ? 'hidden' : '';
+}
+
+/**
+ * Opens the keyword/lore modal with contextual text
+ */
+function openKeywordModal(term) {
+    const modal = document.getElementById('keyword-modal');
+    const titleEl = document.getElementById('keyword-modal-title');
+    const bodyEl = document.getElementById('keyword-modal-body');
+    if (!modal || !titleEl || !bodyEl) return;
+
+    const entry = keywordLore[term] || { title: term, body: ['Entry coming soon.'] };
+    titleEl.textContent = entry.title;
+    bodyEl.innerHTML = entry.body.map(p => `<p>${p}</p>`).join('');
+
+    modal.classList.remove('hidden');
+    syncBodyScrollLock();
+}
+
+function closeKeywordModal() {
+    const modal = document.getElementById('keyword-modal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    syncBodyScrollLock();
+}
+
+// Global click handler for keyword chips (works for dynamic content)
+document.addEventListener('click', (event) => {
+    const chip = event.target.closest('.keyword-chip');
+    if (chip) {
+        const term = chip.dataset.keyword || chip.textContent.trim();
+        openKeywordModal(term);
+    }
+});
+
+/**
  * Animation Logic for the Valuation Panel (CRT Glitch Effect)
  */
 function toggleValuation() {
@@ -711,44 +789,30 @@ function toggleValuation() {
     const btnText = document.getElementById('valuation-btn-text');
     const btnIcon = document.getElementById('valuation-btn-icon');
 
-    if (!wrapper || !valuationPanel) return;
+    if (!wrapper || !valuationPanel || !btnText || !btnIcon) return;
 
-    // Check if we are expanding or collapsing
-    const isExpanding = wrapper.classList.contains('max-w-2xl') || !wrapper.classList.contains('max-w-6xl');
+    const isExpanding = valuationPanel.classList.contains('hidden');
 
-    // 1. Trigger CRT Glitch
     wrapper.classList.add('crt-active');
 
-    // 2. Swap State mid-glitch (150ms)
     setTimeout(() => {
         if (isExpanding) {
-            // Expand
-            wrapper.classList.remove('max-w-2xl');
-            wrapper.classList.add('max-w-6xl'); 
-            
-            // Show valuation panel
+            wrapper.classList.remove('lg:max-w-4xl');
+            wrapper.classList.add('lg:max-w-6xl');
             valuationPanel.classList.remove('hidden', 'opacity-0', 'translate-x-10');
             valuationPanel.classList.add('flex', 'opacity-100', 'translate-x-0');
-            
-            // Update Button
-            btnText.innerText = "Hide Breakdown";
+            btnText.innerText = 'Hide Valuation';
             btnIcon.classList.add('rotate-180');
         } else {
-            // Collapse
-            wrapper.classList.remove('max-w-6xl');
-            wrapper.classList.add('max-w-2xl');
-            
-            // Hide valuation panel
+            wrapper.classList.remove('lg:max-w-6xl');
+            wrapper.classList.add('lg:max-w-4xl');
             valuationPanel.classList.add('hidden', 'opacity-0', 'translate-x-10');
             valuationPanel.classList.remove('flex', 'opacity-100', 'translate-x-0');
-            
-            // Update Button
-            btnText.innerText = 'View "Real Judgment" Breakdown';
+            btnText.innerText = 'Project Valuation';
             btnIcon.classList.remove('rotate-180');
         }
     }, 150);
 
-    // 3. Cleanup
     setTimeout(() => {
         wrapper.classList.remove('crt-active');
     }, 400);
@@ -787,17 +851,26 @@ function openModal(id) {
         </div>
     ` : '';
 
+    const valuationButton = data.type === 'complex' ? `
+        <button type="button" onclick="toggleValuation()" class="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 hover:border-cyber-500/60 text-green-300 font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyber-400/60">
+            <i data-lucide="panel-right-open" class="w-4 h-4"></i>
+            <span id="valuation-btn-text">Project Valuation</span>
+            <i id="valuation-btn-icon" data-lucide="chevron-right" class="w-4 h-4 text-green-300 transition-transform"></i>
+        </button>
+    ` : '';
+
     content.innerHTML = `
         ${awardBanner}
-        <div class="flex items-start justify-between mb-6">
+        <div class="flex items-start justify-between mb-4">
             <div>
                 <h2 class="text-2xl font-bold text-white mb-1">${data.title}</h2>
                 <p class="text-cyber-400 font-mono text-sm">${data.subtitle}</p>
+                ${valuationButton}
             </div>
         </div>
         
         <div class="flex flex-wrap gap-2 mb-6">
-            ${data.tags.map(tag => `<span class="px-2 py-1 rounded bg-slate-800 text-xs text-slate-300 border border-slate-700">${tag}</span>`).join('')}
+            ${data.tags.map(tag => `<button type="button" class="keyword-chip px-2 py-1 rounded bg-slate-800 text-xs text-slate-200 border border-slate-700 hover:border-cyber-500/60 hover:text-cyber-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyber-400/60 transition-colors" data-keyword="${tag}">${tag}</button>`).join('')}
         </div>
         
         <div class="text-slate-300 text-sm leading-relaxed">
@@ -806,7 +879,7 @@ function openModal(id) {
     `;
     
     modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden'; // Prevent scrolling
+    syncBodyScrollLock(); // Prevent scrolling when any modal is open
     
     // Re-initialize icons
     if (window.lucide) lucide.createIcons();
@@ -824,22 +897,28 @@ function closeModal() {
     
     // Reset to collapsed state before closing
     if (wrapper && valuationPanel) {
-        wrapper.classList.remove('max-w-6xl');
-        wrapper.classList.add('max-w-2xl');
+        wrapper.classList.remove('lg:max-w-6xl');
+        wrapper.classList.add('lg:max-w-4xl');
         valuationPanel.classList.add('hidden', 'opacity-0', 'translate-x-10');
         valuationPanel.classList.remove('flex', 'opacity-100', 'translate-x-0');
         
-        if (btnText) btnText.innerText = 'View "Real Judgment" Breakdown';
+        if (btnText) btnText.innerText = 'Project Valuation';
         if (btnIcon) btnIcon.classList.remove('rotate-180');
     }
     
     modal.classList.add('hidden');
-    document.body.style.overflow = ''; // Restore scrolling
+    syncBodyScrollLock(); // Restore scrolling if no other modal is open
 }
 
 // Event Listeners
 document.addEventListener('keydown', function(event) {
     if (event.key === "Escape") {
-        closeModal();
+        const keywordModal = document.getElementById('keyword-modal');
+        const keywordOpen = keywordModal && !keywordModal.classList.contains('hidden');
+        if (keywordOpen) {
+            closeKeywordModal();
+        } else {
+            closeModal();
+        }
     }
 });

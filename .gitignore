@@ -3,6 +3,7 @@ Herman CV.*
 
 # Ignore product requirement documents
 PRD/
+IT Examples/
 
 # Node / tooling (if introduced later)
 node_modules/

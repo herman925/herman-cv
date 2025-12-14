@@ -2,21 +2,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
 :root {
-    --tech-primary: #a78bfa; /* Lighter Violet */
-    --tech-secondary: #c4b5fd; /* Lighter Purple */
-    --tech-accent: #e9d5ff; /* Very Light Purple */
-    --tech-dark: #2e1065; /* Richer Dark Purple */
-    --tech-darker: #1e1b4b; /* Deep Indigo */
+    --tech-primary: #2dd4bf; /* Cyber-400 */
+    --tech-secondary: #5eead4; /* Cyber-300 */
+    --tech-accent: #ccfbf1; /* Cyber-100 */
+    --tech-dark: #134e4a; /* Cyber-900 */
+    --tech-darker: #0f172a; /* Slate-900 */
 }
 
 body.facet-tech {
     font-family: 'Inter', sans-serif;
-    --glass-border: rgba(167, 139, 250, 0.4);
-    --glass-bg: linear-gradient(145deg, rgba(167, 139, 250, 0.15) 0%, rgba(30, 27, 75, 0.8) 100%);
+    --glass-border: rgba(45, 212, 191, 0.4);
+    --glass-bg: linear-gradient(145deg, rgba(45, 212, 191, 0.15) 0%, rgba(15, 23, 42, 0.8) 100%);
     background: 
-        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(167, 139, 250, 0.2), transparent),
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(45, 212, 191, 0.2), transparent),
         radial-gradient(ellipse 60% 40% at 30% 30%, rgba(56, 189, 248, 0.08), transparent),
-        radial-gradient(ellipse 50% 30% at 70% 60%, rgba(167, 139, 250, 0.1), transparent),
+        radial-gradient(ellipse 50% 30% at 70% 60%, rgba(45, 212, 191, 0.1), transparent),
         linear-gradient(to bottom, #0f0e17 0%, #0c1222 50%, #0f0e17 100%);
     background-attachment: fixed;
 }
@@ -26,7 +26,7 @@ h1, h2, h3, h4, h5, h6, .font-tech {
 }
 
 .text-gradient {
-    background: linear-gradient(to right, #e9d5ff, #a78bfa);
+    background: linear-gradient(to right, #ccfbf1, #2dd4bf);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -43,7 +43,7 @@ h1, h2, h3, h4, h5, h6, .font-tech {
 
 .glass-card:hover {
     border-color: var(--tech-primary);
-    box-shadow: 0 0 20px rgba(128, 100, 162, 0.2);
+    box-shadow: 0 0 20px rgba(45, 212, 191, 0.2);
     transform: translateY(-2px);
 }
 

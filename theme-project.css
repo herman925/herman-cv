@@ -279,6 +279,30 @@ body.facet-project {
     margin-top: 0.75rem;
 }
 
+/* --- DETAILS / SUMMARY (ACCORDION) --- */
+
+.pm-summary,
+.timeline-summary {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    list-style: none;
+}
+
+.pm-summary::-webkit-details-marker,
+.timeline-summary::-webkit-details-marker {
+    display: none;
+}
+
+.pm-details[open] .pm-chevron,
+.timeline-card[open] .timeline-chevron {
+    transform: rotate(180deg);
+}
+
 @media (min-width: 768px) {
     .timeline-container::before {
         left: 50%;

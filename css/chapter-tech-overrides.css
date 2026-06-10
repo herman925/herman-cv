@@ -1,0 +1,336 @@
+/* ==========================================================================
+   CHAPTER 02 — technology.html override layer (load AFTER Tailwind, only here)
+   The protected injected markup (js/explorer.js, js/github-cards.js — NEVER
+   edited) keeps emitting dark utility classes. This sheet re-paints them as
+   the SPINE paper monograph, scoped strictly under the protected containers:
+   #explorer-grid, #project-modal, #keyword-modal, #broadcast-carousel.
+   ========================================================================== */
+
+/* --- Surfaces ----------------------------------------------------------- */
+#explorer-grid .bg-slate-800\/50,
+#explorer-grid .bg-slate-800,
+#explorer-grid .bg-slate-900,
+#project-modal .bg-slate-800,
+#project-modal .bg-slate-800\/50,
+#project-modal .bg-slate-900,
+#keyword-modal .bg-slate-800,
+#keyword-modal .bg-slate-900 {
+    background-color: var(--paper-soft) !important;
+}
+
+#project-modal .bg-slate-950,
+#project-modal .bg-slate-900\/90,
+#project-modal .bg-slate-900\/95,
+#keyword-modal .bg-slate-950,
+#keyword-modal .bg-slate-900\/90,
+#keyword-modal .bg-slate-900\/95 {
+    background-color: var(--paper) !important;
+}
+
+/* Modal backdrops stay scrims, but ink-tinted */
+#project-modal.bg-black\/80, #project-modal .bg-black\/80,
+#keyword-modal.bg-black\/80, #keyword-modal .bg-black\/80,
+#project-modal .backdrop-blur-sm, #keyword-modal .backdrop-blur-sm {
+    background-color: rgba(22, 22, 26, .55) !important;
+}
+
+/* --- Text --------------------------------------------------------------- */
+#explorer-grid .text-white,
+#project-modal .text-white,
+#keyword-modal .text-white,
+#explorer-grid .text-slate-100, #project-modal .text-slate-100, #keyword-modal .text-slate-100,
+#explorer-grid .text-slate-200, #project-modal .text-slate-200, #keyword-modal .text-slate-200 {
+    color: var(--ink) !important;
+}
+
+#explorer-grid [class*="text-slate-3"],
+#explorer-grid [class*="text-slate-4"],
+#explorer-grid [class*="text-slate-5"],
+#project-modal [class*="text-slate-3"],
+#project-modal [class*="text-slate-4"],
+#project-modal [class*="text-slate-5"],
+#project-modal [class*="text-slate-6"],
+#keyword-modal [class*="text-slate-3"],
+#keyword-modal [class*="text-slate-4"],
+#keyword-modal [class*="text-slate-5"] {
+    color: var(--ink-soft) !important;
+}
+
+/* Cyber teal accents → chapter teal-ink */
+#explorer-grid [class*="text-cyber-"],
+#project-modal [class*="text-cyber-"],
+#keyword-modal [class*="text-cyber-"],
+#explorer-grid [class*="text-cyan-"],
+#project-modal [class*="text-cyan-"],
+#keyword-modal [class*="text-cyan-"],
+#explorer-grid [class*="text-teal-"],
+#project-modal [class*="text-teal-"] {
+    color: var(--accent-deep) !important;
+}
+
+#explorer-grid [class*="bg-cyber-"],
+#project-modal [class*="bg-cyber-"],
+#keyword-modal [class*="bg-cyber-"] {
+    background-color: var(--accent) !important;
+    color: #FAF7F2 !important;
+}
+
+/* --- Borders & frames ---------------------------------------------------- */
+#explorer-grid [class*="border-slate-"],
+#explorer-grid [class*="border-cyber-"],
+#explorer-grid [class*="border-cyan-"],
+#project-modal [class*="border-slate-"],
+#project-modal [class*="border-cyber-"],
+#project-modal [class*="border-cyan-"],
+#keyword-modal [class*="border-slate-"],
+#keyword-modal [class*="border-cyber-"] {
+    border-color: var(--hairline) !important;
+}
+
+/* Glow shadows → none (hairlines do the work on paper) */
+#explorer-grid [class*="shadow-"],
+#project-modal [class*="shadow-"]:not([class*="shadow-none"]) {
+    box-shadow: none !important;
+}
+
+/* Sharp editorial corners */
+#explorer-grid .rounded-lg, #explorer-grid .rounded-xl, #explorer-grid .rounded-2xl,
+#project-modal .rounded-lg, #project-modal .rounded-xl, #project-modal .rounded-2xl, #project-modal .rounded-3xl,
+#keyword-modal .rounded-lg, #keyword-modal .rounded-xl, #keyword-modal .rounded-2xl {
+    border-radius: 0 !important;
+}
+
+/* --- PLATES & FIGURES: museum-catalog counters on the explorer grid ------ */
+#explorer-grid { counter-reset: plate; }
+#explorer-grid > [onclick] {
+    position: relative;
+    border: 1px solid var(--hairline);
+    background: var(--paper-soft);
+    transition: border-color .25s ease, transform .25s ease;
+}
+#explorer-grid > [onclick]:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+#explorer-grid > [onclick]::before {
+    counter-increment: plate;
+    content: "FIG. " counter(plate, decimal-leading-zero);
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-family: 'Space Grotesk', monospace;
+    font-size: 9px;
+    letter-spacing: .14em;
+    color: var(--ink-soft);
+    opacity: .7;
+    pointer-events: none;
+}
+
+/* Award banners keep their tier colors but flatten to print labels */
+#explorer-grid [class*="from-yellow"], #explorer-grid [class*="from-amber"],
+#explorer-grid [class*="from-purple"], #explorer-grid [class*="from-gray"],
+#explorer-grid [class*="from-orange"] {
+    background-image: none !important;
+}
+
+/* --- Broadcast carousel shell ------------------------------------------- */
+#broadcast-carousel [class*="bg-slate-8"],
+#broadcast-carousel [class*="bg-slate-9"] {
+    background-color: var(--paper-soft) !important;
+}
+#broadcast-carousel .text-white { color: var(--ink) !important; }
+#broadcast-carousel [class*="text-slate-3"],
+#broadcast-carousel [class*="text-slate-4"] { color: var(--ink-soft) !important; }
+#broadcast-carousel [class*="border-slate-"] { border-color: var(--hairline) !important; }
+#broadcast-carousel .rounded-xl, #broadcast-carousel .rounded-2xl { border-radius: 0 !important; }
+
+/* --- Keyword chips ------------------------------------------------------- */
+.keyword-chip {
+    border: 1px solid var(--hairline) !important;
+    background: transparent !important;
+    color: var(--accent-deep) !important;
+    border-radius: 0 !important;
+    font-family: 'Space Grotesk', monospace !important;
+}
+.keyword-chip:hover {
+    border-color: var(--accent) !important;
+    background: var(--accent-soft) !important;
+}
+
+/* --- Terminal (FIELD NOTES) — page-owned shell, content JS untouched ----- */
+.field-notes-frame {
+    border: 1px solid var(--hairline);
+    background: var(--paper-soft);
+}
+.field-notes-frame .field-notes-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--hairline);
+    font-family: 'Space Grotesk', monospace;
+    font-size: 10px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+}
+#terminal-body {
+    background: #0E1413 !important;   /* phosphor well — the one dark plate, framed like equipment */
+    color: #7FD1C8 !important;
+}
+#terminal-body .text-white { color: #E6F4F2 !important; }
+
+/* CRT valuation toggle relies on .crt-active from theme-tech.css — keep working
+   even though theme-tech.css is no longer loaded */
+@keyframes crt-flicker-spine {
+    0% { opacity: 1; } 8% { opacity: .82; } 10% { opacity: .96; }
+    20% { opacity: .9; } 100% { opacity: 1; }
+}
+.crt-active { animation: crt-flicker-spine .42s steps(2, end) 1; }
+
+/* ==========================================================================
+   APPENDED — SPINE rebuild page-specific layer (technology.html)
+   ========================================================================== */
+
+/* --- Utility shims (theme-tech.css dropped; carousel.js + terminal shell
+       rely on these classes) ---------------------------------------------- */
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.cursor-grab { cursor: grab; }
+.cursor-grabbing { cursor: grabbing; }
+
+/* --- Generic hairline frame helper for page-owned shells ------------------ */
+.frame-hairline { border: 1px solid var(--hairline); }
+
+/* --- Explorer chrome (page-owned wrappers around the protected grid) ----- */
+.explorer-chrome-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--hairline);
+    font-family: 'Space Grotesk', monospace;
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+}
+.explorer-status-bar {
+    border-top: 1px solid var(--hairline);
+    padding: 8px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Space Grotesk', monospace;
+    font-size: 10px;
+    letter-spacing: .12em;
+    color: var(--ink-soft);
+}
+#explorer-breadcrumbs { color: var(--ink-soft); }
+#explorer-breadcrumbs .hover\:text-cyber-400:hover { color: var(--accent-deep) !important; }
+
+/* --- FIELD NOTES vertical scrub rule -------------------------------------- */
+.field-rule {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 2px;
+    background: var(--accent);
+    transform-origin: top center;
+}
+
+/* --- Origin story scrubbed line-draw -------------------------------------- */
+.origin-line-svg {
+    position: absolute;
+    top: 0;
+    left: 21px;
+    width: 2px;
+    height: 100%;
+    overflow: visible;
+}
+@media (min-width: 768px) {
+    .origin-line-svg { left: 50%; transform: translateX(-50%); }
+}
+.origin-line-svg path {
+    stroke: var(--accent);
+    stroke-width: 2;
+    fill: none;
+    vector-effect: non-scaling-stroke;
+    opacity: .55;
+}
+.origin-node {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent);
+    background: var(--paper);
+    display: grid;
+    place-items: center;
+    font-family: 'Space Grotesk', monospace;
+    font-size: 13px;
+    color: var(--accent-deep);
+    z-index: 1;
+}
+.origin-node::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+    opacity: 0;
+    pointer-events: none;
+}
+.origin-node.pinged::after { animation: spine-node-ping .9s ease-out 1; }
+@keyframes spine-node-ping {
+    0%   { transform: scale(1); opacity: .8; }
+    100% { transform: scale(2.3); opacity: 0; }
+}
+
+/* --- Mono chip label (replaces old pill chips, radius 0) ------------------ */
+.chip-mono {
+    display: inline-flex;
+    align-items: center;
+    gap: .5em;
+    border: 1px solid var(--hairline);
+    padding: 3px 10px;
+    font-family: 'Space Grotesk', monospace;
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+    background: transparent;
+}
+.chip-mono.chip-accent { border-color: var(--accent); }
+
+/* --- QA pass: pale tint text classes unreadable on paper ----------------- */
+#project-modal [class*="text-yellow-1"], #project-modal [class*="text-yellow-2"],
+#project-modal [class*="text-yellow-3"], #project-modal [class*="text-amber-2"],
+#project-modal [class*="text-amber-3"],
+#explorer-grid [class*="text-yellow-1"], #explorer-grid [class*="text-yellow-2"],
+#explorer-grid [class*="text-yellow-3"], #explorer-grid [class*="text-amber-2"],
+#explorer-grid [class*="text-amber-3"] {
+    color: #D4B274 !important;            /* bright gold on phosphor dark */
+}
+#project-modal .text-yellow-500, #explorer-grid .text-yellow-500 {
+    color: #B8965A !important;            /* gold kicker labels */
+}
+#project-modal [class*="text-green-"], #project-modal [class*="text-emerald-2"],
+#project-modal [class*="text-emerald-3"], #project-modal [class*="text-emerald-4"],
+#explorer-grid [class*="text-green-"],
+#keyword-modal [class*="text-green-"] {
+    color: var(--accent-deep) !important;
+}
+#project-modal [class*="text-red-3"], #project-modal [class*="text-rose-3"],
+#project-modal [class*="text-pink-3"] {
+    color: #FB7185 !important;            /* light rose warnings on dark */
+}
+#project-modal [class*="text-purple-2"], #project-modal [class*="text-purple-3"],
+#project-modal [class*="text-violet-2"], #project-modal [class*="text-violet-3"],
+#project-modal [class*="text-indigo-2"], #project-modal [class*="text-indigo-3"] {
+    color: #C4B5FD !important;
+}
+/* Decorative glow blobs inside the modal die on paper */
+#project-modal .blur-2xl, #project-modal .blur-3xl { display: none !important; }

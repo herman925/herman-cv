@@ -1,465 +1,719 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Herman Chan | Education & Culture</title>
-    <link rel="stylesheet" href="global.css" />
-    <link rel="stylesheet" href="theme-education.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="js/tailwind-config.js"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-  </head>
-  <body class="facet-education antialiased overflow-x-hidden">
-    <!-- Navigation -->
-    <div id="navbar-container"></div>
+<html lang="en" data-chapter="education" class="loading">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Herman Chan | Education & Culture</title>
+    <meta name="description" content="Chapter 04 — The Bridge. Herman Chan as counselor-educator: third-culture roots, inclusive teaching across IVE and Maria College, and education media beyond walls.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,144,600;1,144,500&family=Outfit:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/tailwind-config.js"></script>
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="css/spine.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script defer src="js/motion.js"></script>
+  <script defer src="js/transitions.js"></script>
+  <style>
+    /* ====================================================================
+       Page-specific: Chapter 04 — CREAM & EMERALD ATLAS
+       The journey line is the spine of this chapter; everything else is
+       margin notes, stamps and visas in a travel journal.
+       ==================================================================== */
 
-    <main class="pt-24 pb-20 px-6">
-      <!-- Hero Section -->
-      <section id="philosophy" class="max-w-6xl mx-auto mb-24 pt-10">
-        <div class="flex flex-col md:flex-row items-center gap-12">
-          <div class="flex-1 space-y-8 reveal">
-            <div
-              class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 border border-emerald-200 text-emerald-700 text-sm font-medium tracking-wide"
-            >
-              <i data-lucide="book-open" class="w-4 h-4"></i>
-              <span>Education & Culture</span>
-            </div>
-            <h1
-              class="text-5xl md:text-7xl font-bold leading-tight text-slate-900"
-            >
-              Bridging Worlds Through
-              <span
-                class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500"
-                >Empathetic Knowledge</span
-              >
-            </h1>
-            <p class="text-xl text-slate-600 leading-relaxed max-w-xl">
-              My passion lies in knowledge transfer—translating complex concepts
-              into tangible realities. I believe learning must be felt,
-              experienced, and deeply understood to be truly transformative.
-            </p>
-            <div class="flex gap-4 pt-4">
-              <a
-                href="#journey"
-                class="px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-600/20"
-              >
-                My Journey
-              </a>
-              <a
-                href="#experience"
-                class="px-6 py-3 bg-transparent border border-emerald-600/30 text-emerald-700 rounded-lg font-medium hover:bg-emerald-50 transition-colors"
-              >
-                Teaching Impact
-              </a>
-            </div>
-          </div>
-          <div class="flex-1 relative reveal delay-100">
-            <div
-              class="absolute inset-0 bg-emerald-500/10 rounded-full opacity-20 blur-3xl animate-pulse"
-            ></div>
-            <div
-              class="relative bg-white/60 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-emerald-500/20 rotate-3 hover:rotate-0 transition-transform duration-500"
-            >
-              <div
-                class="flex items-center gap-4 mb-6 border-b border-slate-200 pb-4"
-              >
-                <div
-                  class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600"
-                >
-                  <i data-lucide="quote" class="w-6 h-6"></i>
-                </div>
+    /* Legacy signature — emerald→teal gradient, permitted ONLY in this h1 span */
+    #philosophy h1 .h1-grad {
+      background: linear-gradient(92deg, #10B981 10%, #2DD4BF 90%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: #10B981; /* fallback */
+    }
+
+    /* Journey Line route + waypoints (Chapter 04 signature — full route, six waypoints) */
+    #journey-route { position: relative; }
+    #journey-route svg { position: absolute; left: 0; top: 0; width: 56px; height: 100%; overflow: visible; }
+    .journey-stops { position: absolute; inset: 0; z-index: 1; display: grid; grid-template-rows: repeat(6, 1fr); margin: 0; padding: 0; list-style: none; }
+    .journey-stop { position: relative; display: flex; align-items: center; padding-left: 68px; }
+    @media (min-width: 768px) { .journey-stop { padding-left: 88px; } }
+    .journey-dot {
+      position: absolute; left: 28px; top: 50%;
+      width: 10px; height: 10px; margin: -5px 0 0 -5px;
+      border-radius: 50%; background: var(--accent); display: block;
+    }
+    .journey-ping {
+      position: absolute; inset: -7px; border-radius: 50%;
+      border: 1px solid var(--accent); opacity: 0; display: block;
+    }
+    .journey-name {
+      font-family: 'Space Grotesk', monospace; font-weight: 500;
+      font-size: 14px; letter-spacing: .18em; text-transform: uppercase;
+    }
+
+    /* Passport stamps — 1px emerald border, slight rotation, mono caps */
+    .waypoint-stamp, .honour-stamp {
+      font-family: 'Space Grotesk', monospace;
+      text-transform: uppercase;
+      border: 1px solid var(--accent);
+      color: var(--accent-deep);
+      background: rgba(16, 185, 129, .05);
+      transform: rotate(var(--rot, -3deg));
+    }
+    .waypoint-stamp {
+      display: inline-block;
+      padding: 6px 10px;
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: .12em;
+    }
+    .honour-stamp { display: block; padding: 18px 20px; }
+    .honour-stamp .stamp-label {
+      display: block;
+      font-size: 10px;
+      letter-spacing: .2em;
+      color: var(--accent);
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+      border-bottom: 1px dashed rgba(16, 185, 129, .4);
+    }
+    .honour-stamp .stamp-text {
+      font-size: 11.5px;
+      letter-spacing: .08em;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Initial states — GSAP takes over; reduced motion renders final states */
+    @media (prefers-reduced-motion: no-preference) {
+      .js .journey-dot { transform: scale(0); }
+      .js .waypoint-stamp, .js .honour-stamp { opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .js .journey-dot { transform: none !important; }
+      .js .waypoint-stamp, .js .honour-stamp { opacity: 1 !important; }
+    }
+  </style>
+</head>
+<body class="antialiased overflow-x-hidden">
+  <div class="running-header">HERMAN CHAN — THE DIGITAL HUMANIST — CH. 04 — EDUCATION &amp; CULTURE</div>
+
+  <!-- Navigation -->
+  <div id="navbar-container"></div>
+
+  <main>
+    <!-- ============================================================ -->
+    <!-- 1 · TITLE PLATE — Chapter 04 · The Bridge                    -->
+    <!-- ============================================================ -->
+    <section id="philosophy" class="spine-section min-h-[100svh] flex items-center relative overflow-hidden pt-24">
+      <span class="ghost-numeral top-[6%] right-[-2%]" aria-hidden="true">04</span>
+      <div class="spine-container w-full relative">
+        <p class="kicker"><span class="tick" aria-hidden="true">▪</span>CHAPTER 04 — EDUCATION &amp; CULTURE</p>
+        <p class="serif-italic ink-soft text-xl md:text-2xl mt-5">The Bridge</p>
+        <h1 class="display-l mt-6 max-w-[18ch]" data-reveal-lines>
+          Bridging Worlds Through <span class="serif-italic accent h1-grad">Empathetic Knowledge</span>
+        </h1>
+        <div class="accent-bar mt-10 max-w-[280px]" data-accent-bar></div>
+        <p class="standfirst mt-8">
+          My passion lies in knowledge transfer—translating complex concepts
+          into tangible realities. I believe learning must be felt,
+          experienced, and deeply understood to be truly transformative.
+        </p>
+        <p class="caption mt-6 tracking-[.18em]" aria-hidden="true">ROUTE — TAIPEI → SINGAPORE → HONG KONG · THREE PORTS, ONE BRIDGE</p>
+        <div class="flex flex-wrap items-center gap-x-10 gap-y-4 mt-10">
+          <a class="link-editorial py-3" href="#journey">My Journey →</a>
+          <a class="link-editorial py-3" href="#experience">Teaching Impact</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Philosophy pull quote -->
+    <section class="spine-section !pt-0" aria-labelledby="core-philosophy-head">
+      <div class="spine-container">
+        <hr class="hairline mb-14">
+        <p class="kicker" id="core-philosophy-head"><span class="tick" aria-hidden="true">▪</span>CORE PHILOSOPHY — THE COUNSELOR-EDUCATOR</p>
+        <blockquote class="pullquote mt-8 max-w-[34ch]" data-reveal-lines>
+          "I don't just teach content; I teach people. My background in
+          counseling allows me to build deeper connections, fostering a
+          safe environment where students feel seen, heard, and empowered
+          to learn."
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 2 · SIGNATURE — THE JOURNEY LINE (scrubbed SVG route)        -->
+    <!-- ============================================================ -->
+    <section id="journey" class="spine-section" aria-labelledby="journey-head">
+      <div class="spine-container">
+        <header class="section-head">
+          <hr class="section-rule">
+          <p class="kicker"><span class="tick" aria-hidden="true">▪</span>FIG. 01 — THE LEARNING ROUTE · 1998–2015 · SIX WAYPOINTS</p>
+          <h2 id="journey-head" class="display-m" data-reveal-lines>From Third Culture Kid to Global Educator</h2>
+        </header>
+
+        <div class="grid md:grid-cols-2 gap-14 lg:gap-24 items-start">
+          <!-- The route line — the spine of this chapter -->
+          <div id="journey-route" class="min-h-[1260px] md:min-h-[1440px]">
+            <svg viewBox="0 0 56 1200" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+              <path id="journey-path"
+                d="M28 0 C 50 36, 8 62, 28 100 C 52 156, 4 244, 28 300 C 54 358, 2 444, 28 500 C 50 562, 6 642, 28 700 C 54 760, 2 846, 28 900 C 50 962, 8 1044, 28 1100 C 38 1140, 20 1172, 28 1200"
+                fill="none" stroke="var(--accent)" stroke-width="1.5"
+                vector-effect="non-scaling-stroke" />
+            </svg>
+            <ol class="journey-stops">
+              <li class="journey-stop">
+                <span class="journey-dot" aria-hidden="true"><span class="journey-ping"></span></span>
                 <div>
-                  <p class="font-bold text-slate-900">Core Philosophy</p>
-                  <p class="text-sm text-slate-500">The Counselor-Educator</p>
+                  <p class="kicker">WAYPOINT 01 · 1998–2000 — 25.03°N 121.56°E</p>
+                  <p class="journey-name mt-2">TAIPEI BRITISH SCHOOL</p>
+                  <p class="mt-3"><span class="waypoint-stamp" data-rot="-3" style="--rot:-3deg">IGCSE</span></p>
                 </div>
-              </div>
-              <p class="text-lg text-slate-700 italic leading-relaxed">
-                "I don't just teach content; I teach people. My background in
-                counseling allows me to build deeper connections, fostering a
-                safe environment where students feel seen, heard, and empowered
-                to learn."
-              </p>
-            </div>
+              </li>
+              <li class="journey-stop">
+                <span class="journey-dot" aria-hidden="true"><span class="journey-ping"></span></span>
+                <div>
+                  <p class="kicker">WAYPOINT 02 · 2000–2003 — 1.35°N 103.82°E</p>
+                  <p class="journey-name mt-2">TANGLIN TRUST SINGAPORE</p>
+                  <p class="mt-3"><span class="waypoint-stamp" data-rot="2" style="--rot:2deg">GCSE</span></p>
+                </div>
+              </li>
+              <li class="journey-stop">
+                <span class="journey-dot" aria-hidden="true"><span class="journey-ping"></span></span>
+                <div>
+                  <p class="kicker">WAYPOINT 03 · 2003–2005 — 22.32°N 114.17°E</p>
+                  <p class="journey-name mt-2">GSIS HONG KONG</p>
+                  <p class="mt-3"><span class="waypoint-stamp" data-rot="-2" style="--rot:-2deg">AS &amp; A-Level</span></p>
+                </div>
+              </li>
+              <li class="journey-stop">
+                <span class="journey-dot" aria-hidden="true"><span class="journey-ping"></span></span>
+                <div>
+                  <p class="kicker">WAYPOINT 04 · 2006–2010 — 22.34°N 114.18°E</p>
+                  <p class="journey-name mt-2">HKBU</p>
+                  <p class="mt-3 flex flex-wrap gap-3">
+                    <span class="waypoint-stamp" data-rot="-3" style="--rot:-3deg">AD then BSocSc Psychology, 1st Hons</span>
+                    <span class="waypoint-stamp" data-rot="2.5" style="--rot:2.5deg">Dean's List — Associate Degree</span>
+                  </p>
+                  <p class="caption mt-3 max-w-[30ch]">One of four students who received the first-class honours of the course.</p>
+                </div>
+              </li>
+              <li class="journey-stop">
+                <span class="journey-dot" aria-hidden="true"><span class="journey-ping"></span></span>
+                <div>
+                  <p class="kicker">WAYPOINT 05 · 2013–2015 — 22.42°N 114.21°E</p>
+                  <p class="journey-name mt-2">CUHK</p>
+                  <p class="mt-3"><span class="waypoint-stamp" data-rot="-2.5" style="--rot:-2.5deg">MASGC</span></p>
+                </div>
+              </li>
+              <li class="journey-stop">
+                <span class="journey-dot" aria-hidden="true"><span class="journey-ping"></span></span>
+                <div>
+                  <p class="kicker">WAYPOINT 06 · ROUTE END — 22.30°N 114.17°E</p>
+                  <p class="journey-name mt-2">HONG KONG — THE BRIDGE</p>
+                  <p class="caption mt-3 max-w-[32ch]">Trilingual — English · Cantonese · Mandarin. Higher Diploma in Translation Studies, CUHK SCE, 2005–2006.</p>
+                </div>
+              </li>
+            </ol>
+          </div>
+
+          <!-- The origin narrative (verbatim) -->
+          <div class="prose-measure md:sticky md:top-32">
+            <p class="ink-soft leading-relaxed">
+              My educational philosophy is deeply rooted in my own
+              cross-cultural journey. Growing up in international school
+              environments (GSIS, Tanglin, Taipei British School) gave me a
+              firsthand appreciation for diverse perspectives.
+            </p>
+            <p class="ink-soft leading-relaxed mt-6">
+              This experience fostered a deep
+              <strong class="text-inkbase">cultural humility</strong>—a core counseling trait. It
+              informs my work with minority families and my approach to
+              inclusive education, ensuring that every learner feels seen,
+              valued, and understood regardless of their background.
+            </p>
+            <p class="ink-soft leading-relaxed mt-6">
+              The route reads like a passport: stamped in Taipei, renewed in
+              Singapore, settled in Hong Kong — then deepened at HKBU and
+              CUHK, where the traveller became a psychologist, and the
+              psychologist a guidance counsellor.
+            </p>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- The Journey (Origin Story) -->
-      <section id="journey" class="max-w-5xl mx-auto mb-32 reveal">
-        <div
-          class="bg-white/60 backdrop-blur-sm p-8 md:p-12 rounded-3xl border border-emerald-500/20 shadow-lg"
-        >
-          <div class="flex flex-col md:flex-row gap-12 items-center">
-            <div class="w-full md:w-1/3 flex justify-center">
-              <div class="relative w-48 h-48">
-                <div
-                  class="absolute inset-0 bg-emerald-500/10 rounded-full opacity-50 animate-pulse"
-                ></div>
-                <div
-                  class="absolute inset-4 bg-white rounded-full flex items-center justify-center text-emerald-600 border border-emerald-500/30"
-                >
-                  <i data-lucide="globe" class="w-20 h-20"></i>
-                </div>
-              </div>
-            </div>
-            <div class="flex-1">
-              <div
-                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider mb-6"
-              >
-                The Origin
-              </div>
-              <h2 class="text-3xl font-bold text-slate-900 mb-6">
-                From Third Culture Kid to Global Educator
-              </h2>
-              <p class="text-slate-600 mb-6 leading-relaxed">
-                My educational philosophy is deeply rooted in my own
-                cross-cultural journey. Growing up in international school
-                environments (GSIS, Tanglin, Taipei British School) gave me a
-                firsthand appreciation for diverse perspectives.
-              </p>
-              <p class="text-slate-600 leading-relaxed">
-                This experience fostered a deep
-                <strong>cultural humility</strong>—a core counseling trait. It
-                informs my work with minority families and my approach to
-                inclusive education, ensuring that every learner feels seen,
-                valued, and understood regardless of their background.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- The Counselor-Educator (Uniqueness) -->
-      <section class="max-w-6xl mx-auto mb-32 reveal">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-            The Counselor-Educator
-          </h2>
-          <p class="text-slate-600 max-w-2xl mx-auto">
-            Integrating psychological insights into pedagogical practice.
+    <!-- ============================================================ -->
+    <!-- 2b · BEYOND THE CLASSROOM — honours as passport stamps       -->
+    <!-- ============================================================ -->
+    <section id="beyond" class="spine-section !pt-0" aria-labelledby="beyond-head">
+      <div class="spine-container">
+        <header class="section-head">
+          <hr class="section-rule">
+          <p class="kicker"><span class="tick" aria-hidden="true">▪</span>CH. 04 § BEYOND THE CLASSROOM</p>
+          <h2 id="beyond-head" class="display-m" data-reveal-lines>Stamps in the Margin</h2>
+          <p class="standfirst">
+            The bridge-builder was always competing, solving, playing —
+            every port left an honour in the passport.
           </p>
-        </div>
+        </header>
 
-        <div class="grid md:grid-cols-3 gap-8">
-          <!-- Card 1 -->
-          <div
-            class="bg-white/50 backdrop-blur-sm p-8 rounded-2xl border border-emerald-500/10 hover:border-emerald-500/30 transition-all hover:-translate-y-1"
-          >
-            <div
-              class="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center text-teal-600 mb-6"
-            >
-              <i data-lucide="ear" class="w-6 h-6"></i>
-            </div>
-            <h3 class="text-xl font-bold text-slate-900 mb-3">
-              Active Listening
-            </h3>
-            <p class="text-slate-600 text-sm">
-              Applying counseling techniques to truly hear student concerns,
-              adapting teaching styles to meet their emotional and academic
-              needs.
-            </p>
+        <div id="honour-strip" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 items-start">
+          <div class="honour-stamp" data-rot="-2.4" style="--rot:-2.4deg">
+            <span class="stamp-label">VISA · HONG KONG · 2005</span>
+            <p class="stamp-text">Season MVP — Hong Kong League of International School Basketball, 2005</p>
           </div>
-
-          <!-- Card 2 -->
-          <div
-            class="bg-white/50 backdrop-blur-sm p-8 rounded-2xl border border-emerald-500/10 hover:border-emerald-500/30 transition-all hover:-translate-y-1"
-          >
-            <div
-              class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600 mb-6"
-            >
-              <i data-lucide="users" class="w-6 h-6"></i>
-            </div>
-            <h3 class="text-xl font-bold text-slate-900 mb-3">
-              Student Relations
-            </h3>
-            <p class="text-slate-600 text-sm">
-              Bridging the gap between faculty and students. I create safe
-              spaces where students feel comfortable seeking guidance.
-            </p>
+          <div class="honour-stamp" data-rot="1.8" style="--rot:1.8deg">
+            <span class="stamp-label">VISA · SINGAPORE · 2003</span>
+            <p class="stamp-text">Season Championship — Singapore International School Basketball League, 2003</p>
           </div>
-
-          <!-- Card 3 -->
-          <div
-            class="bg-white/50 backdrop-blur-sm p-8 rounded-2xl border border-emerald-500/10 hover:border-emerald-500/30 transition-all hover:-translate-y-1"
-          >
-            <div
-              class="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center text-cyan-600 mb-6"
-            >
-              <i data-lucide="brain-circuit" class="w-6 h-6"></i>
-            </div>
-            <h3 class="text-xl font-bold text-slate-900 mb-3">
-              Psychological Insight
-            </h3>
-            <p class="text-slate-600 text-sm">
-              Leveraging psychology and sociology knowledge to understand group
-              dynamics and individual learning behaviors.
-            </p>
+          <div class="honour-stamp" data-rot="-1.2" style="--rot:-1.2deg">
+            <span class="stamp-label">VISA · KUALA LUMPUR · 2001</span>
+            <p class="stamp-text">3D Puzzle Champions — fastest problem solving, South-East Asia Mathematics Competitions, Alice Smith School, Kuala Lumpur, 2001</p>
+          </div>
+          <div class="honour-stamp" data-rot="2.6" style="--rot:2.6deg">
+            <span class="stamp-label">VISA · SINGAPORE · 2001</span>
+            <p class="stamp-text">Golden Class Award in Mathematics — Tanglin Trust School of Singapore, 2001</p>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Experience Timeline (Vertical) -->
-      <section id="experience" class="max-w-4xl mx-auto mb-32">
-        <h2 class="text-3xl font-bold text-slate-900 mb-16 text-center reveal">
-          Teaching Impact & Stories
-        </h2>
-        <div
-          class="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-emerald-500/30 before:to-transparent"
-        >
-          <!-- Item 1: Maria College -->
-          <div
-            class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active reveal"
-          >
-            <div
-              class="flex items-center justify-center w-10 h-10 rounded-full border border-emerald-500/30 bg-white text-emerald-600 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10"
-            >
-              <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+    <!-- ============================================================ -->
+    <!-- 3 · THE COUNSELOR-EDUCATOR — three framed pillars            -->
+    <!-- ============================================================ -->
+    <section id="counselor-educator" class="spine-section" aria-labelledby="counselor-educator-head">
+      <div class="spine-container">
+        <header class="section-head">
+          <hr class="section-rule">
+          <p class="kicker"><span class="tick" aria-hidden="true">▪</span>CH. 04 § PRACTICE</p>
+          <h2 id="counselor-educator-head" class="display-m" data-reveal-lines>The Counselor-Educator</h2>
+          <p class="standfirst">Integrating psychological insights into pedagogical practice.</p>
+        </header>
+
+        <div class="grid md:grid-cols-3 gap-6 lg:gap-10">
+          <!-- Pillar 1 -->
+          <figure class="plate-figure plate-reveal m-0">
+            <div class="border border-[var(--hairline)] bg-paper-soft p-8 h-full">
+              <i data-lucide="ear" class="w-6 h-6 accent-deep" aria-hidden="true"></i>
+              <h3 class="ledger-role mt-6 mb-3">Active Listening</h3>
+              <p class="ink-soft body-small">
+                Applying counseling techniques to truly hear student concerns,
+                adapting teaching styles to meet their emotional and academic
+                needs.
+              </p>
             </div>
-            <div
-              class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white/60 backdrop-blur-sm p-6 rounded-xl border border-emerald-500/20 shadow-sm hover:shadow-md hover:border-emerald-500/40 transition-all"
-            >
-              <div class="flex flex-col mb-2">
-                <h3 class="font-bold text-slate-900 text-lg">Maria College</h3>
-                <span
-                  class="text-xs font-mono text-emerald-700 bg-emerald-100 px-2 py-1 rounded w-fit mt-1"
-                  >Psychology & Sociology</span
-                >
-              </div>
-              <p class="text-slate-600 text-sm mb-3">
-                <strong>Mentoring with Empathy:</strong> Beyond delivering
+            <figcaption class="caption">FIG. 02 — ACTIVE LISTENING</figcaption>
+          </figure>
+
+          <!-- Pillar 2 -->
+          <figure class="plate-figure plate-reveal m-0">
+            <div class="border border-[var(--hairline)] bg-paper-soft p-8 h-full">
+              <i data-lucide="users" class="w-6 h-6 accent-deep" aria-hidden="true"></i>
+              <h3 class="ledger-role mt-6 mb-3">Student Relations</h3>
+              <p class="ink-soft body-small">
+                Bridging the gap between faculty and students. I create safe
+                spaces where students feel comfortable seeking guidance.
+              </p>
+            </div>
+            <figcaption class="caption">FIG. 03 — STUDENT RELATIONS</figcaption>
+          </figure>
+
+          <!-- Pillar 3 -->
+          <figure class="plate-figure plate-reveal m-0">
+            <div class="border border-[var(--hairline)] bg-paper-soft p-8 h-full">
+              <i data-lucide="brain-circuit" class="w-6 h-6 accent-deep" aria-hidden="true"></i>
+              <h3 class="ledger-role mt-6 mb-3">Psychological Insight</h3>
+              <p class="ink-soft body-small">
+                Leveraging psychology and sociology knowledge to understand group
+                dynamics and individual learning behaviors.
+              </p>
+            </div>
+            <figcaption class="caption">FIG. 04 — PSYCHOLOGICAL INSIGHT</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 4 · TEACHING TIMELINE — ledger rows                          -->
+    <!-- ============================================================ -->
+    <section id="experience" class="spine-section" aria-labelledby="experience-head">
+      <div class="spine-container">
+        <header class="section-head">
+          <hr class="section-rule">
+          <p class="kicker"><span class="tick" aria-hidden="true">▪</span>CH. 04 § THE LEDGER</p>
+          <h2 id="experience-head" class="display-m" data-reveal-lines>Teaching Impact &amp; Stories</h2>
+        </header>
+
+        <div class="ledger">
+          <!-- Entry 1: Maria College -->
+          <article class="ledger-row page-turn grid md:grid-cols-[240px_1fr] gap-3 md:gap-12">
+            <p class="ledger-year uppercase tracking-[.1em] pt-2">Psychology &amp; Sociology</p>
+            <div>
+              <h3 class="ledger-role">Maria College</h3>
+              <p class="ink-soft body-small mt-3 prose-measure">
+                <strong class="text-inkbase">Mentoring with Empathy:</strong> Beyond delivering
                 lectures, I mentored students in the "Student Relations"
                 program. I used my own counseling experience to show them how to
                 handle real-world cases, turning abstract theories into
                 practical empathy.
               </p>
             </div>
-          </div>
+          </article>
 
-          <!-- Item 2: IVE -->
-          <div
-            class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active reveal"
-          >
-            <div
-              class="flex items-center justify-center w-10 h-10 rounded-full border border-emerald-500/30 bg-white text-emerald-600 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10"
-            >
-              <i data-lucide="book-open" class="w-5 h-5"></i>
-            </div>
-            <div
-              class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white/60 backdrop-blur-sm p-6 rounded-xl border border-emerald-500/20 shadow-sm hover:shadow-md hover:border-emerald-500/40 transition-all"
-            >
-              <div class="flex flex-col mb-2">
-                <h3 class="font-bold text-slate-900 text-lg">
-                  Institute of Vocational Education (IVE)
-                </h3>
-                <span
-                  class="text-xs font-mono text-emerald-700 bg-emerald-100 px-2 py-1 rounded w-fit mt-1"
-                  >Vocational Education</span
-                >
-              </div>
-              <p class="text-slate-600 text-sm">
-                <strong>Holistic Career Development:</strong> Focused on student
+          <!-- Entry 2: IVE -->
+          <article class="ledger-row page-turn grid md:grid-cols-[240px_1fr] gap-3 md:gap-12">
+            <p class="ledger-year uppercase tracking-[.1em] pt-2">Vocational Education</p>
+            <div>
+              <h3 class="ledger-role">Institute of Vocational Education (IVE)</h3>
+              <p class="ink-soft body-small mt-3 prose-measure">
+                <strong class="text-inkbase">Holistic Career Development:</strong> Focused on student
                 development and soft skills. I designed interactive workshops
                 that addressed <em>student anxieties</em> about the future,
                 bridging the gap between academic study and workplace reality
                 with reassurance and clarity.
               </p>
             </div>
-          </div>
+          </article>
 
-          <!-- Item 3: Workplace Training -->
-          <div
-            class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active reveal"
-          >
-            <div
-              class="flex items-center justify-center w-10 h-10 rounded-full border border-emerald-500/30 bg-white text-emerald-600 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10"
-            >
-              <i data-lucide="briefcase" class="w-5 h-5"></i>
-            </div>
-            <div
-              class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white/60 backdrop-blur-sm p-6 rounded-xl border border-emerald-500/20 shadow-sm hover:shadow-md hover:border-emerald-500/40 transition-all"
-            >
-              <div class="flex flex-col mb-2">
-                <h3 class="font-bold text-slate-900 text-lg">
-                  Workplace Training
-                </h3>
-                <span
-                  class="text-xs font-mono text-emerald-700 bg-emerald-100 px-2 py-1 rounded w-fit mt-1"
-                  >Project Management & Operations</span
-                >
-              </div>
-              <p class="text-slate-600 text-sm">
-                <strong>Empowering Teams:</strong> As a Project Officer, I
+          <!-- Entry 3: Workplace Training -->
+          <article class="ledger-row page-turn grid md:grid-cols-[240px_1fr] gap-3 md:gap-12">
+            <p class="ledger-year uppercase tracking-[.1em] pt-2">Project Management &amp; Operations</p>
+            <div>
+              <h3 class="ledger-role">Workplace Training</h3>
+              <p class="ink-soft body-small mt-3 prose-measure">
+                <strong class="text-inkbase">Empowering Teams:</strong> As a Project Officer, I
                 trained teams on workplace software. My goal was to reduce
                 <em>workplace stress</em>
                 by making efficiency accessible, understanding group dynamics to
                 turn "boring" admin tasks into streamlined workflows.
               </p>
             </div>
-          </div>
+          </article>
 
-          <!-- Item 4: SEN -->
-          <div
-            class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active reveal"
-          >
-            <div
-              class="flex items-center justify-center w-10 h-10 rounded-full border border-emerald-500/30 bg-white text-emerald-600 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10"
-            >
-              <i data-lucide="heart-handshake" class="w-5 h-5"></i>
-            </div>
-            <div
-              class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white/60 backdrop-blur-sm p-6 rounded-xl border border-emerald-500/20 shadow-sm hover:shadow-md hover:border-emerald-500/40 transition-all"
-            >
-              <div class="flex flex-col mb-2">
-                <h3 class="font-bold text-slate-900 text-lg">SEN Teaching</h3>
-                <span
-                  class="text-xs font-mono text-emerald-700 bg-emerald-100 px-2 py-1 rounded w-fit mt-1"
-                  >Autism Child Foundations</span
-                >
-              </div>
-              <p class="text-slate-600 text-sm">
-                <strong>Individualized Care:</strong> Provided specialised
+          <!-- Entry 4: SEN Teaching -->
+          <article class="ledger-row page-turn grid md:grid-cols-[240px_1fr] gap-3 md:gap-12">
+            <p class="ledger-year uppercase tracking-[.1em] pt-2">Autism Child Foundations</p>
+            <div>
+              <h3 class="ledger-role">SEN Teaching</h3>
+              <p class="ink-soft body-small mt-3 prose-measure">
+                <strong class="text-inkbase">Individualized Care:</strong> Provided specialised
                 support for children with autism. This role taught me
                 <em>unconditional positive regard</em>
                 and the importance of observing non-verbal cues to tailor
                 learning strategies.
               </p>
             </div>
-          </div>
+          </article>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Media Section (Dark Contrast) -->
-      <section id="media" class="max-w-6xl mx-auto mb-32 reveal">
-        <div
-          class="bg-white/80 backdrop-blur-md rounded-3xl p-8 md:p-16 text-slate-900 overflow-hidden relative shadow-2xl border border-emerald-500/20"
-        >
-          <!-- Background Effects -->
-          <div
-            class="absolute top-0 right-0 w-96 h-96 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 -translate-y-1/2 translate-x-1/2"
-          ></div>
-          <div
-            class="absolute bottom-0 left-0 w-96 h-96 bg-teal-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 translate-y-1/2 -translate-x-1/2"
-          ></div>
+    <!-- ============================================================ -->
+    <!-- 4b · PUBLICATIONS & RESEARCH — the evidence under the bridge -->
+    <!-- ============================================================ -->
+    <section id="publications" class="spine-section !pt-0" aria-labelledby="publications-head">
+      <div class="spine-container">
+        <header class="section-head">
+          <hr class="section-rule">
+          <p class="kicker"><span class="tick" aria-hidden="true">▪</span>CH. 04 § PUBLICATIONS &amp; RESEARCH</p>
+          <h2 id="publications-head" class="display-m" data-reveal-lines>Publications &amp; Research</h2>
+          <p class="standfirst">
+            The bridge stands on evidence — mapping how culture and faith
+            shape civic life, and turning inclusive-education research into
+            classroom-ready materials.
+          </p>
+        </header>
 
-          <div class="relative z-10">
-            <div class="text-center mb-12">
-              <h2 class="text-3xl md:text-4xl font-bold mb-4 text-slate-900">
-                Education Beyond Walls
-              </h2>
-              <p class="text-slate-600 max-w-2xl mx-auto">
-                Leveraging media to scale educational impact and reach
-                digital-native audiences.
+        <div class="ledger">
+          <article class="ledger-row page-turn grid md:grid-cols-[240px_1fr] gap-3 md:gap-12">
+            <p class="ledger-year uppercase tracking-[.1em] pt-2">AERA · New York · 2018</p>
+            <div>
+              <h3 class="ledger-role">Mapping Religious Affiliation with Civic Engagement</h3>
+              <p class="ink-soft body-small mt-3 prose-measure">
+                Yuen, C. Y. M., &amp; Chan, H. (2018, April 25). Mapping religious
+                affiliation with civic engagement outcomes among diverse student
+                cultural groups in Hong Kong [Poster Abstract]. 2018 Annual
+                Meeting of the American Educational Research Association, New
+                York, NY.
               </p>
             </div>
+          </article>
 
-            <div class="grid md:grid-cols-2 gap-8">
-              <!-- Media Card 1 -->
-              <div
-                class="group bg-white/50 backdrop-blur-md p-1 rounded-2xl border border-emerald-500/20 hover:bg-white/70 transition-all duration-300"
-              >
-                <div class="bg-white/50 rounded-xl p-8 h-full flex flex-col">
-                  <div class="flex items-center gap-3 mb-6">
-                    <div class="p-3 bg-emerald-100 rounded-lg text-emerald-600">
-                      <i data-lucide="video" class="w-6 h-6"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-900">
-                      Bilibili Series
-                    </h3>
-                  </div>
-                  <p class="text-slate-600 mb-6 flex-1">
-                    Educational content exploring the intersection of technology
-                    and culture. Designed to engage students outside the
-                    classroom.
-                  </p>
-                  <a
-                    href="#"
-                    class="inline-flex items-center text-emerald-600 hover:text-emerald-700 transition-colors text-sm font-medium"
-                  >
-                    Watch Series
-                    <i
-                      data-lucide="arrow-right"
-                      class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"
-                    ></i>
-                  </a>
-                </div>
-              </div>
-
-              <!-- Media Card 2 -->
-              <div
-                class="group bg-white/50 backdrop-blur-md p-1 rounded-2xl border border-emerald-500/20 hover:bg-white/70 transition-all duration-300"
-              >
-                <div class="bg-white/50 rounded-xl p-8 h-full flex flex-col">
-                  <div class="flex items-center gap-3 mb-6">
-                    <div class="p-3 bg-emerald-100 rounded-lg text-emerald-600">
-                      <i data-lucide="film" class="w-6 h-6"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-900">
-                      Inclusive Teaching Cases
-                    </h3>
-                  </div>
-                  <p class="text-slate-600 mb-6 flex-1">
-                    Produced video cases for EdUHK to demonstrate inclusive
-                    teaching practices for teacher training programs.
-                  </p>
-                  <a
-                    href="#"
-                    class="inline-flex items-center text-emerald-600 hover:text-emerald-700 transition-colors text-sm font-medium"
-                  >
-                    View Cases
-                    <i
-                      data-lucide="arrow-right"
-                      class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"
-                    ></i>
-                  </a>
-                </div>
-              </div>
+          <article class="ledger-row page-turn grid md:grid-cols-[240px_1fr] gap-3 md:gap-12">
+            <p class="ledger-year uppercase tracking-[.1em] pt-2">EdUHK · 2020</p>
+            <div>
+              <h3 class="ledger-role">Inclusive Education Teaching Package — Primary</h3>
+              <p class="ink-soft body-small mt-3 prose-measure" lang="zh-Hant">
+                詹浩洋、陳冠喬、羅加鎂（2020）。學思達：融合教育教材套（第二冊）《小學篇》（第二版）。香港教育大學，香港：特殊教育與輔導學系。
+              </p>
             </div>
-          </div>
+          </article>
+
+          <article class="ledger-row page-turn grid md:grid-cols-[240px_1fr] gap-3 md:gap-12">
+            <p class="ledger-year uppercase tracking-[.1em] pt-2">EdUHK · 2020</p>
+            <div>
+              <h3 class="ledger-role">Inclusive Education Teaching Package — Secondary</h3>
+              <p class="ink-soft body-small mt-3 prose-measure" lang="zh-Hant">
+                詹浩洋、陳冠喬、羅加鎂（2020）。學思達：融合教育教材套（第二冊）《中學篇》（第二版）。香港教育大學，香港：特殊教育與輔導學系。
+              </p>
+            </div>
+          </article>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
 
-    <script src="js/navbar.js"></script>
-    <script>
-      // Initialize Navbar
-      initNavbar({
-        activePage: "education",
-        sections: [
-          { id: "philosophy", label: "Philosophy" },
-          { id: "journey", label: "Journey" },
-          { id: "experience", label: "Experience" },
-          { id: "media", label: "Media" },
-        ],
-        themeColor: "emerald",
-        isDark: false,
-      });
+    <!-- ============================================================ -->
+    <!-- 5 · MEDIA — Education Beyond Walls                           -->
+    <!-- ============================================================ -->
+    <section id="media" class="spine-section" aria-labelledby="media-head">
+      <div class="spine-container">
+        <header class="section-head">
+          <hr class="section-rule">
+          <p class="kicker"><span class="tick" aria-hidden="true">▪</span>CH. 04 § BROADCAST &amp; FILM</p>
+          <h2 id="media-head" class="display-m" data-reveal-lines>Education Beyond Walls</h2>
+          <p class="standfirst">
+            Leveraging media to scale educational impact and reach
+            digital-native audiences.
+          </p>
+        </header>
 
-      // Simple Reveal Animation
-      function reveal() {
-        var reveals = document.querySelectorAll(".reveal");
-        for (var i = 0; i < reveals.length; i++) {
-          var windowHeight = window.innerHeight;
-          var elementTop = reveals[i].getBoundingClientRect().top;
-          var elementVisible = 100;
-          if (elementTop < windowHeight - elementVisible) {
-            reveals[i].classList.add("active");
-            reveals[i].style.opacity = "1";
-            reveals[i].style.transform = "translateY(0)";
-          }
-        }
+        <div class="grid md:grid-cols-2 gap-6 lg:gap-10" style="perspective: 900px">
+          <!-- Media 1: Bilibili Series -->
+          <figure class="plate-figure plate-reveal m-0">
+            <div class="tilt-card border border-[var(--hairline)] bg-paper-soft p-8 h-full flex flex-col">
+              <i data-lucide="video" class="w-6 h-6 accent-deep" aria-hidden="true"></i>
+              <h3 class="ledger-role mt-6 mb-3">Bilibili Series</h3>
+              <p class="ink-soft body-small mb-8 flex-1">
+                Educational content exploring the intersection of technology
+                and culture. Designed to engage students outside the
+                classroom.
+              </p>
+              <a class="link-editorial py-2" href="https://live.bilibili.com/13081069" target="_blank" rel="noopener">
+                Watch Series →
+              </a>
+            </div>
+            <figcaption class="caption">FIG. 05 — BILIBILI, LIVE CHANNEL</figcaption>
+          </figure>
+
+          <!-- Media 2: Inclusive Teaching Cases -->
+          <figure class="plate-figure plate-reveal m-0">
+            <div class="tilt-card border border-[var(--hairline)] bg-paper-soft p-8 h-full flex flex-col">
+              <i data-lucide="film" class="w-6 h-6 accent-deep" aria-hidden="true"></i>
+              <h3 class="ledger-role mt-6 mb-3">Inclusive Teaching Cases</h3>
+              <p class="ink-soft body-small mb-8 flex-1">
+                Produced video cases for EdUHK to demonstrate inclusive
+                teaching practices for teacher training programs.
+              </p>
+              <p class="kicker py-2">View Cases — <span class="accent-deep">In Press</span></p>
+            </div>
+            <figcaption class="caption">FIG. 06 — EDUHK, TEACHER TRAINING</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 6 · RETURN SPREAD — back to the cover                        -->
+    <!-- ============================================================ -->
+    <section class="spine-section" aria-label="Return to the cover">
+      <div class="spine-container text-center">
+        <hr class="hairline mb-14">
+        <p class="kicker"><span aria-hidden="true" style="color:#B8965A; margin-right:.5em;">▪</span>END OF CHAPTER 04 — THE BRIDGE</p>
+        <p class="mt-8">
+          <a class="link-editorial py-3" style="font-size:14px;" href="index.html">Return to the Spine →</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- COLOPHON -->
+  <footer class="colophon">
+    <div class="spine-container">
+      <p class="kicker"><span class="tick">▪</span>COLOPHON</p>
+      <h2 class="colophon-name">Herman Koon Kiu “Joseph” Chan</h2>
+      <p class="ink-soft">The Digital Humanist — Hong Kong</p>
+      <div class="colophon-cols">
+        <div>
+          <p class="kicker">Correspondence</p>
+          <p class="mt-3"><a class="link-editorial" href="mailto:hermanchan_925@hotmail.com">hermanchan_925@hotmail.com</a></p>
+        </div>
+        <div>
+          <p class="kicker">Archive</p>
+          <p class="mt-3"><a class="link-editorial" href="https://github.com/herman925" target="_blank" rel="noopener">github.com/herman925 ↗</a></p>
+        </div>
+        <div>
+          <p class="kicker">Chapters</p>
+          <nav class="mt-3 flex flex-col gap-2">
+            <a class="link-editorial" href="counselling.html">01 Counselling</a>
+            <a class="link-editorial" href="technology.html">02 Technology</a>
+            <a class="link-editorial" href="project-management.html">03 Project Management</a>
+            <a class="link-editorial" href="education-culture.html">04 Education &amp; Culture</a>
+          </nav>
+        </div>
+      </div>
+      <div class="colophon-fine">
+        <span>Set in Fraunces &amp; Outfit. Bound in Hong Kong.</span>
+        <span>© 2026 Herman Koon Kiu “Joseph” Chan</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CHAPTER DOCK (mobile) -->
+  <nav class="chapter-dock" aria-label="Chapters">
+    <a href="counselling.html" data-ink="sienna" title="Counselling"><span></span></a>
+    <a href="technology.html" data-ink="tealink" title="Technology"><span></span></a>
+    <a href="project-management.html" data-ink="oxblood" title="Project Management"><span></span></a>
+    <a href="education-culture.html" data-ink="moss" title="Education &amp; Culture" aria-current="page"><span></span></a>
+  </nav>
+
+  <script src="js/navbar.js"></script>
+  <script>
+    // Initialize Navbar
+    initNavbar({
+      activePage: 'education',
+      sections: [
+        { id: 'philosophy', label: 'Philosophy' },
+        { id: 'journey', label: 'Journey' },
+        { id: 'counselor-educator', label: 'Approach' },
+        { id: 'experience', label: 'Experience' },
+        { id: 'publications', label: 'Publications' },
+        { id: 'media', label: 'Media' },
+      ],
+      themeColor: 'moss',
+      isDark: false,
+    });
+
+    // Initialize Icons
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+      lucide.createIcons();
+    }
+  </script>
+
+  <!-- Page-specific motion: Chapter 04 signature — The Journey Line (full route) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var path = document.getElementById('journey-path');
+      var stops = document.querySelectorAll('.journey-stop');
+      var honourStamps = document.querySelectorAll('.honour-stamp');
+      var pageTurnRows = document.querySelectorAll('.page-turn');
+
+      // Reduced motion / no GSAP: render every final state and bail.
+      if (!window.SPINE || !SPINE.motionOK || typeof gsap === 'undefined') {
+        if (path) path.style.strokeDashoffset = '0';
+        stops.forEach(function (stop) {
+          var dot = stop.querySelector('.journey-dot');
+          if (dot) dot.style.transform = 'none';
+          stop.querySelectorAll('.waypoint-stamp').forEach(function (s) { s.style.opacity = '1'; });
+        });
+        honourStamps.forEach(function (s) { s.style.opacity = '1'; });
+        return;
       }
 
-      // Add initial styles for reveal
-      document.querySelectorAll(".reveal").forEach((el) => {
-        el.style.opacity = "0";
-        el.style.transform = "translateY(30px)";
-        el.style.transition = "all 0.8s ease-out";
+      gsap.registerPlugin(ScrollTrigger);
+
+      // (a) Scrubbed route line — stitches all six waypoints down the section
+      //     (scrub-only, no pin).
+      if (path) {
+        var len = path.getTotalLength();
+        gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
+        gsap.to(path, {
+          strokeDashoffset: 0,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '#journey-route',
+            start: 'top 75%',
+            end: 'bottom 60%',
+            scrub: true
+          }
+        });
+      }
+
+      // Waypoints: emerald dot pings + passport-stamp "thunk" as the line arrives.
+      stops.forEach(function (stop) {
+        var dot = stop.querySelector('.journey-dot');
+        var ping = stop.querySelector('.journey-ping');
+        var stamps = stop.querySelectorAll('.waypoint-stamp');
+        ScrollTrigger.create({
+          trigger: stop,
+          start: 'center 68%',
+          once: true,
+          onEnter: function () {
+            if (dot) gsap.to(dot, { scale: 1, duration: 0.5, ease: 'back.out(2)' });
+            if (ping) {
+              gsap.fromTo(ping,
+                { opacity: 0.9, scale: 0.4 },
+                { opacity: 0, scale: 2.4, duration: 1.1, ease: SPINE.EASE_MICRO }
+              );
+            }
+            stamps.forEach(function (stamp, i) {
+              var base = parseFloat(stamp.getAttribute('data-rot') || '-3');
+              gsap.fromTo(stamp,
+                { opacity: 0, rotation: base - 5, scale: 1.2 },
+                { opacity: 1, rotation: base, scale: 1, duration: 0.55,
+                  delay: 0.12 + i * 0.1, ease: 'back.out(1.7)' }
+              );
+            });
+          }
+        });
       });
 
-      window.addEventListener("scroll", reveal);
-      reveal();
-    </script>
-  </body>
+      // (d) Honour stamps — passport thunks staggering in at slight random rotations.
+      if (honourStamps.length) {
+        ScrollTrigger.batch(honourStamps, {
+          start: 'top 85%',
+          once: true,
+          onEnter: function (batch) {
+            batch.forEach(function (stamp, i) {
+              var base = parseFloat(stamp.getAttribute('data-rot') || '-2');
+              gsap.fromTo(stamp,
+                { opacity: 0, rotation: base - 8, scale: 1.2 },
+                { opacity: 1, rotation: base, scale: 1, duration: 0.6,
+                  delay: i * 0.09, ease: 'back.out(1.7)' }
+              );
+            });
+          }
+        });
+      }
+
+      // (c) Ledger rows — page-turn reveal (rotateX from -10deg, origin top).
+      if (pageTurnRows.length) {
+        gsap.set(pageTurnRows, {
+          opacity: 0, rotationX: -10, y: 12,
+          transformOrigin: 'top center', transformPerspective: 800
+        });
+        ScrollTrigger.batch(pageTurnRows, {
+          start: 'top 88%',
+          once: true,
+          onEnter: function (batch) {
+            gsap.to(batch, {
+              opacity: 1, rotationX: 0, y: 0,
+              duration: 0.8, ease: SPINE.EASE_ENTER, stagger: 0.08
+            });
+          }
+        });
+      }
+
+      // (b) Media plates — 3D tilt hover (desktop + fine pointer only; max ±7deg).
+      if (window.matchMedia('(min-width: 768px) and (pointer: fine)').matches) {
+        document.querySelectorAll('.tilt-card').forEach(function (card) {
+          var rx = gsap.quickTo(card, 'rotationX', { duration: 0.4, ease: SPINE.EASE_MICRO });
+          var ry = gsap.quickTo(card, 'rotationY', { duration: 0.4, ease: SPINE.EASE_MICRO });
+          card.addEventListener('mousemove', function (e) {
+            var r = card.getBoundingClientRect();
+            ry(((e.clientX - r.left) / r.width - 0.5) * 14);
+            rx(((e.clientY - r.top) / r.height - 0.5) * -14);
+          });
+          card.addEventListener('mouseleave', function () { rx(0); ry(0); });
+        });
+      }
+    });
+  </script>
+</body>
 </html>

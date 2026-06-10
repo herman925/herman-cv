@@ -1,563 +1,695 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Herman Chan | Counselling & Social Services</title>
-    <link rel="stylesheet" href="global.css" />
-    <link rel="stylesheet" href="theme-counselling.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="js/tailwind-config.js"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-  </head>
-  <body
-    class="facet-counselling text-stone-800 antialiased overflow-x-hidden selection:bg-orange-200 selection:text-stone-900"
-  >
-    <!-- Navigation -->
-    <div id="navbar-container"></div>
+<html lang="en" data-chapter="counselling" class="loading">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Herman Chan | Counselling &amp; Social Services</title>
+    <meta name="description" content="Chapter 01 — The Listener. Herman Chan's counselling practice: person-centered therapy, CBT, play therapy and mindfulness, forged from lived experience and refugee support work.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,144,600;1,144,500&family=Outfit:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/tailwind-config.js"></script>
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="css/spine.css">
+  <style>
+    /* CH. 01 — page-scoped zen warmth. This chapter alone speaks in circles:
+       the breathing ring's soft language extends to gently rounded cards. */
+    main .letter-card,
+    #memoir .plate-reveal,
+    #toolkit .plate-figure > div,
+    .zen-card { border-radius: 14px; }
 
-    <!-- Hero Section: Zen & Minimalist -->
-    <section
-      class="min-h-screen flex items-center justify-center relative overflow-hidden pt-20"
-    >
-      <!-- Abstract Background Elements -->
-      <div
-        class="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-orange-100/50 rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-breathing"
-      ></div>
-      <div
-        class="absolute bottom-1/4 left-1/4 w-[600px] h-[600px] bg-stone-200/50 rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-breathing delay-2000"
-      ></div>
+    /* Toolkit cards — 3D tilt surface + warm light (JS drives rotation) */
+    #toolkit .tilt-card {
+      transition: box-shadow var(--dur-micro) ease;
+      transform-style: preserve-3d;
+    }
+    #toolkit .tilt-card:hover {
+      box-shadow: 0 24px 48px -24px rgba(249, 115, 22, .28);
+    }
 
-      <div class="container mx-auto px-6 relative z-10 text-center">
-        <div class="inline-block mb-8 reveal">
-          <div
-            class="w-20 h-20 mx-auto bg-white/80 rounded-full flex items-center justify-center shadow-sm mb-6 border border-stone-100 animate-float"
-          >
-            <i data-lucide="flower-2" class="w-10 h-10 text-orange-400"></i>
-          </div>
-        </div>
+    /* Floating zen orbs — warm ember + cool stone, drifting behind content */
+    .zen-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(64px);
+      pointer-events: none;
+      z-index: -1;
+    }
+    /* orbs bleed past the section edges by design — clip them so the page
+       never gains a horizontal scrollbar */
+    section:has(> .zen-orb) { overflow-x: clip; }
+    .zen-orb--ember { background: radial-gradient(circle, rgba(249, 115, 22, .16), rgba(249, 115, 22, 0) 70%); }
+    .zen-orb--stone { background: radial-gradient(circle, rgba(168, 162, 158, .30), rgba(168, 162, 158, 0) 70%); }
+    @media (prefers-reduced-motion: no-preference) {
+      .zen-orb--ember { animation: zen-float-a 9s ease-in-out infinite alternate; }
+      .zen-orb--stone { animation: zen-float-b 10s ease-in-out -4.5s infinite alternate; }
+    }
+    @keyframes zen-float-a {
+      from { transform: translate3d(0, 0, 0) scale(1); }
+      to   { transform: translate3d(3%, -6%, 0) scale(1.06); }
+    }
+    @keyframes zen-float-b {
+      from { transform: translate3d(0, 0, 0) scale(1); }
+      to   { transform: translate3d(-4%, 5%, 0) scale(1.08); }
+    }
 
-        <h1
-          class="text-6xl md:text-8xl font-light tracking-tight text-stone-800 mb-6 reveal"
-        >
-          Presence
-          <span class="font-serif italic text-stone-500">&</span> Empathy
-        </h1>
+    /* Marker-swipe highlight — scaleX wash behind the pull-quote (JS scrubs;
+       static final state is the fully-swiped highlight) */
+    .marker-swipe { position: relative; display: inline-block; }
+    .marker-swipe .marker-ink {
+      position: absolute;
+      inset: .06em -.18em;
+      background: var(--accent-soft);
+      border-radius: 10px;
+      transform-origin: left center;
+      z-index: -1;
+    }
 
-        <div class="mb-10 reveal">
-          <span
-            class="inline-block px-6 py-2 rounded-full bg-white/60 backdrop-blur-sm text-stone-600 text-base font-medium tracking-wide border border-stone-200 shadow-sm"
-          >
-            MASGC (CUHK) • BSocSc (HKBU)
-          </span>
-        </div>
+    /* Breathing-ring echoes — faint concentric companions */
+    .echo-ring { opacity: .16; pointer-events: none; }
+  </style>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script defer src="js/motion.js"></script>
+  <script defer src="js/transitions.js"></script>
+</head>
+<body class="antialiased overflow-x-hidden">
+  <div class="running-header">HERMAN CHAN — THE DIGITAL HUMANIST — CH. 01 — THE LISTENER</div>
 
-        <p
-          class="text-2xl md:text-3xl text-stone-500 max-w-3xl mx-auto leading-relaxed font-light reveal"
-        >
+  <!-- Navigation -->
+  <div id="navbar-container"></div>
+
+  <main>
+    <!-- ================================================================
+         1 · TITLE PLATE
+    ================================================================= -->
+    <section class="spine-section relative overflow-hidden min-h-[100svh] flex items-center pt-20" aria-labelledby="chapter-title">
+      <span class="ghost-numeral" aria-hidden="true" style="top: 6%; right: 2%;">01</span>
+      <div class="spine-container relative z-10 w-full">
+        <p class="kicker mb-8"><span class="tick">▪</span>CHAPTER 01</p>
+        <h1 id="chapter-title" class="display-l" data-reveal-lines>The Listener</h1>
+        <p class="serif-italic accent-deep text-xl md:text-2xl mt-6">Presence <span class="ink-soft">&amp;</span> Empathy</p>
+        <p class="caption mt-4">MASGC (CUHK) • BSocSc (HKBU)</p>
+        <p class="caption mt-2">Professional Registration of Counsellor — Hong Kong Professional Counselling Association (HKPCA) <span class="accent-deep">· in progress</span></p>
+        <p class="standfirst" data-reveal-lines>
           Turning personal struggle into professional strength. Creating safe
           spaces where every student feels seen, heard, and understood.
         </p>
-
-        <div class="mt-16 reveal">
-          <div
-            class="h-24 w-px bg-gradient-to-b from-stone-300 to-transparent mx-auto"
-          ></div>
-        </div>
+        <div class="accent-bar w-32 mt-10" data-accent-bar></div>
       </div>
     </section>
 
-    <!-- The Origin Story (My Why) -->
-    <section class="py-32 bg-stone-50">
-      <div class="container mx-auto px-6 max-w-5xl">
-        <div class="text-center mb-20 reveal">
-          <span
-            class="text-orange-500 font-medium tracking-widest text-sm uppercase mb-4 block"
-            >The Origin</span
-          >
-          <h2 class="text-4xl md:text-5xl font-bold text-stone-800">
-            From Struggle to Support
-          </h2>
-        </div>
+    <!-- ================================================================
+         2 · MEMOIR — the page's ONE pin (desktop); stacked beats on mobile
+    ================================================================= -->
+    <section id="memoir" class="spine-section" aria-labelledby="memoir-title">
+      <!-- zen orbs — slow warm weather behind the memoir -->
+      <div class="zen-orb zen-orb--ember" aria-hidden="true" style="width: min(560px, 80vw); height: min(560px, 80vw); top: 4%; right: -180px;"></div>
+      <div class="zen-orb zen-orb--stone" aria-hidden="true" style="width: min(640px, 90vw); height: min(640px, 90vw); bottom: 6%; left: -240px;"></div>
 
-        <div class="grid md:grid-cols-2 gap-16 items-center">
-          <div class="reveal">
-            <p class="text-xl text-stone-600 leading-loose mb-8">
+      <div class="spine-container">
+        <div class="section-head">
+          <hr class="section-rule">
+          <p class="kicker"><span class="tick">▪</span>CH. 01 § MEMOIR — THE ORIGIN</p>
+          <h2 id="memoir-title" class="display-m" data-reveal-lines>From Struggle to Support</h2>
+        </div>
+      </div>
+
+      <!-- BEAT 00 — THE SEED (prologue: before everything) -->
+      <div class="spine-container mb-24 md:mb-32">
+        <article id="memoir-prologue" class="md:pl-12">
+          <p class="kicker mb-6"><span class="tick">▪</span>// BEAT 00 — THE SEED</p>
+          <p class="serif-italic ink-soft text-lg md:text-xl mb-10 prose-measure">
+            before the degrees, before the title — there was a kid who listened.
+          </p>
+          <div class="grid md:grid-cols-2 gap-6">
+            <div class="zen-card border border-[var(--hairline)] bg-paper-soft p-8">
+              <p class="caption mb-4">SEED 01 — TANGLIN TRUST SCHOOL, SINGAPORE</p>
+              <h3 class="font-display font-semibold text-xl mb-3">The First Door Held Open</h3>
+              <p class="ink-soft body-small leading-loose">
+                Peer Counsellor, Tanglin Trust School, 2001–2003 — Support
+                initiative of school in reaching out to junior level schoolmates
+                to support for academic and interpersonal issues, in coordination
+                with school counsellors <span class="serif-italic">&amp;</span> educational psychologists.
+              </p>
+            </div>
+            <div class="zen-card border border-[var(--hairline)] bg-paper-soft p-8">
+              <p class="caption mb-4">SEED 02 — RIDING FOR THE DISABLED, SINGAPORE</p>
+              <h3 class="font-display font-semibold text-xl mb-3">Trust, on Horseback</h3>
+              <p class="ink-soft body-small leading-loose">
+                Helper, Riding for the Disabled Association of Singapore, 2002 —
+                Developed trust, personal rapport, and healthy working relations
+                through the activity of horse riding. RDA engages people in
+                Equine Assisted Therapy and Hippotherapy for those with
+                disabilities and cognitive impairments.
+              </p>
+            </div>
+          </div>
+          <p class="serif-italic ink-soft mt-8 prose-measure">
+            he was the kid helping other kids — a decade before any qualification made it official.
+          </p>
+        </article>
+      </div>
+
+      <div id="memoir-stage" class="spine-container relative">
+        <!-- sienna progress rule, fills as the memoir scrubs (desktop) -->
+        <div id="memoir-rail" class="hidden md:block absolute left-[clamp(20px,4vw,48px)] top-0 bottom-0 w-[2px] bg-sienna" aria-hidden="true"></div>
+
+        <!-- BEAT 01 — THE STRUGGLE -->
+        <article class="memoir-beat md:pl-12 mb-20 md:mb-0">
+          <p class="kicker mb-6"><span class="tick">▪</span>// BEAT 01 — THE STRUGGLE</p>
+          <div class="prose-measure">
+            <p class="text-lg md:text-xl ink-soft leading-loose mb-6">
               My journey into counseling began in <strong>Year 7</strong> as an
               international school student. Like many teenagers, I faced
               significant mental health challenges. It was a turbulent time
               where I felt lost and misunderstood.
             </p>
-            <p class="text-xl text-stone-600 leading-loose mb-8">
+            <p class="text-lg md:text-xl ink-soft leading-loose">
               I found my lifeline in
               <strong>Drama, Music, and Peer Counseling</strong>. These weren't
               just activities; they were safe harbours. I met mentors who offered
               unconditional support, but I also experienced betrayal and
               criticism from others who dismissed me as "incompetent."
             </p>
-            <p class="text-xl text-stone-600 leading-loose">
-              That duality—<strong>being both held and hurt</strong>—stayed with me. 
-              It followed me through university where I studied Psychology, 
-              then into my postgraduate training in Guidance and Counselling. 
-              Each step was an attempt to understand what I had lived through, 
-              and to become someone who could offer what I once desperately needed.
-            </p>
-            <p class="text-lg text-stone-500 leading-relaxed mt-6 pl-4 border-l-2 border-orange-300 italic">
-              My skill was born from humility. My goal is to lead with empathy.
-            </p>
           </div>
-          <div class="reveal delay-100">
-            <div
-              class="bg-white p-10 rounded-3xl shadow-sm border border-stone-100 relative animate-float-delayed"
-            >
-              <i
-                data-lucide="quote"
-                class="w-10 h-10 text-orange-200 absolute top-8 left-8"
-              ></i>
-              <p
-                class="text-stone-700 italic text-lg relative z-10 pt-8 leading-relaxed"
-              >
-                "That pain became my purpose. The experience of being both
-                supported and judged shaped my worldview. It fueled a deep,
-                burning desire to understand people—to be the empathetic adult I
-                needed when I was younger. Years later, when I walked into ISS 
-                to work with refugees, I finally understood why."
+        </article>
+
+        <!-- BEAT 02 — THE CRUCIBLE -->
+        <article class="memoir-beat md:pl-12 mb-20 md:mb-0">
+          <p class="kicker mb-4"><span class="tick">▪</span>// BEAT 02 — THE CRUCIBLE</p>
+          <h3 class="font-display font-semibold text-2xl md:text-3xl mb-6">International Social Services</h3>
+          <div class="md:grid md:grid-cols-2 md:gap-10">
+            <div>
+              <p class="body-small md:text-base ink-soft leading-relaxed mb-6">
+                My time at ISS (Hong Kong Branch) was a defining chapter. I worked
+                directly with
+                <strong>non-refoulement claimants (refugees)</strong>, witnessing
+                raw human suffering—fear, danger, and the struggle for survival
+                without a safety net.
+              </p>
+              <p class="body-small md:text-base ink-soft leading-relaxed mb-6 md:mb-0">
+                This experience was a masterclass in
+                <strong>cultural humility</strong>. I learned to navigate diverse
+                values on family, politics, and the future, understanding how
+                trauma manifests differently across cultures. It deepened my
+                capacity to sit with pain and offer stability in the midst of
+                chaos.
+              </p>
+            </div>
+            <div>
+              <p class="body-small md:text-base ink-soft leading-relaxed">
+                But I also faced a harsh reality: <strong>paperwork was drowning us</strong>.
+                Administrative burdens consumed hours that should have been spent with clients.
+                I made a choice—to learn technology not for its own sake, but to
+                <strong>reclaim the space and energy</strong> my clients deserved.
+                Every system I built, every hour automated, was an hour returned to human connection.
               </p>
             </div>
           </div>
+        </article>
+
+        <!-- BEAT 03 — THE COUNSELLOR -->
+        <article class="memoir-beat md:pl-12">
+          <p class="kicker mb-6"><span class="tick">▪</span>// BEAT 03 — THE COUNSELLOR</p>
+          <div class="md:grid md:grid-cols-2 md:gap-10 md:items-center">
+            <div>
+              <p class="body-small md:text-base ink-soft leading-relaxed">
+                That duality—<strong>being both held and hurt</strong>—stayed with me.
+                It followed me through university where I studied Psychology,
+                then into my postgraduate training in Guidance and Counselling.
+                Each step was an attempt to understand what I had lived through,
+                and to become someone who could offer what I once desperately needed.
+              </p>
+              <p class="serif-italic ink-soft border-l-2 border-sienna pl-4 mt-6">
+                My skill was born from humility. My goal is to lead with empathy.
+              </p>
+              <div class="zen-card border border-[var(--hairline)] bg-paper-soft p-5 mt-6">
+                <p class="caption mb-2">FIELD RECORD — UNIVERSITY YEARS</p>
+                <p class="body-small ink-soft leading-loose">
+                  One of three students and the only male candidate selected to
+                  receive an internship offer from the Hong Kong Kun Sun
+                  Association (KSA) in the visit to Shek Pik Prison.
+                </p>
+              </div>
+            </div>
+            <blockquote class="letter-card mt-10 md:mt-0">
+              <p class="letter-excerpt">
+                "That pain became my purpose. The experience of being both
+                supported and judged shaped my worldview. It fueled a deep,
+                burning desire to understand people—to be the empathetic adult I
+                needed when I was younger. Years later, when I walked into ISS
+                to work with refugees, I finally understood why."
+              </p>
+            </blockquote>
+          </div>
+        </article>
+      </div>
+
+      <!-- ANNEX — field notes from ISS -->
+      <div class="spine-container mt-24 md:mt-32">
+        <hr class="hairline mb-6">
+        <p class="kicker mb-10"><span class="tick">▪</span>ANNEX — FIELD NOTES FROM ISS</p>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="plate-reveal border border-[var(--hairline)] bg-paper-soft p-8">
+            <p class="caption mb-4">NOTE 01 — CULTURAL INSIGHT</p>
+            <h3 class="font-display font-semibold text-xl mb-3">Cultural Insight</h3>
+            <p class="ink-soft body-small">
+              Understanding how displacement impacts identity, family
+              dynamics, and mental health across different ethnic groups.
+            </p>
+          </div>
+          <div class="plate-reveal border border-[var(--hairline)] bg-paper-soft p-8">
+            <p class="caption mb-4">NOTE 02 — CRISIS RESILIENCE</p>
+            <h3 class="font-display font-semibold text-xl mb-3">Crisis Resilience</h3>
+            <p class="ink-soft body-small">
+              Managing high-stakes situations involving depression, anxiety,
+              and anger with calm, de-escalating presence.
+            </p>
+          </div>
+          <div class="plate-reveal border border-[var(--hairline)] bg-paper-soft p-8">
+            <p class="caption mb-4">NOTE 03 — PRESENCE OVER PAPERWORK</p>
+            <h3 class="font-display font-semibold text-xl mb-3">Presence Over Paperwork</h3>
+            <p class="ink-soft body-small">
+              I built systems that freed 30+ hours weekly—not to chase efficiency,
+              but to be fully present for the people who needed me most.
+            </p>
+          </div>
+        </div>
+        <div class="mt-14 flex flex-wrap items-end gap-x-6 gap-y-3">
+          <span class="stat-value" data-count="30" data-suffix="+">30+</span>
+          <span class="stat-caption pb-2">hours freed weekly — returned to human connection.</span>
         </div>
       </div>
     </section>
 
-    <!-- The Crucible (ISS Experience) -->
-    <section class="py-32 bg-stone-900 text-stone-300 relative overflow-hidden">
-      <!-- Abstract Background -->
-      <div
-        class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10 pointer-events-none"
-      >
-        <div
-          class="absolute -top-24 -left-24 w-[600px] h-[600px] bg-orange-500 rounded-full mix-blend-screen filter blur-3xl animate-breathing"
-        ></div>
-        <div
-          class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-stone-500 rounded-full mix-blend-screen filter blur-3xl animate-breathing delay-2000"
-        ></div>
-      </div>
-
-      <div class="container mx-auto px-6 max-w-6xl relative z-10">
-        <div class="flex flex-col md:flex-row gap-20 items-center">
-          <div class="md:w-1/2 reveal">
-            <span
-              class="text-orange-500 font-medium tracking-widest text-sm uppercase mb-4 block"
-              >The Crucible</span
-            >
-            <h2 class="text-4xl md:text-5xl font-bold text-white mb-8">
-              International Social Services
-            </h2>
-            <p class="text-xl text-stone-400 leading-loose mb-8">
-              My time at ISS (Hong Kong Branch) was a defining chapter. I worked
-              directly with
-              <strong>non-refoulement claimants (refugees)</strong>, witnessing
-              raw human suffering—fear, danger, and the struggle for survival
-              without a safety net.
-            </p>
-            <p class="text-xl text-stone-400 leading-loose mb-8">
-              This experience was a masterclass in
-              <strong>cultural humility</strong>. I learned to navigate diverse
-              values on family, politics, and the future, understanding how
-              trauma manifests differently across cultures. It deepened my
-              capacity to sit with pain and offer stability in the midst of
-              chaos.
-            </p>
-            <p class="text-xl text-stone-400 leading-loose">
-              But I also faced a harsh reality: <strong>paperwork was drowning us</strong>. 
-              Administrative burdens consumed hours that should have been spent with clients. 
-              I made a choice—to learn technology not for its own sake, but to 
-              <strong>reclaim the space and energy</strong> my clients deserved. 
-              Every system I built, every hour automated, was an hour returned to human connection.
-            </p>
-          </div>
-          <div class="md:w-1/2 reveal delay-100">
-            <div class="space-y-6">
-              <div
-                class="p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors"
-              >
-                <div class="flex items-center gap-4 mb-3">
-                  <i data-lucide="globe" class="w-6 h-6 text-orange-400"></i>
-                  <h4 class="text-white text-xl font-semibold">
-                    Cultural Insight
-                  </h4>
-                </div>
-                <p class="text-stone-400 text-lg">
-                  Understanding how displacement impacts identity, family
-                  dynamics, and mental health across different ethnic groups.
-                </p>
-              </div>
-              <div
-                class="p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors"
-              >
-                <div class="flex items-center gap-4 mb-3">
-                  <i data-lucide="shield" class="w-6 h-6 text-orange-400"></i>
-                  <h4 class="text-white text-xl font-semibold">
-                    Crisis Resilience
-                  </h4>
-                </div>
-                <p class="text-stone-400 text-lg">
-                  Managing high-stakes situations involving depression, anxiety,
-                  and anger with calm, de-escalating presence.
-                </p>
-              </div>
-              <div
-                class="p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors"
-              >
-                <div class="flex items-center gap-4 mb-3">
-                  <i data-lucide="heart-handshake" class="w-6 h-6 text-orange-400"></i>
-                  <h4 class="text-white text-xl font-semibold">
-                    Presence Over Paperwork
-                  </h4>
-                </div>
-                <p class="text-stone-400 text-lg">
-                  I built systems that freed 30+ hours weekly—not to chase efficiency, 
-                  but to be fully present for the people who needed me most.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Philosophy (Core Values) - Asymmetrical Layout -->
-    <section class="py-32 bg-white/40">
-      <div class="container mx-auto px-6 max-w-7xl">
-        <div class="text-center mb-20 reveal">
-          <h2 class="text-4xl md:text-5xl font-bold text-stone-800 mb-6">
-            Person-Centered & Empathetic
-          </h2>
-          <p class="text-xl text-stone-500 max-w-3xl mx-auto leading-relaxed">
-            My practice is built on <strong>Person-Centered Therapy</strong>. I
-            believe in aligning my core values with my life experiences to offer
-            authentic support.
-          </p>
+    <!-- ================================================================
+         3 · PHILOSOPHY
+    ================================================================= -->
+    <section id="philosophy" class="spine-section" aria-labelledby="philosophy-title">
+      <div class="spine-container">
+        <div class="section-head">
+          <hr class="section-rule">
+          <p class="kicker"><span class="tick">▪</span>CH. 01 § PHILOSOPHY</p>
+          <h2 id="philosophy-title" class="display-m" data-reveal-lines>Person-Centered <span class="italic font-medium">&amp;</span> Empathetic</h2>
         </div>
 
-        <div class="grid md:grid-cols-12 gap-8">
-          <!-- Large Card (Left) -->
-          <div
-            class="md:col-span-7 zen-card p-12 rounded-3xl reveal hover:-translate-y-1 transition-transform duration-500 animate-float"
-          >
-            <div
-              class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-500 mb-8"
-            >
-              <i data-lucide="heart" class="w-8 h-8"></i>
-            </div>
-            <h3 class="text-3xl font-semibold text-stone-800 mb-6">
-              Unconditional Positive Regard
-            </h3>
-            <p class="text-stone-600 leading-loose text-lg">
+        <blockquote class="pullquote prose-measure" data-reveal-lines>
+          My practice is built on <strong>Person-Centered Therapy</strong>. I
+          believe in aligning my core values with my life experiences to offer
+          authentic support.
+        </blockquote>
+
+        <div class="grid md:grid-cols-3 gap-x-10 gap-y-14 mt-20">
+          <div class="plate-reveal">
+            <p class="caption mb-4">PRINCIPLE 01</p>
+            <h3 class="font-display font-semibold text-2xl mb-4">Unconditional Positive Regard</h3>
+            <p class="ink-soft">
               Creating a judgment-free zone is the foundation of all growth.
               Regardless of a student's actions or struggles, I offer acceptance
               and care. This safety allows them to lower their defenses and
               truly explore who they are.
             </p>
           </div>
-
-          <!-- Stacked Cards (Right) -->
-          <div class="md:col-span-5 space-y-8">
-            <div
-              class="zen-card p-10 rounded-3xl reveal hover:-translate-y-1 transition-transform duration-500 delay-100 animate-float-delayed"
-            >
-              <div class="flex items-center gap-4 mb-4">
-                <div
-                  class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center text-orange-500"
-                >
-                  <i data-lucide="waves" class="w-6 h-6"></i>
-                </div>
-                <h3 class="text-2xl font-semibold text-stone-800">
-                  Hyper-Empathy
-                </h3>
-              </div>
-              <p class="text-stone-600 leading-relaxed text-lg">
-                My past allows me to feel deeply with others. This is my
-                superpower, enabling profound emotional connection.
-              </p>
-            </div>
-
-            <div
-              class="zen-card p-10 rounded-3xl reveal hover:-translate-y-1 transition-transform duration-500 delay-200 animate-float"
-            >
-              <div class="flex items-center gap-4 mb-4">
-                <div
-                  class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center text-orange-500"
-                >
-                  <i data-lucide="compass" class="w-6 h-6"></i>
-                </div>
-                <h3 class="text-2xl font-semibold text-stone-800">
-                  Value Alignment
-                </h3>
-              </div>
-              <p class="text-stone-600 leading-relaxed text-lg">
-                Helping students navigate their moral compass to make authentic,
-                fulfilling life choices.
-              </p>
-            </div>
+          <div class="plate-reveal">
+            <p class="caption mb-4">PRINCIPLE 02</p>
+            <h3 class="font-display font-semibold text-2xl mb-4">Hyper-Empathy</h3>
+            <p class="ink-soft">
+              My past allows me to feel deeply with others. This is my
+              superpower, enabling profound emotional connection.
+            </p>
           </div>
+          <div class="plate-reveal">
+            <p class="caption mb-4">PRINCIPLE 03</p>
+            <h3 class="font-display font-semibold text-2xl mb-4">Value Alignment</h3>
+            <p class="ink-soft">
+              Helping students navigate their moral compass to make authentic,
+              fulfilling life choices.
+            </p>
+          </div>
+        </div>
+
+        <!-- WHY — connecting with people -->
+        <div id="connecting" class="mt-24 md:mt-32">
+          <hr class="hairline mb-6">
+          <p class="kicker mb-10"><span class="tick">▪</span>CH. 01 § WHY — CONNECTING WITH PEOPLE</p>
+          <p class="text-lg md:text-xl ink-soft leading-loose prose-measure mb-8">
+            My lifelong passion for psychology stems from a genuine interest in
+            helping others. Past roles in counselling, tutoring
+            <span class="serif-italic">&amp;</span> working with children have honed my
+            patience, cultural awareness, and ability to build rapport.
+          </p>
+          <blockquote class="pullquote prose-measure">
+            <span class="marker-swipe"><span class="marker-ink" aria-hidden="true"></span>Connecting
+            with people on an individual level to make a difference drives me
+            above all else.</span>
+          </blockquote>
         </div>
       </div>
     </section>
 
-    <!-- Toolkit (Methodology) - Feature List Style -->
-    <section class="py-32 bg-stone-900 text-stone-300">
-      <div class="container mx-auto px-6 max-w-6xl">
-        <div class="text-center mb-20 reveal">
-          <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
-            My Toolkit
-          </h2>
-          <p class="text-xl text-stone-400 max-w-3xl mx-auto leading-relaxed">
+    <!-- ================================================================
+         4 · TOOLKIT
+    ================================================================= -->
+    <section id="toolkit" class="spine-section" aria-labelledby="toolkit-title">
+      <!-- zen orbs — the toolkit works inside the same warm weather -->
+      <div class="zen-orb zen-orb--ember" aria-hidden="true" style="width: min(520px, 78vw); height: min(520px, 78vw); top: -60px; left: -160px;"></div>
+      <div class="zen-orb zen-orb--stone" aria-hidden="true" style="width: min(600px, 88vw); height: min(600px, 88vw); bottom: -80px; right: -200px;"></div>
+
+      <div class="spine-container">
+        <div class="section-head">
+          <hr class="section-rule">
+          <p class="kicker"><span class="tick">▪</span>CH. 01 § TOOLKIT</p>
+          <h2 id="toolkit-title" class="display-m" data-reveal-lines>My Toolkit</h2>
+          <p class="standfirst">
             I blend evidence-based techniques with creative expression to meet
             students where they are.
           </p>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-8 reveal">
-          <!-- Tool 1 -->
-          <div
-            class="bg-white/5 border border-white/10 rounded-3xl p-10 hover:bg-white/10 transition-all duration-300 group"
-          >
-            <div
-              class="w-16 h-16 bg-orange-500/20 rounded-2xl flex items-center justify-center text-orange-400 mb-8 group-hover:scale-110 transition-transform"
-            >
-              <i data-lucide="brain-circuit" class="w-8 h-8"></i>
+        <div class="grid md:grid-cols-3 gap-6" style="perspective: 900px">
+          <figure class="plate-reveal plate-figure m-0">
+            <div class="tilt-card border border-[var(--hairline)] bg-paper-soft p-8 md:p-10">
+              <h3 class="font-display font-semibold text-2xl mb-4">CBT-Informed</h3>
+              <p class="ink-soft leading-loose">
+                Cognitive restructuring to help students manage anxiety and
+                depression by reframing negative thought patterns.
+              </p>
             </div>
-            <h4 class="text-2xl text-white font-semibold mb-4">CBT-Informed</h4>
-            <p class="text-stone-400 leading-relaxed text-lg">
-              Cognitive restructuring to help students manage anxiety and
-              depression by reframing negative thought patterns.
-            </p>
-          </div>
-
-          <!-- Tool 2 -->
-          <div
-            class="bg-white/5 border border-white/10 rounded-3xl p-10 hover:bg-white/10 transition-all duration-300 group relative top-8 md:top-12"
-          >
-            <div
-              class="w-16 h-16 bg-orange-500/20 rounded-2xl flex items-center justify-center text-orange-400 mb-8 group-hover:scale-110 transition-transform"
-            >
-              <i data-lucide="gamepad-2" class="w-8 h-8"></i>
+            <figcaption class="caption">FIG. 01 — COGNITIVE BEHAVIOURAL THERAPY</figcaption>
+          </figure>
+          <figure class="plate-reveal plate-figure m-0 md:mt-12">
+            <div class="tilt-card border border-[var(--hairline)] bg-paper-soft p-8 md:p-10">
+              <h3 class="font-display font-semibold text-2xl mb-4">Play Therapy</h3>
+              <p class="ink-soft leading-loose">
+                Using non-verbal expression (drawing, sand tray, drama) to process
+                trauma—honoring my roots in the arts.
+              </p>
             </div>
-            <h4 class="text-2xl text-white font-semibold mb-4">Play Therapy</h4>
-            <p class="text-stone-400 leading-relaxed text-lg">
-              Using non-verbal expression (drawing, sand tray, drama) to process
-              trauma—honoring my roots in the arts.
-            </p>
-          </div>
-
-          <!-- Tool 3 -->
-          <div
-            class="bg-white/5 border border-white/10 rounded-3xl p-10 hover:bg-white/10 transition-all duration-300 group"
-          >
-            <div
-              class="w-16 h-16 bg-orange-500/20 rounded-2xl flex items-center justify-center text-orange-400 mb-8 group-hover:scale-110 transition-transform"
-            >
-              <i data-lucide="sun" class="w-8 h-8"></i>
+            <figcaption class="caption">FIG. 02 — PLAY THERAPY</figcaption>
+          </figure>
+          <figure class="plate-reveal plate-figure m-0">
+            <div class="tilt-card border border-[var(--hairline)] bg-paper-soft p-8 md:p-10">
+              <h3 class="font-display font-semibold text-2xl mb-4">Mindfulness</h3>
+              <p class="ink-soft leading-loose">
+                Techniques for emotional regulation and grounding, helping
+                students stay present in moments of stress.
+              </p>
             </div>
-            <h4 class="text-2xl text-white font-semibold mb-4">Mindfulness</h4>
-            <p class="text-stone-400 leading-relaxed text-lg">
-              Techniques for emotional regulation and grounding, helping
-              students stay present in moments of stress.
-            </p>
-          </div>
+            <figcaption class="caption">FIG. 03 — MINDFULNESS</figcaption>
+          </figure>
         </div>
       </div>
     </section>
 
-    <!-- Experience / Impact - Zig Zag Layout -->
-    <section class="py-32 relative">
-      <div class="container mx-auto px-6 max-w-6xl">
-        <div class="text-center mb-24 reveal">
-          <span
-            class="text-orange-500 font-medium tracking-widest text-sm uppercase mb-4 block"
-            >Holistic Impact</span
-          >
-          <h2 class="text-4xl md:text-5xl font-bold text-stone-800">
-            Stories of Change
-          </h2>
-          <p
-            class="text-xl text-stone-500 mt-6 max-w-3xl mx-auto leading-relaxed"
-          >
+    <!-- ================================================================
+         5 · SIGNATURE — THE BREATHING RING
+    ================================================================= -->
+    <section id="breath" class="spine-section min-h-[100svh] flex items-center justify-center" aria-labelledby="breath-line">
+      <div class="spine-container w-full text-center">
+        <p class="kicker mb-16"><span class="tick">▪</span>CH. 01 § SIGNATURE — THE BREATHING RING</p>
+        <div class="relative mx-auto grid place-items-center" style="width: min(60vw, 340px); height: min(60vw, 340px);">
+          <!-- faint expanding echoes of the breath -->
+          <div class="echo-ring absolute inset-0 rounded-full border border-[var(--accent)]" aria-hidden="true"></div>
+          <div class="echo-ring absolute inset-0 rounded-full border border-[var(--accent)]" aria-hidden="true"></div>
+          <div class="breathing absolute inset-0 rounded-full border border-[var(--accent)]"
+               data-breath-scale="1.35" data-breath-dur="4" aria-hidden="true"></div>
+          <div class="relative z-10">
+            <p id="breath-inhale" class="kicker">INHALE — 4S</p>
+            <p id="breath-exhale" class="kicker mt-2">EXHALE — 4S</p>
+          </div>
+        </div>
+        <p id="breath-line" class="serif-italic text-xl md:text-2xl mt-20">Before anything else, we breathe.</p>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         6 · IMPACT STORIES
+    ================================================================= -->
+    <section id="impact" class="spine-section" aria-labelledby="impact-title">
+      <div class="spine-container">
+        <div class="section-head">
+          <hr class="section-rule">
+          <p class="kicker"><span class="tick">▪</span>CH. 01 § HOLISTIC IMPACT</p>
+          <h2 id="impact-title" class="display-m" data-reveal-lines>Stories of Change</h2>
+          <p class="standfirst">
             Counseling isn't just a role; it's a skillset I weave into every
             aspect of my career—from teaching to project leadership.
           </p>
         </div>
 
-        <div class="space-y-24">
-          <!-- Story 1: SEN & Teaching (Left Text, Right Visual) -->
-          <div class="flex flex-col md:flex-row items-center gap-16 reveal">
-            <div class="md:w-1/2">
-              <div class="flex items-center gap-4 mb-6">
-                <div
-                  class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600"
-                >
-                  <i data-lucide="users" class="w-6 h-6"></i>
-                </div>
-                <h3 class="font-bold text-stone-800 text-3xl">
-                  The Bridge for SEN
-                </h3>
-              </div>
-              <p class="text-stone-600 text-lg leading-loose mb-6">
-                As an SEN Coordinator, I acted as the vital link between
-                families, teachers, and specialists.
-              </p>
-              <div class="pl-6 border-l-4 border-orange-200">
-                <p class="text-stone-500 italic text-lg">
-                  "Transformed 'difficult' cases into success stories by
-                  creating structured, empathetic support plans that empowered
-                  both the student and the family."
-                </p>
-              </div>
-            </div>
-            <div class="md:w-1/2">
-              <div
-                class="aspect-video bg-stone-100 rounded-3xl relative overflow-hidden shadow-lg animate-float"
-              >
-                <div
-                  class="absolute inset-0 flex items-center justify-center text-stone-300"
-                >
-                  <!-- Placeholder for visual/image -->
-                  <i data-lucide="network" class="w-24 h-24 opacity-20"></i>
-                </div>
-                <div
-                  class="absolute -bottom-10 -right-10 w-40 h-40 bg-orange-200 rounded-full mix-blend-multiply filter blur-2xl opacity-50"
-                ></div>
-              </div>
-            </div>
-          </div>
+        <div class="grid gap-8 md:grid-cols-3">
+          <!-- Story 1 -->
+          <article class="letter-card plate-reveal">
+            <header class="letter-from">
+              <span>FILE 01 — SEN COORDINATION</span>
+              <span class="letter-seal" aria-hidden="true"></span>
+            </header>
+            <h3 class="font-display font-semibold text-2xl mb-4">The Bridge for SEN</h3>
+            <p class="ink-soft mb-6">
+              As an SEN Coordinator, I acted as the vital link between
+              families, teachers, and specialists.
+            </p>
+            <p class="letter-excerpt">
+              "Transformed 'difficult' cases into success stories by
+              creating structured, empathetic support plans that empowered
+              both the student and the family."
+            </p>
+          </article>
 
-          <!-- Story 2: Project Management (Right Text, Left Visual) -->
-          <div
-            class="flex flex-col md:flex-row-reverse items-center gap-16 reveal"
-          >
-            <div class="md:w-1/2">
-              <div class="flex items-center gap-4 mb-6">
-                <div
-                  class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600"
-                >
-                  <i data-lucide="briefcase" class="w-6 h-6"></i>
-                </div>
-                <h3 class="font-bold text-stone-800 text-3xl">
-                  Empathetic Leadership
-                </h3>
-              </div>
-              <p class="text-stone-600 text-lg leading-loose mb-6">
-                Leading diverse teams in high-pressure environments requires
-                more than just management; it requires counseling skills.
-              </p>
-              <div class="pl-6 border-l-4 border-orange-200">
-                <p class="text-stone-500 italic text-lg">
-                  "Applied active listening and conflict resolution to manage
-                  stakeholders, resolving internal conflicts and boosting team
-                  morale and productivity."
-                </p>
-              </div>
-            </div>
-            <div class="md:w-1/2">
-              <div
-                class="aspect-video bg-stone-100 rounded-3xl relative overflow-hidden shadow-lg animate-float-delayed"
-              >
-                <div
-                  class="absolute inset-0 flex items-center justify-center text-stone-300"
-                >
-                  <i data-lucide="users-2" class="w-24 h-24 opacity-20"></i>
-                </div>
-                <div
-                  class="absolute -top-10 -left-10 w-40 h-40 bg-stone-300 rounded-full mix-blend-multiply filter blur-2xl opacity-50"
-                ></div>
-              </div>
-            </div>
-          </div>
+          <!-- Story 2 -->
+          <article class="letter-card plate-reveal">
+            <header class="letter-from">
+              <span>FILE 02 — PROJECT LEADERSHIP</span>
+              <span class="letter-seal" aria-hidden="true"></span>
+            </header>
+            <h3 class="font-display font-semibold text-2xl mb-4">Empathetic Leadership</h3>
+            <p class="ink-soft mb-6">
+              Leading diverse teams in high-pressure environments requires
+              more than just management; it requires counseling skills.
+            </p>
+            <p class="letter-excerpt">
+              "Applied active listening and conflict resolution to manage
+              stakeholders, resolving internal conflicts and boosting team
+              morale and productivity."
+            </p>
+          </article>
 
-          <!-- Story 3: Teaching (Left Text, Right Visual) -->
-          <div class="flex flex-col md:flex-row items-center gap-16 reveal">
-            <div class="md:w-1/2">
-              <div class="flex items-center gap-4 mb-6">
-                <div
-                  class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600"
-                >
-                  <i data-lucide="graduation-cap" class="w-6 h-6"></i>
-                </div>
-                <h3 class="font-bold text-stone-800 text-3xl">
-                  Holistic Education
-                </h3>
-              </div>
-              <p class="text-stone-600 text-lg leading-loose mb-6">
-                At IVE and Maria College, I integrated soft skills training
-                directly into the curriculum.
-              </p>
-              <div class="pl-6 border-l-4 border-orange-200">
-                <p class="text-stone-500 italic text-lg">
-                  "Students didn't just learn subject matter; they developed
-                  emotional resilience and interpersonal skills essential for
-                  their future careers."
-                </p>
-              </div>
-            </div>
-            <div class="md:w-1/2">
-              <div
-                class="aspect-video bg-stone-100 rounded-3xl relative overflow-hidden shadow-lg animate-float"
-              >
-                <div
-                  class="absolute inset-0 flex items-center justify-center text-stone-300"
-                >
-                  <i data-lucide="sprout" class="w-24 h-24 opacity-20"></i>
-                </div>
-                <div
-                  class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-orange-100 rounded-full mix-blend-multiply filter blur-xl opacity-60"
-                ></div>
-              </div>
-            </div>
-          </div>
+          <!-- Story 3 -->
+          <article class="letter-card plate-reveal">
+            <header class="letter-from">
+              <span>FILE 03 — IVE &amp; MARIA COLLEGE</span>
+              <span class="letter-seal" aria-hidden="true"></span>
+            </header>
+            <h3 class="font-display font-semibold text-2xl mb-4">Holistic Education</h3>
+            <p class="ink-soft mb-6">
+              At IVE and Maria College, I integrated soft skills training
+              directly into the curriculum.
+            </p>
+            <p class="letter-excerpt">
+              "Students didn't just learn subject matter; they developed
+              emotional resilience and interpersonal skills essential for
+              their future careers."
+            </p>
+          </article>
         </div>
       </div>
     </section>
+  </main>
 
-    <script src="js/navbar.js"></script>
-    <script>
-      // Initialize Navbar
-      initNavbar({
-        activePage: "counselling",
-        themeColor: "orange",
-        isDark: false,
-      });
+  <!-- ================================================================
+       7 · COLOPHON
+  ================================================================= -->
+  <footer class="colophon">
+    <div class="spine-container">
+      <p class="kicker"><span class="tick">▪</span>COLOPHON</p>
+      <h2 class="colophon-name">Herman Koon Kiu “Joseph” Chan</h2>
+      <p class="ink-soft">The Digital Humanist — Hong Kong</p>
+      <div class="colophon-cols">
+        <div>
+          <p class="kicker">Correspondence</p>
+          <p class="mt-3"><a class="link-editorial" href="mailto:hermanchan_925@hotmail.com">hermanchan_925@hotmail.com</a></p>
+        </div>
+        <div>
+          <p class="kicker">Archive</p>
+          <p class="mt-3"><a class="link-editorial" href="https://github.com/herman925" target="_blank" rel="noopener">github.com/herman925 ↗</a></p>
+        </div>
+        <div>
+          <p class="kicker">Chapters</p>
+          <nav class="mt-3 flex flex-col gap-2">
+            <a class="link-editorial" href="counselling.html">01 Counselling</a>
+            <a class="link-editorial" href="technology.html">02 Technology</a>
+            <a class="link-editorial" href="project-management.html">03 Project Management</a>
+            <a class="link-editorial" href="education-culture.html">04 Education &amp; Culture</a>
+          </nav>
+        </div>
+      </div>
+      <div class="colophon-fine">
+        <span>Set in Fraunces &amp; Outfit. Bound in Hong Kong.</span>
+        <span>© 2026 Herman Koon Kiu “Joseph” Chan</span>
+      </div>
+    </div>
+  </footer>
 
-      // Initialize Icons
-      if (window.lucide && typeof lucide.createIcons === "function") {
-        lucide.createIcons();
+  <!-- Chapter dock (mobile) -->
+  <nav class="chapter-dock" aria-label="Chapters">
+    <a href="counselling.html" data-ink="sienna" title="Counselling" aria-current="page"><span></span></a>
+    <a href="technology.html" data-ink="tealink" title="Technology"><span></span></a>
+    <a href="project-management.html" data-ink="oxblood" title="Project Management"><span></span></a>
+    <a href="education-culture.html" data-ink="moss" title="Education &amp; Culture"><span></span></a>
+  </nav>
+
+  <script src="js/navbar.js"></script>
+  <script>
+    // Initialize Navbar
+    initNavbar({
+      activePage: 'counselling',
+      sections: [
+        { id: 'memoir', label: 'Memoir' },
+        { id: 'philosophy', label: 'Philosophy' },
+        { id: 'toolkit', label: 'Toolkit' },
+        { id: 'breath', label: 'Breathe' },
+        { id: 'impact', label: 'Stories of Change' }
+      ],
+      themeColor: 'sienna',
+      isDark: false
+    });
+
+    // Initialize Icons
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+      lucide.createIcons();
+    }
+  </script>
+
+  <!-- Page-specific motion: memoir ink-blot pin, prologue blots, toolkit tilt,
+       marker-swipe pull-quote, breathing-ring labels + echo rings.
+       Orbs are pure CSS (gated by prefers-reduced-motion in the page styles). -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Gate: reduced motion / missing GSAP → static final states.
+      // (Beats stay stacked; both INHALE / EXHALE labels stay visible;
+      //  marker swipe rests fully swiped; echo rings sit faint and still.)
+      if (!window.SPINE || !SPINE.motionOK || !window.gsap) return;
+
+      // --- Breathing-ring labels: crossfade in sync with the 4s ring loop ---
+      var inhale = document.getElementById('breath-inhale');
+      var exhale = document.getElementById('breath-exhale');
+      if (inhale && exhale) {
+        gsap.set(exhale, { opacity: 0 });
+        gsap.to(inhale, { opacity: 0, duration: 4, ease: SPINE.EASE_AMBIENT, yoyo: true, repeat: -1 });
+        gsap.to(exhale, { opacity: 1, duration: 4, ease: SPINE.EASE_AMBIENT, yoyo: true, repeat: -1 });
       }
 
-      // Simple Reveal Animation
-      function reveal() {
-        var reveals = document.querySelectorAll(".reveal");
-        for (var i = 0; i < reveals.length; i++) {
-          var windowHeight = window.innerHeight;
-          var elementTop = reveals[i].getBoundingClientRect().top;
-          var elementVisible = 100;
-          if (elementTop < windowHeight - elementVisible) {
-            reveals[i].classList.add("active");
-            reveals[i].style.opacity = "1";
-            reveals[i].style.transform = "translateY(0)";
+      // --- Echo rings: two faint concentric companions, staggered yoyo ---
+      gsap.utils.toArray('#breath .echo-ring').forEach(function (ring, i) {
+        gsap.fromTo(ring,
+          { scale: 1.04, opacity: 0.16 },
+          {
+            scale: 1.5, opacity: 0.03, duration: 4.6,
+            ease: SPINE.EASE_AMBIENT, yoyo: true, repeat: -1, delay: i * 1.5
+          });
+      });
+
+      // --- Marker-swipe: slow highlight wash across the pull-quote, scrubbed ---
+      gsap.utils.toArray('.marker-ink').forEach(function (ink) {
+        gsap.fromTo(ink, { scaleX: 0 }, {
+          scaleX: 1, ease: 'none',
+          scrollTrigger: { trigger: ink.parentNode, start: 'top 82%', end: 'top 42%', scrub: true }
+        });
+      });
+
+      var mm = gsap.matchMedia();
+
+      // --- Toolkit cards: gentle 3D tilt (desktop + fine pointer only) ---
+      mm.add('(min-width: 768px) and (pointer: fine)', function () {
+        var cleanups = [];
+        gsap.utils.toArray('#toolkit .tilt-card').forEach(function (card) {
+          gsap.set(card, { transformPerspective: 900 });
+          var rx = gsap.quickTo(card, 'rotationX', { duration: 0.45, ease: SPINE.EASE_MICRO });
+          var ry = gsap.quickTo(card, 'rotationY', { duration: 0.45, ease: SPINE.EASE_MICRO });
+          function move(e) {
+            var r = card.getBoundingClientRect();
+            ry(((e.clientX - r.left) / r.width - 0.5) * 14);   // max ±7deg
+            rx(((e.clientY - r.top) / r.height - 0.5) * -14);  // max ±7deg
           }
-        }
-      }
-
-      // Add initial styles for reveal
-      document.querySelectorAll(".reveal").forEach((el) => {
-        el.style.opacity = "0";
-        el.style.transform = "translateY(30px)";
-        el.style.transition = "all 0.8s ease-out";
+          function leave() { rx(0); ry(0); }
+          card.addEventListener('mousemove', move);
+          card.addEventListener('mouseleave', leave);
+          cleanups.push(function () {
+            card.removeEventListener('mousemove', move);
+            card.removeEventListener('mouseleave', leave);
+            gsap.set(card, { clearProps: 'transform' });
+          });
+        });
+        return function () { cleanups.forEach(function (fn) { fn(); }); };
       });
 
-      window.addEventListener("scroll", reveal);
-      reveal();
-    </script>
-  </body>
+      // --- Desktop: prologue ink-blots + memoir pin (the page's ONE pin) ---
+      mm.add('(min-width: 768px)', function () {
+        // BEAT 00 seed cards: radial ink-blot reveal, expanding from the
+        // beat-marker corner, scrubbed (mobile: static, fully visible)
+        gsap.utils.toArray('#memoir-prologue .zen-card').forEach(function (card) {
+          gsap.fromTo(card,
+            { clipPath: 'circle(0% at 30px 30px)' },
+            {
+              clipPath: 'circle(142% at 30px 30px)', ease: 'none',
+              scrollTrigger: { trigger: card, start: 'top 88%', end: 'top 48%', scrub: true }
+            });
+        });
+
+        var stage = document.getElementById('memoir-stage');
+        var rail = document.getElementById('memoir-rail');
+        var beats = gsap.utils.toArray('#memoir-stage .memoir-beat');
+        if (!stage || beats.length !== 3) return;
+
+        gsap.set(stage, { height: '100svh' });
+        gsap.set(beats, {
+          position: 'absolute',
+          left: 'clamp(20px, 4vw, 48px)',
+          right: 'clamp(20px, 4vw, 48px)',
+          top: '50%',
+          yPercent: -50,
+          autoAlpha: 0,
+          marginBottom: 0
+        });
+        gsap.set(beats[0], { autoAlpha: 1 });
+
+        var BLOT_FROM = 'circle(0% at 30px 30px)';
+        var BLOT_TO = 'circle(142% at 30px 30px)';
+
+        var tl = gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: {
+            trigger: stage,
+            start: 'top top',
+            end: '+=180%',
+            pin: true,
+            scrub: true
+          }
+        });
+        // Incoming beats bloom in as radial ink-blots from their beat marker
+        tl.to(beats[0], { autoAlpha: 0, y: -40, duration: 1 }, 1)
+          .fromTo(beats[1],
+            { autoAlpha: 1, clipPath: BLOT_FROM },
+            { autoAlpha: 1, clipPath: BLOT_TO, duration: 1, immediateRender: false }, 1.5)
+          .to(beats[1], { autoAlpha: 0, y: -40, duration: 1 }, 3.5)
+          .fromTo(beats[2],
+            { autoAlpha: 1, clipPath: BLOT_FROM },
+            { autoAlpha: 1, clipPath: BLOT_TO, duration: 1, immediateRender: false }, 4)
+          .to({}, { duration: 1 });
+
+        if (rail) {
+          gsap.set(rail, { transformOrigin: 'top center' });
+          tl.fromTo(rail, { scaleY: 0 }, { scaleY: 1, duration: tl.duration() }, 0);
+        }
+      });
+    });
+  </script>
+</body>
 </html>

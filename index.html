@@ -1,655 +1,1258 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" data-chapter="cover" class="loading">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Herman Chan | The Digital Humanist</title>
-    
-    <!-- External Stylesheet -->
-    <link rel="stylesheet" href="global.css">
-
-    <!-- Tailwind CSS (CDN) -->
+    <meta name="description" content="Herman Chan — The Digital Humanist. A technologist born from humility, a leader driven by empathy. A portfolio in four chapters: counselling, technology, project management, education.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,144,600;1,144,500&family=Outfit:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- Tailwind Configuration -->
     <script src="js/tailwind-config.js"></script>
-</head>
-<body class="bg-void text-slate-300 antialiased selection:bg-cyber-500 selection:text-void overflow-x-hidden">
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="css/spine.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="js/motion.js"></script>
+    <script defer src="js/transitions.js"></script>
+    <!-- index only: three.js importmap + cover module (post-LCP, capability-gated) -->
+    <script type="importmap">
+      { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js" } }
+    </script>
+    <script type="module" src="js/brain-cover.js"></script>
 
-    <!-- Animated Neural Background -->
-    <canvas id="neuralCanvas"></canvas>
+    <!-- Page-specific styles: gold engraving restyle of the brain SVG, cover hero,
+         TOC, mobile chapter cards, chapter-spread inks, letter details -->
+    <style>
+        /* ---- Cover hero stage ---------------------------------------------- */
+        /* Thesis compact above; the brain IS the centerpiece below it. */
+        .cover-thesis #thesis { font-size: clamp(2rem, 4.6vw, 4.2rem); line-height: 1.05; }
+        .cover-stage {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            margin-top: clamp(12px, 2vh, 28px);
+        }
+        @media (max-width: 767px) {
+            .brain-map-wrapper.cover-brain { display: none; }
+        }
+        .brain-map-wrapper.cover-brain { margin: 0; padding: 0; width: 100%; display: flex; justify-content: center; }
+        .cover-brain .brain-frame {
+            position: relative;
+            width: 100%;
+            max-width: min(860px, 88vw);
+            cursor: pointer;
+        }
+        .cover-brain .brain-frame svg { width: 100%; height: auto; display: block; overflow: visible; }
+        #brain-canvas-mount {
+            position: absolute;
+            inset: -6%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        #brain-canvas-mount canvas { display: block; width: 100%; height: 100%; }
+        #brainMapSVG { position: relative; z-index: 1; animation: none; }
+
+        #intro-hairline {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: var(--gold);
+            transform-origin: left center;
+            z-index: 5;
+        }
+
+        /* ---- The engraving: gold 1px strokes on ink ------------------------ */
+        #brainMapSVG .network-edge {
+            stroke: rgba(184, 150, 90, .38) !important;
+            stroke-width: 1 !important;
+            filter: none !important;
+        }
+        #brainMapSVG .network-node {
+            fill: #B8965A !important;
+            stroke: none !important;
+            r: 2.5;
+            filter: none !important;
+        }
+        #brainMapSVG .highlight-edge {
+            stroke: rgba(212, 178, 116, .5) !important;
+            stroke-width: 1 !important;
+            filter: none !important;
+        }
+        #brainMapSVG .connector-line { stroke: #B8965A !important; stroke-width: 1px; }
+        #brainMapSVG .connector-dot { fill: #D4B274; }
+        #brainMapSVG .brain-label-title { fill: #FAF7F2; font-family: 'Fraunces', Georgia, serif; font-weight: 600; }
+        #brainMapSVG .brain-label-sub { fill: rgba(250, 247, 242, .65); }
+        #brainMapSVG .brain-section:hover .network-edge {
+            stroke: rgba(212, 178, 116, .9) !important;
+            stroke-width: 1.5 !important;
+        }
+        #brainMapSVG .brain-section:hover .network-node { fill: #D4B274 !important; r: 4; }
+        #brainMapSVG:hover .brain-section:not(:hover) { opacity: .35; filter: none; }
+        #brainMapSVG a.brain-section:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+        #brainMapSVG a.brain-section:focus-visible .network-edge {
+            stroke: rgba(212, 178, 116, .9) !important;
+            stroke-width: 1.5 !important;
+        }
+        #brainMapSVG a.brain-section:focus-visible .brain-label-group { opacity: 1; }
+        #brainMapSVG a.brain-section:focus-visible .connector-line { stroke-dashoffset: 0; opacity: .8; }
+        #brainMapSVG a.brain-section:focus-visible .connector-dot { opacity: 1; }
+
+        /* GL tier: canvas carries the glow; SVG stays present as the engraving,
+           and lights up in its FACET INK on hover/focus */
+        html.brain-gl #brainMapSVG .network-edge { opacity: .28; }
+        html.brain-gl #brainMapSVG .network-node { opacity: .35; }
+        html.brain-gl #brainMapSVG .highlight-edge { opacity: .18; }
+        html.brain-gl #brainMapSVG .brain-section:hover .network-edge,
+        html.brain-gl #brainMapSVG a.brain-section:focus-visible .network-edge { opacity: .9; }
+        html.brain-gl #brainMapSVG .brain-section:hover .network-node,
+        html.brain-gl #brainMapSVG a.brain-section:focus-visible .network-node { opacity: 1; }
+
+        /* Facet-ink hover identity — each region answers in its own colour */
+        #brainMapSVG .zone-counselling:hover .network-edge,
+        #brainMapSVG a.zone-counselling:focus-visible .network-edge { stroke: rgba(249, 115, 22, .85) !important; }
+        #brainMapSVG .zone-counselling:hover .network-node,
+        #brainMapSVG a.zone-counselling:focus-visible .network-node { fill: #FB923C !important; }
+        #brainMapSVG .zone-technology:hover .network-edge,
+        #brainMapSVG a.zone-technology:focus-visible .network-edge { stroke: rgba(45, 212, 191, .85) !important; }
+        #brainMapSVG .zone-technology:hover .network-node,
+        #brainMapSVG a.zone-technology:focus-visible .network-node { fill: #2DD4BF !important; }
+        #brainMapSVG .zone-project:hover .network-edge,
+        #brainMapSVG a.zone-project:focus-visible .network-edge { stroke: rgba(225, 29, 72, .8) !important; }
+        #brainMapSVG .zone-project:hover .network-node,
+        #brainMapSVG a.zone-project:focus-visible .network-node { fill: #FB7185 !important; }
+        #brainMapSVG .zone-education:hover .network-edge,
+        #brainMapSVG a.zone-education:focus-visible .network-edge { stroke: rgba(16, 185, 129, .85) !important; }
+        #brainMapSVG .zone-education:hover .network-node,
+        #brainMapSVG a.zone-education:focus-visible .network-node { fill: #34D399 !important; }
+        /* Static tier: the SVG IS the art-directed engraving (default state above) */
+        html.brain-static #brain-canvas-mount { display: none; }
+
+        /* ---- Table of contents (desktop) ----------------------------------- */
+        .cover-toc {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0 .75rem;
+        }
+        @media (min-width: 768px) { .cover-toc { display: flex; } }
+        .toc-entry {
+            display: inline-flex;
+            align-items: center;
+            gap: .6em;
+            min-height: 44px;
+            padding: 10px 6px;
+            font-family: 'Space Grotesk', monospace;
+            font-weight: 500;
+            font-size: 12px;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: rgba(250, 247, 242, .78);
+            background-image: linear-gradient(var(--toc-ink), var(--toc-ink));
+            background-repeat: no-repeat;
+            background-position: left calc(100% - 6px);
+            background-size: 0% 1px;
+            transition: background-size var(--dur-micro) ease, color var(--dur-micro) ease;
+        }
+        .toc-entry:hover, .toc-entry:focus-visible { color: #FAF7F2; background-size: 100% 1px; }
+        .toc-entry .toc-tick { color: var(--toc-ink); }
+        .toc-sep { color: rgba(250, 247, 242, .3); font-family: 'Space Grotesk', monospace; }
+
+        /* ---- Mobile chapter router (the TOC as full-bleed cards) ------------ */
+        .chapter-cards { display: block; }
+        @media (min-width: 768px) { .chapter-cards { display: none; } }
+        .chapter-card {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            min-height: 64px;
+            padding: 14px clamp(20px, 6vw, 32px);
+            border-top: 1px solid var(--hairline-inv);
+            text-decoration: none;
+            color: var(--paper);
+        }
+        .chapter-card:last-of-type { border-bottom: 1px solid var(--hairline-inv); }
+        .chapter-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: -1px;
+            width: 56px; height: 1px;
+            background: var(--card-ink);
+        }
+        .chapter-card .chapter-card-num {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 600;
+            font-size: 1.7rem;
+            line-height: 1;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--card-ink);
+            flex: none;
+        }
+        .chapter-card .chapter-card-arrow { margin-left: auto; color: var(--card-ink); }
+
+        /* ---- Chapter spread inks (legible variants on ink surface) ---------- */
+        .chapter-spread { --spread-ink: #D4B274; --spread-bright: #E8D5AE; }
+        .spread-sienna  { --spread-ink: #D9763B; --spread-bright: #E89B6B; }
+        .spread-tealink { --spread-ink: #14998F; --spread-bright: #4FC3B8; }
+        .spread-oxblood { --spread-ink: #C04568; --spread-bright: #E07A95; }
+        .spread-moss    { --spread-ink: #4C8A6C; --spread-bright: #7FBF9C; }
+        .chapter-spread .kicker .tick { color: var(--spread-ink); }
+        .chapter-spread .ghost-numeral { -webkit-text-stroke-color: var(--spread-ink); opacity: .3; }
+        .chapter-spread .accent-bar { background: var(--spread-ink); }
+        .chapter-spread .link-editorial {
+            color: var(--spread-bright);
+            background-image: linear-gradient(var(--spread-bright), var(--spread-bright));
+        }
+        .chapter-spread .spread-caption { color: var(--spread-bright); }
+
+        /* ---- Scroll rule ----------------------------------------------------- */
+        .scroll-rule {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-top: clamp(28px, 4vh, 56px);
+        }
+        .scroll-rule .scroll-line {
+            width: 1px;
+            height: 56px;
+            background: rgba(250, 247, 242, .18);
+            position: relative;
+            overflow: hidden;
+        }
+        .scroll-rule .scroll-line i {
+            position: absolute;
+            inset: 0;
+            display: block;
+            background: var(--gold);
+            transform-origin: top;
+        }
+
+        /* ---- Letter details (full quotes, no-JS friendly) -------------------- */
+        .letter-details > summary { list-style: none; user-select: none; cursor: pointer; min-height: 44px; }
+        .letter-details > summary::-webkit-details-marker { display: none; }
+        .letter-details[open] > summary .when-closed { display: none; }
+        .letter-details:not([open]) > summary .when-open { display: none; }
+        .letter-body p + p { margin-top: 1em; }
+
+        /* Navbar gold legibility on ink (CSS-only, zero edits to navbar.js) */
+        html[data-chapter="cover"] #navbar .text-gold-600 { color: #D4B274; }
+
+        /* ==================================================================
+           NEW — Specifications marquee: thin double-hairline spec strip.
+           GSAP drives the loop; without JS / under reduced motion the track
+           sits static and truncates at the viewport edge (overflow hidden).
+           ================================================================== */
+        .spec-marquee {
+            position: relative;
+            border-top: 1px solid var(--hairline-inv);
+            border-bottom: 1px solid var(--hairline-inv);
+            overflow: hidden;
+        }
+        .spec-marquee::before,
+        .spec-marquee::after {
+            content: '';
+            position: absolute;
+            left: 0; right: 0;
+            height: 1px;
+            background: var(--hairline-inv);
+            pointer-events: none;
+            z-index: 1;
+        }
+        .spec-marquee::before { top: 4px; }
+        .spec-marquee::after  { bottom: 4px; }
+        .spec-marquee-viewport { overflow: hidden; padding-block: 18px; }
+        .spec-marquee-track {
+            display: flex;
+            width: max-content;
+            will-change: transform;
+        }
+        .spec-marquee-group {
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            flex: none;
+        }
+        .spec-item {
+            font-family: 'Space Grotesk', monospace;
+            font-weight: 500;
+            font-size: 11px;
+            letter-spacing: .18em;
+            color: rgba(250, 247, 242, .72);
+        }
+        .spec-tick { margin-inline: 1.6em; font-size: 11px; }
+
+        /* ==================================================================
+           NEW — V.A.S.K. specimen card: ink-bordered quadrants on the dark
+           cover surface, each headed by a facet-ink mono kicker + ghost
+           specimen letter; chips carry 1px hairline-inv borders.
+           ================================================================== */
+        .vask-quadrant {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--hairline-inv);
+            background: rgba(250, 247, 242, .03);
+            padding: clamp(22px, 3vw, 36px);
+            will-change: transform;
+        }
+        .vask-letter {
+            position: absolute;
+            right: -10px; bottom: -28px;
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 600;
+            font-size: clamp(5.5rem, 9vw, 9rem);
+            line-height: 1;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--vask-ink);
+            opacity: .22;
+            pointer-events: none;
+            user-select: none;
+        }
+        .vask-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+            border-bottom: 1px solid var(--hairline-inv);
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+        }
+        .vask-kicker {
+            font-family: 'Space Grotesk', monospace;
+            font-weight: 500;
+            font-size: 12px;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: var(--vask-ink);
+        }
+        .vask-sub {
+            font-family: 'Fraunces', Georgia, serif;
+            font-style: italic;
+            font-weight: 500;
+            font-size: .95rem;
+            color: rgba(250, 247, 242, .6);
+        }
+        .vask-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .vask-chips li {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 11px;
+            letter-spacing: .08em;
+            border: 1px solid var(--hairline-inv);
+            color: rgba(250, 247, 242, .78);
+            padding: 8px 12px;
+        }
+        /* Chip entrance initial state — only when motion is allowed AND the
+           page script confirmed GSAP is live (html.vask-static = fallback). */
+        @media (prefers-reduced-motion: no-preference) {
+            html.js:not(.vask-static) .vask-chips li {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .vask-chips li { opacity: 1 !important; transform: none !important; }
+        }
+    </style>
+</head>
+<body class="antialiased overflow-x-hidden">
+
+    <div class="running-header">HERMAN CHAN — THE DIGITAL HUMANIST — HONG KONG</div>
 
     <!-- Navigation -->
     <div id="navbar-container"></div>
 
-    <!-- Hero Section -->
-    <section class="entry-gate relative min-h-screen flex flex-col items-center justify-center pt-20 pb-10">
-        
-        <!-- Text Intro -->
-        <div class="entry-gate-header text-center reveal active mb-4 z-20 px-4">
-            <p class="entry-gate-eyebrow">My Neural Network</p>
-            <h1 class="entry-gate-heading mb-4">
-                <span class="text-gradient">A technologist born from humility.</span><br>
-                <span class="text-gradient">A leader driven by empathy.</span>
-            </h1>
-            <p class="text-slate-400 max-w-lg mx-auto text-sm md:text-base">
-                Explore how my four career facets interconnect—hover over any area to discover the journey.
-            </p>
+    <main>
+    <!-- ===================================================================
+         THE COVER — hero / thesis / engraved brain / table of contents
+         =================================================================== -->
+    <section id="cover" class="relative min-h-[100svh] flex flex-col justify-center pt-28 pb-10" aria-labelledby="thesis">
+        <span id="intro-hairline" aria-hidden="true"></span>
+
+        <div class="spine-container w-full">
+
+            <!-- The thesis — compact, above the brain -->
+            <div class="cover-thesis relative z-20 text-center px-2">
+                <p class="kicker mb-5"><span class="tick">▪</span>My Neural Network</p>
+                <h1 id="thesis" class="display-xl" data-reveal-lines>
+                    A technologist born from <em class="text-gold">humility.</em><br>
+                    A leader driven by <em class="text-gold">empathy.</em>
+                </h1>
+                <p class="standfirst mx-auto mt-6 hidden md:block">Four facets, one mind. Hover a region of the network to see it light up — click it to step inside.</p>
+            </div>
+
+            <div class="cover-stage">
+
+                <!-- The Engraved Brain: WebGL constellation mounts behind; the SVG
+                     stays as the accessible click/routing layer above it. -->
+                <div class="brain-map-wrapper cover-brain">
+                    <div class="brain-frame">
+                        <div id="brain-canvas-mount" aria-hidden="true"></div>
+                        <!-- ViewBox matches the coordinate system (approx 0-400) -->
+                        <svg id="brainMapSVG" viewBox="0 0 450 400" xmlns="http://www.w3.org/2000/svg">
+                            <g transform="translate(40, 0)">
+
+                            <!-- EDUCATION (Left) -->
+                            <a href="education-culture.html" class="brain-section zone-education" aria-label="Open Chapter 04 — Education &amp; Culture">
+                                <path class="hit-area" d="M 5 100 L 90 100 L 90 350 L 5 350 Z" />
+                                <!-- Connections -->
+                                <line class="network-edge" x1="71" y1="113" x2="63" y2="153" />
+                                <line class="network-edge" x1="71" y1="113" x2="21" y2="143" />
+                                <line class="network-edge" x1="21" y1="143" x2="63" y2="153" />
+                                <line class="network-edge" x1="21" y1="143" x2="41" y2="202" />
+                                <line class="network-edge" x1="63" y1="153" x2="82" y2="190" />
+                                <line class="network-edge" x1="63" y1="153" x2="41" y2="202" />
+                                <line class="network-edge" x1="82" y1="190" x2="41" y2="202" />
+                                <line class="network-edge" x1="82" y1="190" x2="107" y2="227" />
+                                <line class="network-edge" x1="41" y1="202" x2="9" y2="235" />
+                                <line class="network-edge" x1="41" y1="202" x2="61" y2="255" />
+                                <line class="network-edge" x1="9" y1="235" x2="61" y2="255" />
+                                <line class="network-edge" x1="61" y1="255" x2="100" y2="262" />
+                                <line class="network-edge" x1="133" y1="328" x2="91" y2="321" />
+                                <line class="network-edge" x1="91" y1="321" x2="61" y2="255" />
+                                <line class="network-edge" x1="61" y1="255" x2="9" y2="235" />
+                                <line class="network-edge" x1="9" y1="235" x2="21" y2="143" />
+                                <line class="network-edge" x1="21" y1="143" x2="110" y2="65" />
+
+                                <!-- Nodes -->
+                                <circle class="network-node" cx="71" cy="113" />
+                                <circle class="network-node" cx="21" cy="143" />
+                                <circle class="network-node" cx="63" cy="153" />
+                                <circle class="network-node" cx="82" cy="190" />
+                                <circle class="network-node" cx="41" cy="202" />
+                                <circle class="network-node" cx="9" cy="235" />
+                                <circle class="network-node" cx="61" cy="255" />
+                                <!-- Label -->
+                                <path class="connector-line" stroke="#22c55e" d="M 9 235 L -30 235 L -60 270" />
+                                <circle class="connector-dot" cx="-60" cy="270" r="3" />
+                                <g class="brain-label-group" transform="translate(-68, 270)">
+                                    <text x="0" y="0" text-anchor="end" class="brain-label-title">Education</text>
+                                    <text x="0" y="15" text-anchor="end" class="brain-label-sub">
+                                        <tspan x="0" dy="0">Nurturing &amp;</tspan>
+                                        <tspan x="0" dy="12">Knowledge Transfer</tspan>
+                                    </text>
+                                </g>
+                            </a>
+
+                            <!-- COUNSELLING (Middle Left) -->
+                            <a href="counselling.html" class="brain-section zone-counselling" aria-label="Open Chapter 01 — Counselling">
+                                <path class="hit-area" d="M 90 60 L 190 60 L 190 350 L 90 350 Z" />
+                                <!-- Connections -->
+                                <line class="network-edge" x1="110" y1="65" x2="116" y2="106" />
+                                <line class="network-edge" x1="110" y1="65" x2="165" y2="83" />
+                                <line class="network-edge" x1="110" y1="65" x2="71" y2="113" />
+                                <line class="network-edge" x1="110" y1="65" x2="146" y2="119" />
+                                <!-- Blue-to-purple top hull segment -->
+                                <line class="network-edge" x1="110" y1="65" x2="221" y2="56" />
+
+                                <line class="network-edge" x1="165" y1="83" x2="200" y2="94" />
+                                <line class="network-edge" x1="165" y1="83" x2="146" y2="119" />
+                                <line class="network-edge" x1="165" y1="83" x2="199" y2="125" />
+                                <line class="network-edge" x1="165" y1="83" x2="116" y2="106" />
+                                <line class="network-edge" x1="116" y1="106" x2="146" y2="119" />
+                                <line class="network-edge" x1="116" y1="106" x2="125" y2="145" />
+                                <line class="network-edge" x1="116" y1="106" x2="71" y2="113" />
+                                <line class="network-edge" x1="146" y1="119" x2="125" y2="145" />
+                                <line class="network-edge" x1="146" y1="119" x2="199" y2="125" />
+                                <line class="network-edge" x1="125" y1="145" x2="149" y2="188" />
+                                <line class="network-edge" x1="125" y1="145" x2="82" y2="190" />
+                                <line class="network-edge" x1="149" y1="188" x2="151" y2="223" />
+                                <line class="network-edge" x1="149" y1="188" x2="107" y2="227" />
+                                <line class="network-edge" x1="151" y1="223" x2="182" y2="244" />
+                                <line class="network-edge" x1="151" y1="223" x2="107" y2="227" />
+                                <line class="network-edge" x1="151" y1="223" x2="133" y2="269" />
+                                <line class="network-edge" x1="107" y1="227" x2="100" y2="262" />
+                                <line class="network-edge" x1="107" y1="227" x2="133" y2="269" />
+                                <line class="network-edge" x1="182" y1="244" x2="133" y2="269" />
+                                <line class="network-edge" x1="182" y1="244" x2="133" y2="328" />
+
+                                <line class="network-edge" x1="100" y1="262" x2="133" y2="269" />
+                                <line class="network-edge" x1="100" y1="262" x2="116" y2="296" />
+                                <line class="network-edge" x1="133" y1="269" x2="116" y2="296" />
+                                <line class="network-edge" x1="116" y1="296" x2="91" y2="321" />
+                                <line class="network-edge" x1="116" y1="296" x2="133" y2="328" />
+                                <line class="network-edge" x1="91" y1="321" x2="133" y2="328" />
+                                <!-- Nodes -->
+                                <circle class="network-node" cx="110" cy="65" />
+                                <circle class="network-node" cx="165" cy="83" />
+                                <circle class="network-node" cx="116" cy="106" />
+                                <circle class="network-node" cx="146" cy="119" />
+                                <circle class="network-node" cx="125" cy="145" />
+                                <circle class="network-node" cx="149" cy="188" />
+                                <circle class="network-node" cx="151" cy="223" />
+                                <circle class="network-node" cx="107" cy="227" />
+                                <circle class="network-node" cx="182" cy="244" />
+                                <circle class="network-node" cx="100" cy="262" />
+                                <circle class="network-node" cx="133" cy="269" />
+                                <circle class="network-node" cx="116" cy="296" />
+                                <circle class="network-node" cx="91" cy="321" />
+                                <circle class="network-node" cx="133" cy="328" />
+                                <!-- Label -->
+                                <path class="connector-line" stroke="#f97316" d="M 110 65 L 80 30 L 20 30" />
+                                <circle class="connector-dot" cx="20" cy="30" r="3" />
+                                <g class="brain-label-group" transform="translate(12, 30)">
+                                    <text x="0" y="0" text-anchor="end" class="brain-label-title">Counselling</text>
+                                    <text x="0" y="15" text-anchor="end" class="brain-label-sub">
+                                        <tspan x="0" dy="0">Development &amp;</tspan>
+                                        <tspan x="0" dy="12">Life-Learning</tspan>
+                                    </text>
+                                </g>
+                            </a>
+
+                            <!-- TECHNOLOGY (Middle Right) -->
+                            <a href="technology.html" class="brain-section zone-technology" aria-label="Open Chapter 02 — Technology">
+                                <path class="hit-area" d="M 190 50 L 280 50 L 280 350 L 190 350 Z" />
+                                <!-- Connections -->
+                                <line class="network-edge" x1="221" y1="56" x2="200" y2="94" />
+                                <line class="network-edge" x1="221" y1="56" x2="257" y2="92" />
+                                <line class="network-edge" x1="221" y1="56" x2="229" y2="111" />
+                                <line class="network-edge" x1="221" y1="56" x2="165" y2="83" />
+                                <line class="network-edge" x1="257" y1="92" x2="283" y2="111" />
+                                <line class="network-edge" x1="257" y1="92" x2="229" y2="111" />
+                                <line class="network-edge" x1="257" y1="92" x2="200" y2="94" />
+                                <line class="network-edge" x1="200" y1="94" x2="199" y2="125" />
+                                <line class="network-edge" x1="200" y1="94" x2="229" y2="111" />
+                                <line class="network-edge" x1="229" y1="111" x2="199" y2="125" />
+                                <line class="network-edge" x1="229" y1="111" x2="236" y2="149" />
+                                <line class="network-edge" x1="199" y1="125" x2="236" y2="149" />
+                                <line class="network-edge" x1="199" y1="125" x2="191" y2="175" />
+                                <line class="network-edge" x1="236" y1="149" x2="191" y2="175" />
+                                <line class="network-edge" x1="236" y1="149" x2="273" y2="195" />
+                                <line class="network-edge" x1="191" y1="175" x2="209" y2="208" />
+                                <line class="network-edge" x1="191" y1="175" x2="149" y2="188" />
+                                <line class="network-edge" x1="273" y1="195" x2="311" y2="212" />
+                                <line class="network-edge" x1="273" y1="195" x2="251" y2="232" />
+                                <line class="network-edge" x1="209" y1="208" x2="182" y2="244" />
+                                <line class="network-edge" x1="209" y1="208" x2="251" y2="232" />
+                                <line class="network-edge" x1="209" y1="208" x2="151" y2="223" />
+                                <line class="network-edge" x1="251" y1="232" x2="182" y2="244" />
+                                <!-- Nodes -->
+                                <circle class="network-node" cx="221" cy="56" />
+                                <circle class="network-node" cx="257" cy="92" />
+                                <circle class="network-node" cx="200" cy="94" />
+                                <circle class="network-node" cx="229" cy="111" />
+                                <circle class="network-node" cx="199" cy="125" />
+                                <circle class="network-node" cx="236" cy="149" />
+                                <circle class="network-node" cx="191" cy="175" />
+                                <circle class="network-node" cx="273" cy="195" />
+                                <circle class="network-node" cx="209" cy="208" />
+                                <circle class="network-node" cx="251" cy="232" />
+                                <!-- Label -->
+                                <path class="connector-line" stroke="#8064a2" d="M 221 56 L 221 10 L 280 10" />
+                                <circle class="connector-dot" cx="280" cy="10" r="3" />
+                                <g class="brain-label-group" transform="translate(288, 10)">
+                                    <text x="0" y="0" text-anchor="start" class="brain-label-title">Technology</text>
+                                    <text x="0" y="15" text-anchor="start" class="brain-label-sub">Accuracy, Efficiency, Automation & AI</text>
+                                </g>
+                            </a>
+
+                            <!-- PROJECT MGMT (Right) -->
+                            <a href="project-management.html" class="brain-section zone-project" aria-label="Open Chapter 03 — Project Management">
+                                <path class="hit-area" d="M 280 90 L 360 90 L 360 260 L 280 260 Z" />
+                                <!-- Connections -->
+
+                                <line class="network-edge" x1="315" y1="97" x2="283" y2="111" />
+                                <line class="network-edge" x1="315" y1="97" x2="325" y2="139" />
+                                <line class="network-edge" x1="283" y1="111" x2="325" y2="139" />
+                                <line class="network-edge" x1="325" y1="139" x2="352" y2="172" />
+                                <line class="network-edge" x1="325" y1="139" x2="301" y2="175" />
+                                <line class="network-edge" x1="352" y1="172" x2="347" y2="205" />
+                                <line class="network-edge" x1="352" y1="172" x2="301" y2="175" />
+                                <line class="network-edge" x1="352" y1="172" x2="311" y2="212" />
+                                <line class="network-edge" x1="301" y1="175" x2="273" y2="195" />
+                                <line class="network-edge" x1="301" y1="175" x2="311" y2="212" />
+                                <line class="network-edge" x1="347" y1="205" x2="311" y2="212" />
+                                <line class="network-edge" x1="347" y1="205" x2="319" y2="251" />
+                                <line class="network-edge" x1="311" y1="212" x2="319" y2="251" />
+                                <!-- Purple-to-red and red-to-red top hull segments -->
+                                <line class="network-edge" x1="221" y1="56" x2="315" y2="97" />
+                                <line class="network-edge" x1="315" y1="97" x2="352" y2="172" />
+                                <!-- Mid/bottom hull segments (purple↔red boundary) -->
+                                <line class="network-edge" x1="273" y1="195" x2="319" y2="251" />
+                                <line class="network-edge" x1="251" y1="232" x2="319" y2="251" />
+
+                                <!-- Nodes -->
+                                <circle class="network-node" cx="315" cy="97" />
+                                <circle class="network-node" cx="283" cy="111" />
+                                <circle class="network-node" cx="325" cy="139" />
+                                <circle class="network-node" cx="352" cy="172" />
+                                <circle class="network-node" cx="301" cy="175" />
+                                <circle class="network-node" cx="347" cy="205" />
+                                <circle class="network-node" cx="311" cy="212" />
+                                <circle class="network-node" cx="319" cy="251" />
+                                <!-- Label -->
+                                <path class="connector-line" stroke="#c0504d" d="M 352 172 L 380 172 L 410 210" />
+                                <circle class="connector-dot" cx="410" cy="210" r="3" />
+                                <g class="brain-label-group" transform="translate(418, 210)">
+                                    <text x="0" y="0" text-anchor="start" class="brain-label-title">Project Mgmt</text>
+                                    <text x="0" y="15" text-anchor="start" class="brain-label-sub">Systems & Delivery</text>
+                                </g>
+                            </a>
+
+                            <!-- Highlight outline + accents -->
+                            <g class="brain-highlight" fill="none">
+                                <g class="zone-counselling">
+                                    <polyline class="highlight-edge" points="133 328 91 321 61 255" />
+                                    <polyline class="highlight-edge" points="71 113 110 65 165 83" />
+                                    <polyline class="highlight-edge" points="182 244 133 328" />
+                                </g>
+                                <g class="zone-education">
+                                    <polyline class="highlight-edge" points="61 255 9 235 21 143 71 113" />
+                                </g>
+                                <g class="zone-technology">
+                                    <polyline class="highlight-edge" points="165 83 221 56 257 92 273 195 251 232 182 244" />
+                                    <line class="highlight-edge" x1="273" y1="195" x2="251" y2="232" />
+                                </g>
+                                <g class="zone-project">
+                                    <polyline class="highlight-edge" points="257 92 315 97 352 172 347 205 319 251" />
+                                    <line class="highlight-edge" x1="273" y1="195" x2="311" y2="212" />
+                                    <line class="highlight-edge" x1="251" y1="232" x2="319" y2="251" />
+                                </g>
+                            </g>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Table of Contents (desktop) — these ARE the chapter routes -->
+            <nav class="cover-toc mt-6" aria-label="Table of contents">
+                <a class="toc-entry" style="--toc-ink:#F97316" data-zone="counselling" href="counselling.html"><span class="toc-tick" aria-hidden="true">▪</span>01 Counselling</a>
+                <span class="toc-sep" aria-hidden="true">·</span>
+                <a class="toc-entry" style="--toc-ink:#2DD4BF" data-zone="technology" href="technology.html"><span class="toc-tick" aria-hidden="true">▪</span>02 Technology</a>
+                <span class="toc-sep" aria-hidden="true">·</span>
+                <a class="toc-entry" style="--toc-ink:#E11D48" data-zone="project" href="project-management.html"><span class="toc-tick" aria-hidden="true">▪</span>03 Project Management</a>
+                <span class="toc-sep" aria-hidden="true">·</span>
+                <a class="toc-entry" style="--toc-ink:#10B981" data-zone="education" href="education-culture.html"><span class="toc-tick" aria-hidden="true">▪</span>04 Education &amp; Culture</a>
+            </nav>
         </div>
 
-        <!-- The Interactive Network Brain -->
-    <div class="brain-map-wrapper reveal active z-10 relative">
-            <!-- ViewBox matches the coordinate system (approx 0-400) -->
-            <svg id="brainMapSVG" viewBox="0 0 450 400" xmlns="http://www.w3.org/2000/svg">
-                <g transform="translate(40, 0)">
-                
-                <!-- EDUCATION (Green - Left) -->
-                <a href="education-culture.html" class="brain-section zone-education">
-                    <path class="hit-area" d="M 5 100 L 90 100 L 90 350 L 5 350 Z" />
-                    <!-- Connections -->
-                    <line class="network-edge" x1="71" y1="113" x2="63" y2="153" />
-                    <line class="network-edge" x1="71" y1="113" x2="21" y2="143" />
-                    <line class="network-edge" x1="21" y1="143" x2="63" y2="153" />
-                    <line class="network-edge" x1="21" y1="143" x2="41" y2="202" />
-                    <line class="network-edge" x1="63" y1="153" x2="82" y2="190" />
-                    <line class="network-edge" x1="63" y1="153" x2="41" y2="202" />
-                    <line class="network-edge" x1="82" y1="190" x2="41" y2="202" />
-                    <line class="network-edge" x1="82" y1="190" x2="107" y2="227" />
-                    <line class="network-edge" x1="41" y1="202" x2="9" y2="235" />
-                    <line class="network-edge" x1="41" y1="202" x2="61" y2="255" />
-                    <line class="network-edge" x1="9" y1="235" x2="61" y2="255" />
-                    <line class="network-edge" x1="61" y1="255" x2="100" y2="262" />
-                    <line class="network-edge" x1="133" y1="328" x2="91" y2="321" />
-                    <line class="network-edge" x1="91" y1="321" x2="61" y2="255" />
-                    <line class="network-edge" x1="61" y1="255" x2="9" y2="235" />
-                    <line class="network-edge" x1="9" y1="235" x2="21" y2="143" />
-                    <line class="network-edge" x1="21" y1="143" x2="110" y2="65" />
+        <!-- Mobile chapter router — the TOC as full-bleed stacked cards -->
+        <nav class="chapter-cards mt-12 w-full" aria-label="Chapters">
+            <p class="kicker text-center mb-4">Tap a facet to open</p>
+            <a class="chapter-card" style="--card-ink:#D9763B" href="counselling.html">
+                <span class="chapter-card-num" aria-hidden="true">01</span>
+                <span>
+                    <span class="block font-semibold">Counselling</span>
+                    <span class="caption block" style="color:rgba(250,247,242,.6)">Empathic, warm, accessible.</span>
+                </span>
+                <span class="chapter-card-arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="chapter-card" style="--card-ink:#14998F" href="technology.html">
+                <span class="chapter-card-num" aria-hidden="true">02</span>
+                <span>
+                    <span class="block font-semibold">Technology</span>
+                    <span class="caption block" style="color:rgba(250,247,242,.6)">Modern, sleek, innovative.</span>
+                </span>
+                <span class="chapter-card-arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="chapter-card" style="--card-ink:#C04568" href="project-management.html">
+                <span class="chapter-card-num" aria-hidden="true">03</span>
+                <span>
+                    <span class="block font-semibold">Project Management</span>
+                    <span class="caption block" style="color:rgba(250,247,242,.6)">Structured, efficient, clear.</span>
+                </span>
+                <span class="chapter-card-arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="chapter-card" style="--card-ink:#4C8A6C" href="education-culture.html">
+                <span class="chapter-card-num" aria-hidden="true">04</span>
+                <span>
+                    <span class="block font-semibold">Education &amp; Culture</span>
+                    <span class="caption block" style="color:rgba(250,247,242,.6)">Informative, engaging, scholarly.</span>
+                </span>
+                <span class="chapter-card-arrow" aria-hidden="true">→</span>
+            </a>
+        </nav>
 
-                    <!-- Nodes -->
-                    <circle class="network-node" cx="71" cy="113" />
-                    <circle class="network-node" cx="21" cy="143" />
-                    <circle class="network-node" cx="63" cy="153" />
-                    <circle class="network-node" cx="82" cy="190" />
-                    <circle class="network-node" cx="41" cy="202" />
-                    <circle class="network-node" cx="9" cy="235" />
-                    <circle class="network-node" cx="61" cy="255" />
-                    <!-- Label -->
-                    <path class="connector-line" stroke="#22c55e" d="M 9 235 L -30 235 L -60 270" />
-                    <circle class="connector-dot" cx="-60" cy="270" r="3" />
-                    <g class="brain-label-group" transform="translate(-68, 270)">
-                        <text x="0" y="0" text-anchor="end" class="brain-label-title">Education</text>
-                        <text x="0" y="15" text-anchor="end" class="brain-label-sub">
-                            <tspan x="0" dy="0">Nurturing &amp;</tspan>
-                            <tspan x="0" dy="12">Knowledge Transfer</tspan>
-                        </text>
-                    </g>
-                </a>
+        <div class="scroll-rule" aria-hidden="true">
+            <span class="kicker">Scroll</span>
+            <span class="scroll-line"><i></i></span>
+        </div>
+    </section>
 
-                <!-- COUNSELLING (Orange - Middle Left) -->
-                <a href="counselling.html" class="brain-section zone-counselling">
-                    <path class="hit-area" d="M 90 60 L 190 60 L 190 350 L 90 350 Z" />
-                    <!-- Connections -->
-                    <line class="network-edge" x1="110" y1="65" x2="116" y2="106" />
-                    <line class="network-edge" x1="110" y1="65" x2="165" y2="83" />
-                    <line class="network-edge" x1="110" y1="65" x2="71" y2="113" />
-                    <line class="network-edge" x1="110" y1="65" x2="146" y2="119" />
-                    <!-- Blue-to-purple top hull segment -->
-                    <line class="network-edge" x1="110" y1="65" x2="221" y2="56" />
-
-                    <line class="network-edge" x1="165" y1="83" x2="200" y2="94" />
-                    <line class="network-edge" x1="165" y1="83" x2="146" y2="119" />
-                    <line class="network-edge" x1="165" y1="83" x2="199" y2="125" />
-                    <line class="network-edge" x1="165" y1="83" x2="116" y2="106" />
-                    <line class="network-edge" x1="116" y1="106" x2="146" y2="119" />
-                    <line class="network-edge" x1="116" y1="106" x2="125" y2="145" />
-                    <line class="network-edge" x1="116" y1="106" x2="71" y2="113" />
-                    <line class="network-edge" x1="146" y1="119" x2="125" y2="145" />
-                    <line class="network-edge" x1="146" y1="119" x2="199" y2="125" />
-                    <line class="network-edge" x1="125" y1="145" x2="149" y2="188" />
-                    <line class="network-edge" x1="125" y1="145" x2="82" y2="190" />
-                    <line class="network-edge" x1="149" y1="188" x2="151" y2="223" />
-                    <line class="network-edge" x1="149" y1="188" x2="107" y2="227" />
-                    <line class="network-edge" x1="151" y1="223" x2="182" y2="244" />
-                    <line class="network-edge" x1="151" y1="223" x2="107" y2="227" />
-                    <line class="network-edge" x1="151" y1="223" x2="133" y2="269" />
-                    <line class="network-edge" x1="107" y1="227" x2="100" y2="262" />
-                    <line class="network-edge" x1="107" y1="227" x2="133" y2="269" />
-                    <line class="network-edge" x1="182" y1="244" x2="133" y2="269" />
-                    <line class="network-edge" x1="182" y1="244" x2="133" y2="328" />
-
-                    <line class="network-edge" x1="100" y1="262" x2="133" y2="269" />
-                    <line class="network-edge" x1="100" y1="262" x2="116" y2="296" />
-                    <line class="network-edge" x1="133" y1="269" x2="116" y2="296" />
-                    <line class="network-edge" x1="116" y1="296" x2="91" y2="321" />
-                    <line class="network-edge" x1="116" y1="296" x2="133" y2="328" />
-                    <line class="network-edge" x1="91" y1="321" x2="133" y2="328" />
-                    <!-- Nodes -->
-                    <circle class="network-node" cx="110" cy="65" />
-                    <circle class="network-node" cx="165" cy="83" />
-                    <circle class="network-node" cx="116" cy="106" />
-                    <circle class="network-node" cx="146" cy="119" />
-                    <circle class="network-node" cx="125" cy="145" />
-                    <circle class="network-node" cx="149" cy="188" />
-                    <circle class="network-node" cx="151" cy="223" />
-                    <circle class="network-node" cx="107" cy="227" />
-                    <circle class="network-node" cx="182" cy="244" />
-                    <circle class="network-node" cx="100" cy="262" />
-                    <circle class="network-node" cx="133" cy="269" />
-                    <circle class="network-node" cx="116" cy="296" />
-                    <circle class="network-node" cx="91" cy="321" />
-                    <circle class="network-node" cx="133" cy="328" />
-                    <!-- Label -->
-                    <path class="connector-line" stroke="#f97316" d="M 110 65 L 80 30 L 20 30" />
-                    <circle class="connector-dot" cx="20" cy="30" r="3" />
-                    <g class="brain-label-group" transform="translate(12, 30)">
-                        <text x="0" y="0" text-anchor="end" class="brain-label-title">Counselling</text>
-                        <text x="0" y="15" text-anchor="end" class="brain-label-sub">
-                            <tspan x="0" dy="0">Development &amp;</tspan>
-                            <tspan x="0" dy="12">Life-Learning</tspan>
-                        </text>
-                    </g>
-                </a>
-
-                <!-- TECHNOLOGY (Purple - Middle Right) -->
-                <a href="technology.html" class="brain-section zone-technology">
-                    <path class="hit-area" d="M 190 50 L 280 50 L 280 350 L 190 350 Z" />
-                    <!-- Connections -->
-                    <line class="network-edge" x1="221" y1="56" x2="200" y2="94" />
-                    <line class="network-edge" x1="221" y1="56" x2="257" y2="92" />
-                    <line class="network-edge" x1="221" y1="56" x2="229" y2="111" />
-                    <line class="network-edge" x1="221" y1="56" x2="165" y2="83" />
-                    <line class="network-edge" x1="257" y1="92" x2="283" y2="111" />
-                    <line class="network-edge" x1="257" y1="92" x2="229" y2="111" />
-                    <line class="network-edge" x1="257" y1="92" x2="200" y2="94" />
-                    <line class="network-edge" x1="200" y1="94" x2="199" y2="125" />
-                    <line class="network-edge" x1="200" y1="94" x2="229" y2="111" />
-                    <line class="network-edge" x1="229" y1="111" x2="199" y2="125" />
-                    <line class="network-edge" x1="229" y1="111" x2="236" y2="149" />
-                    <line class="network-edge" x1="199" y1="125" x2="236" y2="149" />
-                    <line class="network-edge" x1="199" y1="125" x2="191" y2="175" />
-                    <line class="network-edge" x1="236" y1="149" x2="191" y2="175" />
-                    <line class="network-edge" x1="236" y1="149" x2="273" y2="195" />
-                    <line class="network-edge" x1="191" y1="175" x2="209" y2="208" />
-                    <line class="network-edge" x1="191" y1="175" x2="149" y2="188" />
-                    <line class="network-edge" x1="273" y1="195" x2="311" y2="212" />
-                    <line class="network-edge" x1="273" y1="195" x2="251" y2="232" />
-                    <line class="network-edge" x1="209" y1="208" x2="182" y2="244" />
-                    <line class="network-edge" x1="209" y1="208" x2="251" y2="232" />
-                    <line class="network-edge" x1="209" y1="208" x2="151" y2="223" />
-                    <line class="network-edge" x1="251" y1="232" x2="182" y2="244" />
-                    <!-- Nodes -->
-                    <circle class="network-node" cx="221" cy="56" />
-                    <circle class="network-node" cx="257" cy="92" />
-                    <circle class="network-node" cx="200" cy="94" />
-                    <circle class="network-node" cx="229" cy="111" />
-                    <circle class="network-node" cx="199" cy="125" />
-                    <circle class="network-node" cx="236" cy="149" />
-                    <circle class="network-node" cx="191" cy="175" />
-                    <circle class="network-node" cx="273" cy="195" />
-                    <circle class="network-node" cx="209" cy="208" />
-                    <circle class="network-node" cx="251" cy="232" />
-                    <!-- Label -->
-                    <path class="connector-line" stroke="#8064a2" d="M 221 56 L 221 10 L 280 10" />
-                    <circle class="connector-dot" cx="280" cy="10" r="3" />
-                    <g class="brain-label-group" transform="translate(288, 10)">
-                        <text x="0" y="0" text-anchor="start" class="brain-label-title">Technology</text>
-                        <text x="0" y="15" text-anchor="start" class="brain-label-sub">Accuracy, Efficiency, Automation & AI</text>
-                    </g>
-                </a>
-
-                <!-- PROJECT MGMT (Red - Right) -->
-                <a href="project-management.html" class="brain-section zone-project">
-                    <path class="hit-area" d="M 280 90 L 360 90 L 360 260 L 280 260 Z" />
-                    <!-- Connections -->
-
-                    <line class="network-edge" x1="315" y1="97" x2="283" y2="111" />
-                    <line class="network-edge" x1="315" y1="97" x2="325" y2="139" />
-                    <line class="network-edge" x1="283" y1="111" x2="325" y2="139" />
-                    <line class="network-edge" x1="325" y1="139" x2="352" y2="172" />
-                    <line class="network-edge" x1="325" y1="139" x2="301" y2="175" />
-                    <line class="network-edge" x1="352" y1="172" x2="347" y2="205" />
-                    <line class="network-edge" x1="352" y1="172" x2="301" y2="175" />
-                    <line class="network-edge" x1="352" y1="172" x2="311" y2="212" />
-                    <line class="network-edge" x1="301" y1="175" x2="273" y2="195" />
-                    <line class="network-edge" x1="301" y1="175" x2="311" y2="212" />
-                    <line class="network-edge" x1="347" y1="205" x2="311" y2="212" />
-                    <line class="network-edge" x1="347" y1="205" x2="319" y2="251" />
-                    <line class="network-edge" x1="311" y1="212" x2="319" y2="251" />
-                    <!-- Purple-to-red and red-to-red top hull segments -->
-                    <line class="network-edge" x1="221" y1="56" x2="315" y2="97" />
-                    <line class="network-edge" x1="315" y1="97" x2="352" y2="172" />
-                    <!-- Mid/bottom hull segments (purple↔red boundary) -->
-                    <line class="network-edge" x1="273" y1="195" x2="319" y2="251" />
-                    <line class="network-edge" x1="251" y1="232" x2="319" y2="251" />
-
-                    <!-- Nodes -->
-                    <circle class="network-node" cx="315" cy="97" />
-                    <circle class="network-node" cx="283" cy="111" />
-                    <circle class="network-node" cx="325" cy="139" />
-                    <circle class="network-node" cx="352" cy="172" />
-                    <circle class="network-node" cx="301" cy="175" />
-                    <circle class="network-node" cx="347" cy="205" />
-                    <circle class="network-node" cx="311" cy="212" />
-                    <circle class="network-node" cx="319" cy="251" />
-                    <!-- Label -->
-                    <path class="connector-line" stroke="#c0504d" d="M 352 172 L 380 172 L 410 210" />
-                    <circle class="connector-dot" cx="410" cy="210" r="3" />
-                    <g class="brain-label-group" transform="translate(418, 210)">
-                        <text x="0" y="0" text-anchor="start" class="brain-label-title">Project Mgmt</text>
-                        <text x="0" y="15" text-anchor="start" class="brain-label-sub">Systems & Delivery</text>
-                    </g>
-                </a>
-
-                <!-- Highlight outline + accents -->
-                <g class="brain-highlight" fill="none">
-                    <g class="zone-counselling">
-                        <polyline class="highlight-edge" points="133 328 91 321 61 255" />
-                        <polyline class="highlight-edge" points="71 113 110 65 165 83" />
-                        <polyline class="highlight-edge" points="182 244 133 328" />
-                    </g>
-                    <g class="zone-education">
-                        <polyline class="highlight-edge" points="61 255 9 235 21 143 71 113" />
-                    </g>
-                    <g class="zone-technology">
-                        <polyline class="highlight-edge" points="165 83 221 56 257 92 273 195 251 232 182 244" />
-                        <line class="highlight-edge" x1="273" y1="195" x2="251" y2="232" />
-                    </g>
-                    <g class="zone-project">
-                        <polyline class="highlight-edge" points="257 92 315 97 352 172 347 205 319 251" />
-                        <line class="highlight-edge" x1="273" y1="195" x2="311" y2="212" />
-                        <line class="highlight-edge" x1="251" y1="232" x2="319" y2="251" />
-                    </g>
-                </g>
-                </g>
-            </svg>
-
-            <!-- Mobile facet legend -->
-            <div class="mt-6 w-full md:hidden space-y-3">
-                <div class="text-center text-xs uppercase tracking-[0.15em] text-cyan-200">Tap a facet to open</div>
-                <div id="mobile-constellation" class="mobile-constellation grid grid-cols-2 gap-3 text-sm">
-                    <a href="education-culture.html" class="constellation-card">
-                        <div class="text-cyan-200 font-semibold">Education</div>
-                        <div class="text-slate-400 text-xs">Informative, engaging, scholarly.</div>
-                    </a>
-                    <a href="counselling.html" class="constellation-card">
-                        <div class="text-orange-300 font-semibold">Counselling</div>
-                        <div class="text-slate-400 text-xs">Empathic, warm, accessible.</div>
-                    </a>
-                    <a href="project-management.html" class="constellation-card">
-                        <div class="text-rose-300 font-semibold">Project Mgmt</div>
-                        <div class="text-slate-400 text-xs">Structured, efficient, clear.</div>
-                    </a>
-                    <a href="technology.html" class="constellation-card">
-                        <div class="text-purple-300 font-semibold">Technology</div>
-                        <div class="text-slate-400 text-xs">Modern, sleek, innovative.</div>
-                    </a>
+    <!-- ===================================================================
+         SPECIFICATIONS MARQUEE (NEW) — the spine's spec strip. The visible
+         track is decorative (aria-hidden) and loops via GSAP; a visually
+         hidden static list carries the same facts for screen readers.
+         =================================================================== -->
+    <section class="spec-marquee" aria-label="Specifications">
+        <ul class="sr-only">
+            <li>10+ YEARS LEADING INITIATIVES</li>
+            <li>8,000+ STUDENTS' DATA — SOLE DEVELOPER</li>
+            <li>120 SCHOOLS RANDOMISED</li>
+            <li>BSocSc 1ST CLASS HONOURS</li>
+            <li>TRILINGUAL EN · 粵 · 普</li>
+            <li>SMART WORK PRACTICE AWARD 2018/19</li>
+            <li>7 INNOVATIONS SHIPPED</li>
+            <li>90 WPM EN / 95 WPM 中</li>
+        </ul>
+        <div class="spec-marquee-viewport" aria-hidden="true">
+            <div class="spec-marquee-track" id="spec-marquee-track">
+                <div class="spec-marquee-group">
+                    <span class="spec-item">10+ YEARS LEADING INITIATIVES</span><span class="spec-tick" style="color:#F97316">▪</span>
+                    <span class="spec-item">8,000+ STUDENTS' DATA — SOLE DEVELOPER</span><span class="spec-tick" style="color:#2DD4BF">▪</span>
+                    <span class="spec-item">120 SCHOOLS RANDOMISED</span><span class="spec-tick" style="color:#E11D48">▪</span>
+                    <span class="spec-item">BSocSc 1ST CLASS HONOURS</span><span class="spec-tick" style="color:#10B981">▪</span>
+                    <span class="spec-item">TRILINGUAL EN · 粵 · 普</span><span class="spec-tick" style="color:#F97316">▪</span>
+                    <span class="spec-item">SMART WORK PRACTICE AWARD 2018/19</span><span class="spec-tick" style="color:#2DD4BF">▪</span>
+                    <span class="spec-item">7 INNOVATIONS SHIPPED</span><span class="spec-tick" style="color:#E11D48">▪</span>
+                    <span class="spec-item">90 WPM EN / 95 WPM 中</span><span class="spec-tick" style="color:#10B981">▪</span>
+                </div>
+                <div class="spec-marquee-group">
+                    <span class="spec-item">10+ YEARS LEADING INITIATIVES</span><span class="spec-tick" style="color:#F97316">▪</span>
+                    <span class="spec-item">8,000+ STUDENTS' DATA — SOLE DEVELOPER</span><span class="spec-tick" style="color:#2DD4BF">▪</span>
+                    <span class="spec-item">120 SCHOOLS RANDOMISED</span><span class="spec-tick" style="color:#E11D48">▪</span>
+                    <span class="spec-item">BSocSc 1ST CLASS HONOURS</span><span class="spec-tick" style="color:#10B981">▪</span>
+                    <span class="spec-item">TRILINGUAL EN · 粵 · 普</span><span class="spec-tick" style="color:#F97316">▪</span>
+                    <span class="spec-item">SMART WORK PRACTICE AWARD 2018/19</span><span class="spec-tick" style="color:#2DD4BF">▪</span>
+                    <span class="spec-item">7 INNOVATIONS SHIPPED</span><span class="spec-tick" style="color:#E11D48">▪</span>
+                    <span class="spec-item">90 WPM EN / 95 WPM 中</span><span class="spec-tick" style="color:#10B981">▪</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Floating CTA - Testimonials (fixed to viewport bottom-right) -->
-    <a href="#" id="testimonials-trigger" class="group fixed bottom-4 right-4 flex items-center gap-3 pr-3 z-20">
-        <svg width="78" height="78" viewBox="0 0 78 78" class="overflow-visible animate-[pulse_2.6s_ease-in-out_infinite]" aria-hidden="true">
-            <defs>
-                <linearGradient id="cometTail" x1="0%" y1="50%" x2="100%" y2="50%">
-                    <stop offset="0%" stop-color="#22d3ee" stop-opacity="0" />
-                    <stop offset="40%" stop-color="#22d3ee" stop-opacity="0.35" />
-                    <stop offset="100%" stop-color="#67e8f9" stop-opacity="0.9" />
-                </linearGradient>
-                <radialGradient id="cometCore" cx="50%" cy="50%" r="55%">
-                    <stop offset="0%" stop-color="#e0f2fe" />
-                    <stop offset="55%" stop-color="#67e8f9" />
-                    <stop offset="100%" stop-color="#0ea5e9" />
-                </radialGradient>
-            </defs>
-            <path d="M10 48 C26 44 42 36 60 22" fill="none" stroke="url(#cometTail)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" class="opacity-90" />
-            <path d="M18 52 C34 48 50 38 68 24" fill="none" stroke="url(#cometTail)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="opacity-80" />
-            <circle cx="62" cy="22" r="11" fill="url(#cometCore)" />
-            <circle cx="62" cy="22" r="5" class="fill-white" />
-            <circle cx="62" cy="22" r="3" class="fill-cyan-50" />
-        </svg>
-        <div class="flex flex-col text-left text-slate-100">
-            <span class="text-[11px] uppercase tracking-[0.18em] text-cyan-200">Hear Voices of Others</span>
-            <span class="text-sm font-semibold text-cyan-50">Testimonials</span>
-        </div>
-        <svg width="28" height="28" viewBox="0 0 24 24" class="text-cyan-200">
-            <path fill="currentColor" d="M5 12h11.17l-3.58-3.59L14 7l6 6-6 6-1.41-1.41L16.17 13H5z" />
-        </svg>
-    </a>
-
-
-    <!-- Testimonials Modal -->
-    <div id="testimonials-modal" class="fixed inset-0 z-30 hidden items-center justify-center px-4 py-8">
-        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur" aria-hidden="true"></div>
-        <div class="relative z-10 w-full max-w-5xl rounded-3xl border border-cyan-500/30 bg-slate-900/90 shadow-[0_0_40px_rgba(34,211,238,0.18)] overflow-hidden">
-            <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/80">
-                <div class="space-y-1">
-                    <p class="text-cyan-300 text-xs uppercase tracking-[0.25em]">Voices of Others</p>
-                    <h2 class="text-xl md:text-2xl font-semibold text-slate-50">Testimonials</h2>
-                </div>
-                <button id="testimonials-close" class="text-slate-300 hover:text-white" aria-label="Close">
-                    <svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M18.3 5.71 12 12l6.3 6.29-1.41 1.42L10.59 13.4 4.3 19.71 2.89 18.3 9.17 12 2.89 5.71 4.3 4.3 10.59 10.6 16.89 4.3z"/></svg>
-                </button>
+    <!-- ===================================================================
+         CHAPTER SPREADS — one spread per chapter, pinned on desktop
+         =================================================================== -->
+    <section class="spine-section chapter-spread spread-sienna relative overflow-hidden" aria-labelledby="spread-01-title">
+        <span class="ghost-numeral top-[6%] right-[-3%]" aria-hidden="true">01</span>
+        <div class="spine-container relative z-10">
+            <div class="section-head">
+                <hr class="section-rule">
+                <p class="kicker"><span class="tick">▪</span>Chapter 01 — Counselling · The Listener</p>
             </div>
-            <div class="max-h-[76vh] px-6 pb-6 pt-4 flex flex-col gap-4">
-                <div class="flex items-center justify-between text-slate-300 text-sm">
-                    <div class="flex gap-3">
-                        <button id="testimonial-prev" class="px-3 py-1.5 rounded-full border border-cyan-400/40 bg-slate-800/60 hover:bg-slate-800 text-cyan-100">Prev</button>
-                        <button id="testimonial-next" class="px-3 py-1.5 rounded-full border border-cyan-400/40 bg-slate-800/60 hover:bg-slate-800 text-cyan-100">Next</button>
-                        <button id="testimonial-play-pause" class="px-3 py-1.5 rounded-full border border-cyan-400/40 bg-slate-800/60 hover:bg-slate-800 text-cyan-100">Pause</button>
-                        <span id="testimonial-countdown" class="px-3 py-1.5 rounded-full border border-slate-700 bg-slate-800/50 text-cyan-200 text-xs">10s</span>
-                    </div>
-                    <div class="text-xs text-slate-400">Auto-scroll carousel</div>
-                </div>
-                <div class="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/70 shadow-lg">
-                    <div id="testimonial-track" class="flex transition-transform duration-700 ease-in-out">
-                        <div class="min-w-full grid gap-4 md:grid-cols-2 p-5">
-                            <article class="flex gap-4 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-lg">
-                                <img src="resources/photos/Hastings.jpg" alt="Dr CHIM Ho Yeung, Hastings" class="h-28 w-20 rounded-xl object-cover ring-2 ring-cyan-300/50 flex-shrink-0" />
-                                <div class="space-y-2">
-                                    <div>
-                                        <h3 class="text-lg font-semibold text-slate-100">Dr CHIM Ho Yeung, Hastings</h3>
-                                        <p class="text-sm text-slate-400">Senior Lecturer II, The Education University of Hong Kong</p>
-                                    </div>
-                                    <p class="text-slate-200 text-sm leading-relaxed whitespace-pre-line">...a passionate, industrious and independent colleague who is willing to devote himself into tasks.
+            <h2 id="spread-01-title" class="display-l max-w-4xl" data-reveal-lines>Before anything was built, someone had to be heard.</h2>
+            <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption">Development &amp; Life-Learning · Empathic, warm, accessible.</p>
+            <div class="accent-bar w-44 max-w-full mt-10" data-accent-bar></div>
+            <p class="mt-10"><a class="link-editorial" href="counselling.html">Open Chapter <span aria-hidden="true">→</span></a></p>
+        </div>
+    </section>
 
-Herman's interpersonal skills and diligence are impressive. He is always resourceful and conscientious in his work, prompt with assignments and active in discussions. He has a pleasant and helpful disposition who can manage to stay calm under situations of stress. He communicates competently in both Mandarin and English and is a good team member.
+    <section class="spine-section chapter-spread spread-tealink relative overflow-hidden" aria-labelledby="spread-02-title">
+        <span class="ghost-numeral top-[6%] left-[-3%]" aria-hidden="true">02</span>
+        <div class="spine-container relative z-10">
+            <div class="section-head">
+                <hr class="section-rule">
+                <p class="kicker"><span class="tick">▪</span>Chapter 02 — Technology · The Builder</p>
+            </div>
+            <h2 id="spread-02-title" class="display-l max-w-4xl md:ml-auto md:text-right" data-reveal-lines>Tools are empathy at scale — built precisely, shipped humbly.</h2>
+            <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption md:text-right">Accuracy, Efficiency, Automation &amp; AI · Modern, sleek, innovative.</p>
+            <div class="accent-bar w-44 max-w-full mt-10 md:ml-auto" data-accent-bar></div>
+            <p class="mt-10 md:text-right"><a class="link-editorial" href="technology.html">Open Chapter <span aria-hidden="true">→</span></a></p>
+        </div>
+    </section>
 
-Herman has always carried out duties assigned to him responsibly and efficiently. The materials that he has developed are of outstanding levels. He is always enthusiastic about his duties and ad hoc assignments.</p>
-                                </div>
-                            </article>
-                            <article class="flex gap-4 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-lg">
-                                <img src="resources/photos/Polly.jpg" alt="Ms LAU Shuk Han, Polly" class="h-28 w-20 rounded-xl object-cover ring-2 ring-cyan-300/50 flex-shrink-0" />
-                                <div class="space-y-2">
-                                    <div>
-                                        <h3 class="text-lg font-semibold text-slate-100">Ms LAU Shuk Han, Polly</h3>
-                                        <p class="text-sm text-slate-400">Qualified Speech Therapist and Audiologist; Senior Lecturer I, The Education University of Hong Kong</p>
-                                    </div>
-                                    <p class="text-slate-200 text-sm leading-relaxed whitespace-pre-line">Herman has always impressed me in a number of ways. He was a creative and innovative person. He is patient to listen to the needs and concerns of colleagues and then comes up with creative ideas to solve the problems. Most importantly, he would integrate his ideas with the needs of his team members, and through his hard work and perseverance, he could put things into practical reality...
+    <section class="spine-section chapter-spread spread-oxblood relative overflow-hidden" aria-labelledby="spread-03-title">
+        <span class="ghost-numeral top-[6%] right-[-3%]" aria-hidden="true">03</span>
+        <div class="spine-container relative z-10">
+            <div class="section-head">
+                <hr class="section-rule">
+                <p class="kicker"><span class="tick">▪</span>Chapter 03 — Project Management · The Architect</p>
+            </div>
+            <h2 id="spread-03-title" class="display-l max-w-4xl" data-reveal-lines>Foresight is a structure: anticipate, design, deliver, repeat.</h2>
+            <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption">Systems &amp; Delivery · Structured, efficient, clear.</p>
+            <div class="accent-bar w-44 max-w-full mt-10" data-accent-bar></div>
+            <p class="mt-10"><a class="link-editorial" href="project-management.html">Open Chapter <span aria-hidden="true">→</span></a></p>
+        </div>
+    </section>
 
-...We have had various opportunities to exchange our views on technological advances in the education field, I am still impressed by his dedication to putting in long hours when he has to and his devotion to his work.</p>
-                                </div>
-                            </article>
-                        </div>
-                        <div class="min-w-full grid gap-4 md:grid-cols-2 p-5">
-                            <article class="flex gap-4 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-lg">
-                                <img src="resources/photos/Hui King Fai.jpg" alt="Dr King Fai HUI, Sammy" class="h-28 w-20 rounded-xl object-cover ring-2 ring-cyan-300/50 flex-shrink-0" />
-                                <div class="space-y-2">
-                                    <div>
-                                        <h3 class="text-lg font-semibold text-slate-100">Dr King Fai HUI, Sammy</h3>
-                                        <p class="text-sm text-slate-400">Principal Lecturer cum Associate Vice-President (Student Learning), The Education University of Hong Kong</p>
-                                    </div>
-                                    <p class="text-slate-200 text-sm leading-relaxed whitespace-pre-line">...a responsible, hardworking and committed colleague...I was particularly impressed by Herman's work efficiency and creativity, which was beyond possible doubt.
+    <section class="spine-section chapter-spread spread-moss relative overflow-hidden" aria-labelledby="spread-04-title">
+        <span class="ghost-numeral top-[6%] left-[-3%]" aria-hidden="true">04</span>
+        <div class="spine-container relative z-10">
+            <div class="section-head">
+                <hr class="section-rule">
+                <p class="kicker"><span class="tick">▪</span>Chapter 04 — Education &amp; Culture · The Bridge</p>
+            </div>
+            <h2 id="spread-04-title" class="display-l max-w-4xl md:ml-auto md:text-right" data-reveal-lines>Knowledge only matters when it crosses a bridge.</h2>
+            <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption md:text-right">Nurturing &amp; Knowledge Transfer · Informative, engaging, scholarly.</p>
+            <div class="accent-bar w-44 max-w-full mt-10 md:ml-auto" data-accent-bar></div>
+            <p class="mt-10 md:text-right"><a class="link-editorial" href="education-culture.html">Open Chapter <span aria-hidden="true">→</span></a></p>
+        </div>
+    </section>
 
-Herman has a good command of both English and Chinese language ability. He has too a very nice personality and be able to build up a professional relationship with anyone who comes into contact. Herman is a valuable asset to any organization.</p>
-                                </div>
-                            </article>
-                            <article class="flex gap-4 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-lg">
-                                <img src="resources/photos/May.png" alt="Ms May Lin" class="h-28 w-20 rounded-xl object-cover ring-2 ring-cyan-300/50 flex-shrink-0" />
-                                <div class="space-y-2">
-                                    <div>
-                                        <h3 class="text-lg font-semibold text-slate-100">Ms May Lin</h3>
-                                        <p class="text-sm text-slate-400">Project Manager, KeySteps@JC Phase II Team, The Education University of Hong Kong</p>
-                                    </div>
-                                    <p class="text-slate-200 text-sm leading-relaxed whitespace-pre-line">...essential role in establishing various protocols and mechanisms essential for the project's commencement, in addition to providing support in staff training, daily operations, and research activities.
+    <!-- ===================================================================
+         V.A.S.K. — THE SPECIMEN CARD (NEW) — four ink-bordered quadrants
+         on the cover's dark surface: Values / Attitudes / Skills / Knowledge.
+         Headers scramble-settle on entry; chips stagger in; cards tilt in 3D
+         on fine pointers. Fully static under reduced motion.
+         =================================================================== -->
+    <section id="vask" class="spine-section" aria-labelledby="vask-title">
+        <div class="spine-container">
+            <div class="section-head">
+                <hr class="section-rule">
+                <p class="kicker"><span class="tick">▪</span>SPECIFICATIONS — V.A.S.K.</p>
+                <h2 id="vask-title" class="display-m" data-reveal-lines>The Specimen Card</h2>
+                <p class="standfirst">The concept of V.A.S.K is a practical representation of oneself in terms of core characteristics that cannot otherwise be expressed through the browsing of education or occupational experiences.</p>
+            </div>
 
-Herman has been instrumental in ensuring the smooth day-to-day functioning of our team. He consistently demonstrates exceptional skills in utilizing various tools to facilitate efficient data handling and verification processes. His technical expertise has been invaluable in bridging gaps within our team, enabling us to effectively achieve our research objectives.
+            <div class="vask-grid grid gap-6 md:grid-cols-2" style="perspective: 900px">
 
-Herman's ability to transition seamlessly between administrative and research tasks highlights his versatility and dedication. I highly recommend Herman for any position that requires a skilled, adaptable, and dedicated professional.</p>
-                                </div>
-                            </article>
-                        </div>
-                    </div>
-                </div>
+                <article class="vask-quadrant plate-reveal" style="--vask-ink:#F97316">
+                    <span class="vask-letter" aria-hidden="true">V</span>
+                    <header class="vask-head">
+                        <h3 class="vask-kicker" data-scramble>VALUES</h3>
+                        <span class="vask-sub">What I treasure</span>
+                    </header>
+                    <ul class="vask-chips" role="list">
+                        <li>Altruism</li>
+                        <li>Creativity</li>
+                        <li>Equality</li>
+                        <li>Freedom</li>
+                        <li>Honesty</li>
+                        <li>Personal Development</li>
+                        <li>Self-Competence</li>
+                        <li>Social Justice</li>
+                        <li>Working Relationships</li>
+                    </ul>
+                </article>
+
+                <article class="vask-quadrant plate-reveal" style="--vask-ink:#2DD4BF">
+                    <span class="vask-letter" aria-hidden="true">A</span>
+                    <header class="vask-head">
+                        <h3 class="vask-kicker" data-scramble>ATTITUDES</h3>
+                        <span class="vask-sub">How I work &amp; live</span>
+                    </header>
+                    <ul class="vask-chips" role="list">
+                        <li>Culturally Sensitive</li>
+                        <li>Empathic</li>
+                        <li>Focused</li>
+                        <li>Honest</li>
+                        <li>Initiative</li>
+                        <li>Inquisitive</li>
+                        <li>Perfectionistic</li>
+                        <li>Persistent</li>
+                        <li>Respectful</li>
+                        <li>Sincere</li>
+                        <li>Transparent</li>
+                    </ul>
+                </article>
+
+                <article class="vask-quadrant plate-reveal" style="--vask-ink:#E11D48">
+                    <span class="vask-letter" aria-hidden="true">S</span>
+                    <header class="vask-head">
+                        <h3 class="vask-kicker" data-scramble>SKILLS</h3>
+                        <span class="vask-sub">What I am good at</span>
+                    </header>
+                    <ul class="vask-chips" role="list">
+                        <li>Complex Problem Solving</li>
+                        <li>Counselling</li>
+                        <li>Active Listening</li>
+                        <li>Critical Thinking</li>
+                        <li>Programming (VBA/Python/HTML/PowerShell)</li>
+                        <li>Statistical Analysis</li>
+                        <li>Translation &amp; Interpretation</li>
+                        <li>Public Speaking</li>
+                        <li>Financial &amp; Time Management</li>
+                    </ul>
+                </article>
+
+                <article class="vask-quadrant plate-reveal" style="--vask-ink:#10B981">
+                    <span class="vask-letter" aria-hidden="true">K</span>
+                    <header class="vask-head">
+                        <h3 class="vask-kicker" data-scramble>KNOWLEDGE</h3>
+                        <span class="vask-sub">What I know</span>
+                    </header>
+                    <ul class="vask-chips" role="list">
+                        <li>Psychology</li>
+                        <li>Counselling</li>
+                        <li>Mindfulness</li>
+                        <li>Computational Thinking</li>
+                        <li>E-learning</li>
+                        <li>Project Management</li>
+                        <li>SEN Education</li>
+                        <li>Culturally Responsive Education</li>
+                        <li>Machine Learning/AI</li>
+                        <li>Stakeholder Engagement</li>
+                    </ul>
+                </article>
+
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- ===================================================================
+         CORRESPONDENCE — the four testimonials as letters, verbatim
+         =================================================================== -->
+    <section id="correspondence" class="spine-section" aria-labelledby="correspondence-title">
+        <div class="spine-container">
+            <div class="section-head">
+                <hr class="section-rule">
+                <p class="kicker"><span class="tick">▪</span>Correspondence — Hear Voices of Others</p>
+                <h2 id="correspondence-title" class="display-m" data-reveal-lines>Testimonials</h2>
+                <p class="standfirst">Four letters from colleagues and mentors, reproduced in full.</p>
+            </div>
+
+            <div class="grid gap-6 md:grid-cols-2">
+
+                <article class="letter-card plate-reveal">
+                    <header class="letter-from">
+                        <span>Letter 01 / 04 — The Education University of Hong Kong</span>
+                        <span class="letter-seal" aria-hidden="true"></span>
+                    </header>
+                    <div class="flex items-start gap-5">
+                        <img class="letter-avatar" src="resources/photos/Hastings.webp" alt="Dr CHIM Ho Yeung, Hastings" width="56" height="56" loading="lazy">
+                        <div>
+                            <h3 class="font-semibold text-lg leading-snug">Dr CHIM Ho Yeung, Hastings</h3>
+                            <p class="caption mt-1" style="color:rgba(250,247,242,.6)">Senior Lecturer II, The Education University of Hong Kong</p>
+                        </div>
+                    </div>
+                    <blockquote class="letter-excerpt mt-6">...a passionate, industrious and independent colleague who is willing to devote himself into tasks.</blockquote>
+                    <details class="letter-details mt-5">
+                        <summary class="link-editorial" aria-label="Full letter from Dr CHIM Ho Yeung, Hastings">
+                            <span class="when-closed">Read the full letter</span>
+                            <span class="when-open">Fold the letter</span>
+                            <span aria-hidden="true">→</span>
+                        </summary>
+                        <div class="letter-excerpt letter-body mt-4">
+                            <p>Herman's interpersonal skills and diligence are impressive. He is always resourceful and conscientious in his work, prompt with assignments and active in discussions. He has a pleasant and helpful disposition who can manage to stay calm under situations of stress. He communicates competently in both Mandarin and English and is a good team member.</p>
+                            <p>Herman has always carried out duties assigned to him responsibly and efficiently. The materials that he has developed are of outstanding levels. He is always enthusiastic about his duties and ad hoc assignments.</p>
+                        </div>
+                    </details>
+                </article>
+
+                <article class="letter-card plate-reveal">
+                    <header class="letter-from">
+                        <span>Letter 02 / 04 — The Education University of Hong Kong</span>
+                        <span class="letter-seal" aria-hidden="true"></span>
+                    </header>
+                    <div class="flex items-start gap-5">
+                        <img class="letter-avatar" src="resources/photos/Polly.webp" alt="Ms LAU Shuk Han, Polly" width="56" height="56" loading="lazy">
+                        <div>
+                            <h3 class="font-semibold text-lg leading-snug">Ms LAU Shuk Han, Polly</h3>
+                            <p class="caption mt-1" style="color:rgba(250,247,242,.6)">Qualified Speech Therapist and Audiologist; Senior Lecturer I, The Education University of Hong Kong</p>
+                        </div>
+                    </div>
+                    <blockquote class="letter-excerpt mt-6">Herman has always impressed me in a number of ways. He was a creative and innovative person. He is patient to listen to the needs and concerns of colleagues and then comes up with creative ideas to solve the problems. Most importantly, he would integrate his ideas with the needs of his team members, and through his hard work and perseverance, he could put things into practical reality...</blockquote>
+                    <details class="letter-details mt-5">
+                        <summary class="link-editorial" aria-label="Full letter from Ms LAU Shuk Han, Polly">
+                            <span class="when-closed">Read the full letter</span>
+                            <span class="when-open">Fold the letter</span>
+                            <span aria-hidden="true">→</span>
+                        </summary>
+                        <div class="letter-excerpt letter-body mt-4">
+                            <p>...We have had various opportunities to exchange our views on technological advances in the education field, I am still impressed by his dedication to putting in long hours when he has to and his devotion to his work.</p>
+                        </div>
+                    </details>
+                </article>
+
+                <article class="letter-card plate-reveal">
+                    <header class="letter-from">
+                        <span>Letter 03 / 04 — The Education University of Hong Kong</span>
+                        <span class="letter-seal" aria-hidden="true"></span>
+                    </header>
+                    <div class="flex items-start gap-5">
+                        <img class="letter-avatar" src="resources/photos/Hui King Fai.webp" alt="Dr King Fai HUI, Sammy" width="56" height="56" loading="lazy">
+                        <div>
+                            <h3 class="font-semibold text-lg leading-snug">Dr King Fai HUI, Sammy</h3>
+                            <p class="caption mt-1" style="color:rgba(250,247,242,.6)">Principal Lecturer cum Associate Vice-President (Student Learning), The Education University of Hong Kong</p>
+                        </div>
+                    </div>
+                    <blockquote class="letter-excerpt mt-6">...a responsible, hardworking and committed colleague...I was particularly impressed by Herman's work efficiency and creativity, which was beyond possible doubt.</blockquote>
+                    <details class="letter-details mt-5">
+                        <summary class="link-editorial" aria-label="Full letter from Dr King Fai HUI, Sammy">
+                            <span class="when-closed">Read the full letter</span>
+                            <span class="when-open">Fold the letter</span>
+                            <span aria-hidden="true">→</span>
+                        </summary>
+                        <div class="letter-excerpt letter-body mt-4">
+                            <p>Herman has a good command of both English and Chinese language ability. He has too a very nice personality and be able to build up a professional relationship with anyone who comes into contact. Herman is a valuable asset to any organization.</p>
+                        </div>
+                    </details>
+                </article>
+
+                <article class="letter-card plate-reveal">
+                    <header class="letter-from">
+                        <span>Letter 04 / 04 — KeySteps@JC Phase II Team</span>
+                        <span class="letter-seal" aria-hidden="true"></span>
+                    </header>
+                    <div class="flex items-start gap-5">
+                        <img class="letter-avatar" src="resources/photos/May.webp" alt="Ms May Lin" width="56" height="56" loading="lazy">
+                        <div>
+                            <h3 class="font-semibold text-lg leading-snug">Ms May Lin</h3>
+                            <p class="caption mt-1" style="color:rgba(250,247,242,.6)">Project Manager, KeySteps@JC Phase II Team, The Education University of Hong Kong</p>
+                        </div>
+                    </div>
+                    <blockquote class="letter-excerpt mt-6">...essential role in establishing various protocols and mechanisms essential for the project's commencement, in addition to providing support in staff training, daily operations, and research activities.</blockquote>
+                    <details class="letter-details mt-5">
+                        <summary class="link-editorial" aria-label="Full letter from Ms May Lin">
+                            <span class="when-closed">Read the full letter</span>
+                            <span class="when-open">Fold the letter</span>
+                            <span aria-hidden="true">→</span>
+                        </summary>
+                        <div class="letter-excerpt letter-body mt-4">
+                            <p>Herman has been instrumental in ensuring the smooth day-to-day functioning of our team. He consistently demonstrates exceptional skills in utilizing various tools to facilitate efficient data handling and verification processes. His technical expertise has been invaluable in bridging gaps within our team, enabling us to effectively achieve our research objectives.</p>
+                            <p>Herman's ability to transition seamlessly between administrative and research tasks highlights his versatility and dedication. I highly recommend Herman for any position that requires a skilled, adaptable, and dedicated professional.</p>
+                        </div>
+                    </details>
+                </article>
+
+            </div>
+        </div>
+    </section>
+    </main>
+
+    <!-- ===================================================================
+         COLOPHON
+         =================================================================== -->
+    <footer class="colophon">
+        <div class="spine-container">
+            <p class="kicker"><span class="tick">▪</span>COLOPHON</p>
+            <h2 class="colophon-name">Herman Koon Kiu “Joseph” Chan</h2>
+            <p class="ink-soft">The Digital Humanist — Hong Kong</p>
+            <div class="colophon-cols">
+                <div>
+                    <p class="kicker">Correspondence</p>
+                    <p class="mt-3"><a class="link-editorial" href="mailto:hermanchan_925@hotmail.com">hermanchan_925@hotmail.com</a></p>
+                </div>
+                <div>
+                    <p class="kicker">Archive</p>
+                    <p class="mt-3"><a class="link-editorial" href="https://github.com/herman925" target="_blank" rel="noopener">github.com/herman925 ↗</a></p>
+                </div>
+                <div>
+                    <p class="kicker">Chapters</p>
+                    <nav class="mt-3 flex flex-col gap-2">
+                        <a class="link-editorial" href="counselling.html">01 Counselling</a>
+                        <a class="link-editorial" href="technology.html">02 Technology</a>
+                        <a class="link-editorial" href="project-management.html">03 Project Management</a>
+                        <a class="link-editorial" href="education-culture.html">04 Education &amp; Culture</a>
+                    </nav>
+                </div>
+            </div>
+            <div class="colophon-fine">
+                <span>Set in Fraunces &amp; Outfit. Bound in Hong Kong.</span>
+                <span>© 2026 Herman Koon Kiu “Joseph” Chan</span>
+            </div>
+        </div>
+    </footer>
 
     <!-- SCRIPTS -->
-    <script>
-        // Initialize Icons (guard in case Lucide fails to load)
-        if (window.lucide && typeof lucide.createIcons === 'function') {
-            lucide.createIcons();
-        }
-
-        // Scroll Reveal Animation
-        function reveal() {
-            var reveals = document.querySelectorAll(".reveal");
-            for (var i = 0; i < reveals.length; i++) {
-                var windowHeight = window.innerHeight;
-                var elementTop = reveals[i].getBoundingClientRect().top;
-                var elementVisible = 150;
-                if (elementTop < windowHeight - elementVisible) {
-                    reveals[i].classList.add("active");
-                }
-            }
-        }
-        window.addEventListener("scroll", reveal);
-        // Trigger once on load
-        reveal();
-
-        // Navbar Scroll Effect
-        window.addEventListener('scroll', function() {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('bg-slate-900/90', 'backdrop-blur-md', 'shadow-lg');
-            } else {
-                navbar.classList.remove('bg-slate-900/90', 'backdrop-blur-md', 'shadow-lg');
-            }
-        });
-
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        if (mobileMenuBtn && mobileMenu) {
-            mobileMenuBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-                // Optional: Toggle icon between menu and x
-                const icon = mobileMenuBtn.querySelector('i');
-                if (mobileMenu.classList.contains('hidden')) {
-                    icon.setAttribute('data-lucide', 'menu');
-                } else {
-                    icon.setAttribute('data-lucide', 'x');
-                }
-                lucide.createIcons();
-            });
-        }
-
-        // Neural Network Canvas Background
-        const canvas = document.getElementById('neuralCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        let width, height;
-        let particles = [];
-
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
-        
-        window.addEventListener('resize', resize);
-        resize();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
-                this.size = Math.random() * 2;
-            }
-            
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
-            }
-            
-            draw() {
-                ctx.fillStyle = 'rgba(45, 212, 191, 0.5)'; // Cyan color
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        function initParticles() {
-            particles = [];
-            for (let i = 0; i < 50; i++) {
-                particles.push(new Particle());
-            }
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-                
-                // Draw connections
-                for (let j = i; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (distance < 150) {
-                        ctx.strokeStyle = `rgba(45, 212, 191, ${0.1 - distance/1500})`;
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-            requestAnimationFrame(animate);
-        }
-
-        initParticles();
-        animate();
-
-        // Highlight brain on touch/mobile (no hover)
-        function syncBrainHighlight() {
-            const prefersCoarse = window.matchMedia('(pointer: coarse)').matches;
-            const isNarrow = window.innerWidth < 768;
-            document.body.classList.toggle('mobile-brain', prefersCoarse || isNarrow);
-        }
-        syncBrainHighlight();
-        window.addEventListener('resize', syncBrainHighlight);
-
-        // Testimonials modal
-        const testimonialTrigger = document.getElementById('testimonials-trigger');
-        const testimonialModal = document.getElementById('testimonials-modal');
-        const testimonialClose = document.getElementById('testimonials-close');
-        const testimonialTrack = document.getElementById('testimonial-track');
-        const testimonialPrev = document.getElementById('testimonial-prev');
-        const testimonialNext = document.getElementById('testimonial-next');
-        const testimonialPlayPause = document.getElementById('testimonial-play-pause');
-
-        const testimonialCountdown = document.getElementById('testimonial-countdown');
-        const AUTOPLAY_MS = 30000;
-        const COUNTDOWN_SECONDS = AUTOPLAY_MS / 1000;
-
-        let slideIndex = 0;
-        const slideCount = testimonialTrack ? testimonialTrack.children.length : 0;
-        let autoplay = true;
-        let countdownRemaining = COUNTDOWN_SECONDS;
-        let countdownTimer;
-
-        function updateCountdownLabel(text) {
-            if (!testimonialCountdown) return;
-            testimonialCountdown.textContent = text;
-        }
-
-        function updateSlide(index) {
-            if (!testimonialTrack) return;
-            slideIndex = (index + slideCount) % slideCount;
-            testimonialTrack.style.transform = `translateX(-${slideIndex * 100}%)`;
-        }
-
-        function nextSlide() {
-            updateSlide(slideIndex + 1);
-        }
-
-        function prevSlide() {
-            updateSlide(slideIndex - 1);
-        }
-
-        function startAutoplay() {
-            clearInterval(countdownTimer);
-            countdownRemaining = COUNTDOWN_SECONDS;
-            updateCountdownLabel(`${countdownRemaining}s`);
-            countdownTimer = setInterval(() => {
-                countdownRemaining -= 1;
-                if (countdownRemaining <= 0) {
-                    nextSlide();
-                    countdownRemaining = COUNTDOWN_SECONDS;
-                }
-                updateCountdownLabel(`${countdownRemaining}s`);
-            }, 1000);
-            autoplay = true;
-            if (testimonialPlayPause) testimonialPlayPause.textContent = 'Pause';
-        }
-
-        function stopAutoplay() {
-            clearInterval(countdownTimer);
-            autoplay = false;
-            updateCountdownLabel('Paused');
-            if (testimonialPlayPause) testimonialPlayPause.textContent = 'Play';
-        }
-
-        function openTestimonials(e) {
-            if (e) e.preventDefault();
-            testimonialModal.classList.remove('hidden');
-            testimonialModal.classList.add('flex');
-            slideIndex = 0;
-            updateSlide(0);
-            startAutoplay();
-        }
-
-        function closeTestimonials() {
-            testimonialModal.classList.add('hidden');
-            testimonialModal.classList.remove('flex');
-            stopAutoplay();
-        }
-
-        if (testimonialTrigger) testimonialTrigger.addEventListener('click', openTestimonials);
-        if (testimonialClose) testimonialClose.addEventListener('click', closeTestimonials);
-        testimonialModal.addEventListener('click', (e) => {
-            if (e.target === testimonialModal) closeTestimonials();
-        });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !testimonialModal.classList.contains('hidden')) {
-                closeTestimonials();
-            }
-        });
-
-        if (testimonialNext) testimonialNext.addEventListener('click', () => { nextSlide(); stopAutoplay(); });
-        if (testimonialPrev) testimonialPrev.addEventListener('click', () => { prevSlide(); stopAutoplay(); });
-        if (testimonialPlayPause) testimonialPlayPause.addEventListener('click', () => {
-            if (autoplay) {
-                stopAutoplay();
-            } else {
-                startAutoplay();
-            }
-        });
-
-    </script>
     <script src="js/navbar.js"></script>
     <script>
         // Initialize Navbar
         initNavbar({
             activePage: 'home',
-            themeColor: 'cyber',
+            themeColor: 'gold',
             isDark: true
+        });
+        // Initialize Icons (guard in case Lucide fails to load)
+        if (window.lucide && typeof lucide.createIcons === 'function') {
+            lucide.createIcons();
+        }
+    </script>
+
+    <!-- Page-specific motion: first-visit hairline, scroll rule loop,
+         pinned chapter spreads (desktop only). Shared behaviors live in motion.js. -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            'use strict';
+
+            // Letter <details> change heights — keep ScrollTrigger measurements honest
+            document.querySelectorAll('.letter-details').forEach(function (d) {
+                d.addEventListener('toggle', function () {
+                    if (window.ScrollTrigger) ScrollTrigger.refresh();
+                });
+            });
+
+            if (!window.SPINE || !SPINE.motionOK || !window.gsap) {
+                // Reduced motion / no GSAP: final states (CSS defaults already show
+                // the full hairline, a static scroll rule, a static truncated
+                // marquee — and, via this class, fully visible V.A.S.K. chips).
+                document.documentElement.classList.add('vask-static');
+                return;
+            }
+            gsap.registerPlugin(ScrollTrigger);
+
+            // 0. First-visit intro — 0.7s gold hairline draw, sessionStorage-gated
+            try {
+                if (!sessionStorage.getItem('spine-intro-seen')) {
+                    sessionStorage.setItem('spine-intro-seen', '1');
+                    gsap.fromTo('#intro-hairline',
+                        { scaleX: 0 },
+                        { scaleX: 1, duration: 0.7, ease: SPINE.EASE_STRUCT });
+                }
+            } catch (e) { /* storage unavailable — skip the intro */ }
+
+            // SCROLL rule loop (ambient)
+            var scrollLine = document.querySelector('.scroll-line i');
+            if (scrollLine) {
+                gsap.timeline({ repeat: -1, repeatDelay: 0.5 })
+                    .fromTo(scrollLine,
+                        { scaleY: 0, transformOrigin: 'top center' },
+                        { scaleY: 1, duration: 0.9, ease: SPINE.EASE_MICRO })
+                    .to(scrollLine,
+                        { scaleY: 0, transformOrigin: 'bottom center', duration: 0.9, ease: SPINE.EASE_MICRO },
+                        '+=0.2');
+            }
+
+            // Chapter spreads — pinned on desktop only; mobile stays stacked
+            gsap.matchMedia().add('(min-width: 768px)', function () {
+                document.querySelectorAll('.chapter-spread').forEach(function (sec) {
+                    var numeral = sec.querySelector('.ghost-numeral');
+                    var tl = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: sec,
+                            start: 'top top',
+                            end: '+=45%',
+                            pin: true,
+                            scrub: true,
+                            anticipatePin: 1
+                        }
+                    });
+                    if (numeral) {
+                        tl.fromTo(numeral,
+                            { yPercent: 14, opacity: 0.12 },
+                            { yPercent: -10, opacity: 0.3, ease: 'none' }, 0);
+                    }
+                });
+            });
+
+            /* ==============================================================
+               NEW — Specifications marquee: seamless xPercent loop (~35s).
+               Two identical groups; -50% then repeat = no visible seam.
+               Pauses on hover and while off-screen.
+               ============================================================== */
+            (function () {
+                var strip = document.querySelector('.spec-marquee');
+                var track = document.getElementById('spec-marquee-track');
+                if (!strip || !track) return;
+                var loop = gsap.to(track, { xPercent: -50, duration: 35, ease: 'none', repeat: -1 });
+                var hovered = false, inView = true;
+                function sync() { if (hovered || !inView) loop.pause(); else loop.play(); }
+                strip.addEventListener('mouseenter', function () { hovered = true; sync(); });
+                strip.addEventListener('mouseleave', function () { hovered = false; sync(); });
+                ScrollTrigger.create({
+                    trigger: strip,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    onToggle: function (self) { inView = self.isActive; sync(); }
+                });
+            })();
+
+            /* ==============================================================
+               NEW — V.A.S.K. specimen card: 300ms text-scramble on each
+               quadrant header, then 30ms chip stagger, once per quadrant.
+               ============================================================== */
+            var SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ/#%&*+';
+            function scrambleSettle(el) {
+                var original = el.getAttribute('data-scramble-text');
+                if (!original) {
+                    original = el.textContent;
+                    el.setAttribute('data-scramble-text', original);
+                }
+                var DUR = 300;
+                var start = performance.now();
+                requestAnimationFrame(function frame(now) {
+                    var p = Math.min((now - start) / DUR, 1);
+                    var settled = Math.floor(original.length * p);
+                    var out = original.slice(0, settled);
+                    for (var i = settled; i < original.length; i++) {
+                        out += original[i] === ' ' ? ' '
+                            : SCRAMBLE_CHARS[(Math.random() * SCRAMBLE_CHARS.length) | 0];
+                    }
+                    el.textContent = p < 1 ? out : original;
+                    if (p < 1) requestAnimationFrame(frame);
+                });
+            }
+            document.querySelectorAll('.vask-quadrant').forEach(function (card) {
+                var head = card.querySelector('[data-scramble]');
+                var chips = card.querySelectorAll('.vask-chips li');
+                ScrollTrigger.create({
+                    trigger: card,
+                    start: 'top 80%',
+                    once: true,
+                    onEnter: function () {
+                        if (head) scrambleSettle(head);
+                        if (chips.length) {
+                            gsap.to(chips, {
+                                opacity: 1,
+                                y: 0,
+                                duration: 0.5,
+                                ease: SPINE.EASE_ENTER,
+                                stagger: 0.03
+                            });
+                        }
+                    }
+                });
+            });
+
+            /* ==============================================================
+               NEW — Z-axis + magnetism, fine pointers only:
+               · 3D tilt — V.A.S.K. quadrants ±7°, letter cards ±4°
+                 (perspective on the grid container; quickTo per card)
+               · Magnetic pull — TOC entries + OPEN CHAPTER links drift up
+                 to 6px toward the cursor inside an 80px radius, ease back out.
+               ============================================================== */
+            gsap.matchMedia().add('(pointer: fine)', function () {
+                // Letter grid gets its perspective without touching its markup
+                var letterGrid = document.querySelector('#correspondence .grid');
+                if (letterGrid) gsap.set(letterGrid, { perspective: 900 });
+
+                function attachTilt(selector, maxDeg) {
+                    document.querySelectorAll(selector).forEach(function (card) {
+                        var rx = gsap.quickTo(card, 'rotationX', { duration: 0.45, ease: SPINE.EASE_MICRO });
+                        var ry = gsap.quickTo(card, 'rotationY', { duration: 0.45, ease: SPINE.EASE_MICRO });
+                        card.addEventListener('mousemove', function (e) {
+                            var r = card.getBoundingClientRect();
+                            ry(((e.clientX - r.left) / r.width - 0.5) * 2 * maxDeg);
+                            rx(((e.clientY - r.top) / r.height - 0.5) * -2 * maxDeg);
+                        });
+                        card.addEventListener('mouseleave', function () { rx(0); ry(0); });
+                    });
+                }
+                attachTilt('.vask-quadrant', 7);
+                attachTilt('#correspondence .letter-card', 4);
+
+                // Magnetic pull
+                var RADIUS = 80, MAX_PULL = 6;
+                var magnets = [];
+                document.querySelectorAll('.cover-toc .toc-entry, .chapter-spread .link-editorial')
+                    .forEach(function (el) {
+                        magnets.push({
+                            el: el,
+                            xTo: gsap.quickTo(el, 'x', { duration: 0.4, ease: SPINE.EASE_MICRO }),
+                            yTo: gsap.quickTo(el, 'y', { duration: 0.4, ease: SPINE.EASE_MICRO }),
+                            active: false
+                        });
+                    });
+                function onPointerMove(e) {
+                    for (var i = 0; i < magnets.length; i++) {
+                        var m = magnets[i];
+                        var r = m.el.getBoundingClientRect();
+                        var dx = e.clientX - (r.left + r.width / 2);
+                        var dy = e.clientY - (r.top + r.height / 2);
+                        var dist = Math.hypot(dx, dy);
+                        if (dist < RADIUS) {
+                            m.active = true;
+                            m.xTo((dx / RADIUS) * MAX_PULL);
+                            m.yTo((dy / RADIUS) * MAX_PULL);
+                        } else if (m.active) {
+                            m.active = false;
+                            m.xTo(0);
+                            m.yTo(0);
+                        }
+                    }
+                }
+                window.addEventListener('pointermove', onPointerMove, { passive: true });
+                return function () {
+                    window.removeEventListener('pointermove', onPointerMove);
+                };
+            });
         });
     </script>
 </body>

@@ -16,3 +16,9 @@ Static portfolio for Herman Chan with four facet pages (counselling, project man
 ## Notes
 - `.gitignore` excludes personal CV documents (`Herman CV.*`) and the `PRD/` folder.
 - No build step needed; site runs on vanilla HTML/CSS/JS with Tailwind CDN.
+
+## Design system — "SPINE: A Monograph in Four Chapters"
+- Spec: `.planning/DESIGN-SPEC.md`. Theme engine: CSS custom properties in `css/spine.css`, switched per page via `<html data-chapter="cover|counselling|technology|project|education">`.
+- Motion: GSAP 3.13 + ScrollTrigger + SplitText (CDN, pinned versions) driven by data attributes (`data-reveal-lines`, `.plate-reveal`, `data-count`, `data-accent-bar`) in `js/motion.js`; page wipes in `js/transitions.js`; three.js gold particle brain (index only, capability-gated) in `js/brain-cover.js`.
+- Protected files (never restyle by editing): `js/explorer.js`, `js/github-cards.js`, `js/navbar.js`. technology.html is repainted purely via `css/chapter-tech-overrides.css`.
+- Old `theme-*.css` files and `style.css` are no longer loaded by any page.

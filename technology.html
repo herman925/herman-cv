@@ -1,1160 +1,1503 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" data-chapter="technology" class="loading">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Herman Chan | The Digital Humanist</title>
-    
-    <!-- External Stylesheet -->
-    <link rel="stylesheet" href="global.css">
-    <link rel="stylesheet" href="theme-tech.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Herman Chan | The Digital Humanist</title>
+    <meta name="description" content="Chapter 02 — The Builder. Herman Chan's technology work: the 4Set platform (8,000+ students, 110+ schools), automation systems, AI integration and a self-taught engineering journey.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,144,600;1,144,500&family=Outfit:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/tailwind-config.js"></script>
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="css/spine.css">
+  <link rel="stylesheet" href="css/chapter-tech-overrides.css">
+  <style>
+    /* ======================================================================
+       CH. 02 page layer — DARK PHOSPHOR amplifiers (page-scoped only)
+       ====================================================================== */
 
-    <!-- Tailwind CSS (CDN) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    /* Terminal: faint phosphor glow pulse (4s). Static glow under reduced motion. */
+    .field-notes-frame { box-shadow: 0 0 22px rgba(45, 212, 191, .14); }
+    @media (prefers-reduced-motion: no-preference) {
+      .field-notes-frame { animation: phosphor-pulse 4s ease-in-out infinite; }
+    }
+    @keyframes phosphor-pulse {
+      0%, 100% { box-shadow: 0 0 16px rgba(45, 212, 191, .10); }
+      50%      { box-shadow: 0 0 34px rgba(45, 212, 191, .24); }
+    }
 
-    <!-- Tailwind Configuration -->
-    <script src="js/tailwind-config.js"></script>
+    /* Scanline: 1px teal gradient line, swept down each section once by GSAP.
+       opacity 0 at rest — under reduced motion it simply never appears. */
+    .scanline {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(45, 212, 191, .55) 25%,
+        rgba(94, 234, 212, .85) 50%,
+        rgba(45, 212, 191, .55) 75%,
+        transparent);
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+      z-index: 1;
+    }
+
+    /* H1 "The Builder": ONE earned glitch — a 2-frame RGB-split jitter.
+       Fires once on load (JS adds .glitch-fire) and once on hover. No loop. */
+    @keyframes builder-glitch {
+      0%, 49% {
+        text-shadow: 2px 0 rgba(255, 77, 109, .85), -2px 0 rgba(45, 212, 191, .9);
+        transform: translateX(-2px);
+      }
+      50%, 100% {
+        text-shadow: -2px 0 rgba(255, 77, 109, .85), 2px 0 rgba(45, 212, 191, .9);
+        transform: translateX(2px);
+      }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .glitch-title.glitch-fire,
+      .glitch-title:hover { animation: builder-glitch .18s steps(2, end) 1; }
+    }
+
+    /* Ledger rows: teal underline draws across when opened (pure CSS —
+       complete final state without JS). */
+    details.ledger-row > summary { position: relative; }
+    details.ledger-row > summary::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: -2px;
+      height: 1px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform .7s cubic-bezier(.16, 1, .3, 1);
+    }
+    details.ledger-row[open] > summary::after { transform: scaleX(1); }
+    @media (prefers-reduced-motion: reduce) {
+      details.ledger-row > summary::after { transition: none; }
+    }
+
+    /* Origin nodes: phosphor afterglow once the line-draw pings them. */
+    .origin-node.pinged {
+      box-shadow: 0 0 18px rgba(45, 212, 191, .45), 0 0 3px rgba(94, 234, 212, .7);
+    }
+  </style>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script defer src="js/motion.js"></script>
+  <script defer src="js/transitions.js"></script>
 </head>
-<body class="facet-tech bg-void text-cyber-400 antialiased selection:bg-cyber-500 selection:text-void overflow-x-hidden">
+<body class="antialiased overflow-x-hidden">
 
-    <!-- Animated Neural Background -->
-    <canvas id="neuralCanvas"></canvas>
+  <div class="running-header">HERMAN CHAN — THE DIGITAL HUMANIST — CH. 02 — TECHNOLOGY</div>
 
-    <!-- Navigation -->
-    <div id="navbar-container"></div>
+  <!-- Navigation -->
+  <div id="navbar-container"></div>
 
-    <!-- Hero Section -->
-    <section class="relative py-32 flex items-center">
-        <div class="container mx-auto px-6 relative z-10">
-            
-            <!-- Core Identity Statement - Full Width -->
-            <div class="mb-10 px-6 py-4 rounded-2xl bg-gradient-to-r from-cyber-900/40 via-slate-800/30 to-orange-900/20 border border-cyber-400/20 backdrop-blur-sm reveal">
-                <p class="text-center text-base md:text-lg text-slate-200 italic font-light tracking-wide">
-                    "A technologist whose skill was born from <span class="text-cyber-400 font-semibold">humility</span>, and whose goal is to lead with <span class="text-orange-400 font-semibold">empathy</span>."
-                </p>
-            </div>
+  <main>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                
-                <div class="lg:col-span-7 space-y-8 reveal relative">
-                    <!-- CLI Bubble Removed -->
-
-                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700 backdrop-blur-sm">
-                        <span class="w-2 h-2 rounded-full bg-cyber-400 animate-pulse"></span>
-                        <span class="text-xs font-mono text-cyber-400 uppercase tracking-widest">System Status: Cognitive-First</span>
-                    </div>
-                    
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold font-tech leading-tight text-white">
-                        Engineering for the <span class="text-gradient glitch" data-text="Human Mind">Human Mind</span>
-                    </h1>
-                    
-                    <p class="text-xl text-slate-400 max-w-2xl leading-relaxed border-l-2 border-cyber-500/30 pl-6">
-                        I am a <strong>Digital Humanist</strong>. I take pride in my work as a harmonious blend of knowledge, thoughtfulness, and a forward-thinking mindset—and <em>then</em> AI. By bridging <strong>Psychology</strong> and <strong>Technology</strong>, I build tools & systems that are not only efficient but intuitive, reducing cognitive load and empowering users.
-                    </p>
-                    
-                    <div class="flex flex-wrap gap-4 pt-4">
-                        <a href="https://github.com/herman925" target="_blank" rel="noopener noreferrer" class="group relative px-6 py-3 bg-cyber-600 text-white font-semibold rounded-lg overflow-hidden transition-all hover:shadow-[0_0_20px_rgba(128,100,162,0.4)] flex-1 md:flex-none text-center min-w-[160px]">
-                            <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                            <span class="relative flex items-center justify-center gap-2">
-                                <i data-lucide="code-2" class="w-4 h-4"></i> GitHub
-                            </span>
-                        </a>
-                        <a href="#ecosystem" class="px-6 py-3 bg-slate-800 border border-slate-600 text-cyber-400 font-semibold rounded-lg hover:border-cyber-400 hover:text-cyber-400 transition-colors flex items-center justify-center gap-2 flex-1 md:flex-none text-center min-w-[160px]">
-                            <i data-lucide="folder-git-2" class="w-4 h-4"></i> Projects
-                        </a>
-                        <a href="#broadcast" class="px-6 py-3 bg-slate-800 border border-slate-600 text-cyber-400 font-semibold rounded-lg hover:border-cyber-400 hover:text-cyber-400 transition-colors flex items-center justify-center gap-2 flex-1 md:flex-none text-center min-w-[160px]">
-                            <i data-lucide="film" class="w-4 h-4"></i> Watch Videos
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Terminal Window (New Feature) -->
-                <div class="lg:col-span-5 relative h-[500px] w-full flex items-center justify-center">
-                    <!-- Terminal Window -->
-                    <div class="w-full max-w-md bg-slate-900/90 border border-slate-700 rounded-lg shadow-2xl overflow-hidden backdrop-blur-md transform hover:scale-[1.02] transition-transform duration-300">
-                        <!-- Terminal Header -->
-                        <div class="bg-slate-800/80 px-4 py-2 flex items-center justify-between border-b border-slate-700">
-                            <div class="flex items-center gap-2">
-                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                            </div>
-                            <div class="text-xs text-slate-400 font-mono opacity-70">herman@tech-hub:~ (Live Career Log)</div>
-                        </div>
-                        <!-- Terminal Body -->
-                        <div class="p-6 font-mono text-sm h-[320px] overflow-y-auto scrollbar-hide" id="terminal-body">
-                            <div id="terminal-content" class="space-y-2 text-cyber-400"></div>
-                            <div class="mt-2 flex items-center">
-                                <span class="text-green-400 mr-2">➜</span>
-                                <span class="text-blue-400 mr-2">~</span>
-                                <span id="typewriter-cursor" class="text-cyber-400"></span><span class="animate-pulse text-cyber-400">_</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Decorative Elements behind -->
-                    <div class="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-cyber-500/10 blur-3xl rounded-full animate-pulse-slow"></div>
-                </div>
-                    
-                    <!-- Decorative Elements behind grid -->
-                    <div class="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-cyber-500/10 blur-3xl rounded-full animate-pulse-slow"></div>
-                </div>
-            </div>
+    <!-- ================================================================
+         01 · TITLE PLATE — Ghost 02 / The Builder
+         ================================================================ -->
+    <section class="spine-section relative overflow-hidden min-h-[100svh] flex items-center pt-24" aria-labelledby="chapter-title">
+      <span class="ghost-numeral top-[6%] right-[-4%] md:right-[2%]" aria-hidden="true">02</span>
+      <div class="spine-container relative w-full">
+        <hr class="section-rule">
+        <!-- P8: kicker density doubled — the most machine-voiced chapter -->
+        <div class="flex flex-wrap gap-x-8 gap-y-2 mb-10">
+          <p class="kicker"><span class="tick">▪</span>Chapter 02</p>
+          <p class="kicker">CH. 02 § The Builder</p>
+          <p class="kicker">System Status: Cognitive-First</p>
+          <p class="kicker hidden md:block">Phosphor Teal — 2DD4BF</p>
+          <p class="kicker hidden lg:block">Reproduced at 1:1</p>
         </div>
-        
-        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-slate-400 animate-bounce">
-            <i data-lucide="chevrons-down" class="w-6 h-6"></i>
+
+        <h1 id="chapter-title" class="display-l glitch-title" data-reveal-lines>The Builder</h1>
+        <div class="accent-bar w-24 mt-6 mb-10" data-accent-bar></div>
+
+        <div class="grid lg:grid-cols-12 gap-12 items-start">
+          <div class="lg:col-span-7">
+            <h2 class="display-m" data-reveal-lines>Engineering for the <em class="serif-italic accent-deep">Human Mind</em></h2>
+            <p class="standfirst mt-6">"A technologist whose skill was born from <em>humility</em>, and whose goal is to lead with <em>empathy</em>."</p>
+            <p class="prose-measure ink-soft mt-8">
+              I am a <strong>Digital Humanist</strong>. I take pride in my work as a harmonious blend of knowledge, thoughtfulness, and a forward-thinking mindset—and <em>then</em> AI. By bridging <strong>Psychology</strong> and <strong>Technology</strong>, I build tools &amp; systems that are not only efficient but intuitive, reducing cognitive load and empowering users.
+            </p>
+            <div class="flex flex-wrap gap-x-10 gap-y-5 pt-10">
+              <a href="https://github.com/herman925" target="_blank" rel="noopener noreferrer" class="link-editorial py-2">GitHub ↗</a>
+              <a href="#ecosystem" class="link-editorial py-2">Projects →</a>
+              <a href="#broadcast" class="link-editorial py-2">Watch Videos →</a>
+            </div>
+          </div>
+          <div class="lg:col-span-5">
+            <div class="frame-hairline p-6 bg-[var(--paper-soft)] plate-reveal">
+              <p class="kicker mb-3"><span class="tick">▪</span>Index of this chapter</p>
+              <ol class="font-mono text-xs tracking-[0.12em] uppercase text-[var(--ink-soft)] space-y-2">
+                <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#field-notes">§ Field Notes — Career Log</a></li>
+                <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#ecosystem">§ Plates &amp; Figures — Digital Ecosystem</a></li>
+                <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#innovations">§ The Workshop — Innovations Ledger</a></li>
+                <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#broadcast">§ Broadcasts</a></li>
+                <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#stories">§ Narratives &amp; Journey</a></li>
+                <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#timeline">§ Career Timeline</a></li>
+                <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#contact">§ Initiate Connection</a></li>
+              </ol>
+            </div>
+          </div>
         </div>
+
+        <p class="kicker mt-16">Scroll ↓</p>
+      </div>
     </section>
 
-    <!-- Digital Ecosystem & Codebase (File Explorer) -->
-    <section id="ecosystem" class="py-24 relative min-h-[800px]">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12 reveal">
-                <h2 class="text-4xl font-bold text-white mb-2">Digital <span class="text-cyber-400">Ecosystem</span></h2>
-                <p class="text-slate-400 max-w-xl mx-auto">Explore the codebase. Navigate through production systems, research tools, and prototypes.</p>
-                <!-- Navigation Hint -->
-                <p class="text-cyber-400/70 text-sm mt-3 flex items-center justify-center gap-2 animate-pulse">
-                    <i data-lucide="mouse-pointer-click" class="w-4 h-4"></i>
-                    <span>Click folders to explore • Double-click files to preview</span>
-                </p>
-            </div>
-
-            <!-- File Explorer Interface -->
-            <div class="max-w-5xl mx-auto bg-slate-900/80 backdrop-blur-xl border border-slate-700 rounded-xl overflow-hidden shadow-2xl reveal">
-                <!-- Window Header -->
-                <div class="bg-slate-800/80 border-b border-slate-700 p-4 flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <!-- Window Controls -->
-                        <div class="flex gap-2">
-                            <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
-                            <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-                            <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
-                        </div>
-                        
-                        <!-- Navigation Controls -->
-                        <div class="flex items-center gap-2 ml-4">
-                            <button id="explorer-back" aria-label="Go back" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 hover:border-slate-500 transition-all opacity-0 pointer-events-none shadow-lg">
-                                <i data-lucide="arrow-left" class="w-5 h-5"></i>
-                            </button>
-                        </div>
-
-                        <!-- Breadcrumbs -->
-                        <div id="explorer-breadcrumbs" class="flex items-center gap-2 text-sm font-mono text-slate-400 ml-2">
-                            <!-- Injected via JS -->
-                        </div>
-                    </div>
-                    
-                    <!-- Search Bar (Visual Only) -->
-                    <div class="hidden md:flex items-center gap-2 bg-slate-950/50 px-3 py-1.5 rounded border border-slate-700/50">
-                        <i data-lucide="search" class="w-3 h-3 text-slate-400"></i>
-                        <span class="text-xs text-slate-600 font-mono">Search ecosystem...</span>
-                    </div>
-                </div>
-
-                <!-- Main Content Area -->
-                <div class="p-8 min-h-[400px] bg-gradient-to-b from-slate-900/50 to-slate-950/50">
-                    <div id="explorer-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 transition-all duration-300">
-                        <!-- Content Injected via JS -->
-                    </div>
-                </div>
-
-                <!-- Status Bar -->
-                <div class="bg-slate-950 border-t border-slate-800 px-4 py-2 flex justify-between items-center text-[10px] font-mono text-slate-400">
-                    <div class="flex gap-4">
-                        <span><span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-1"></span>System Online</span>
-                        <span>14 Items</span>
-                    </div>
-                    <div>
-                        UTF-8
-                    </div>
-                </div>
-            </div>
+    <!-- ================================================================
+         02 · FIELD NOTES — the live typewriter terminal, reproduced 1:1
+         ================================================================ -->
+    <section id="field-notes" class="spine-section" aria-labelledby="field-notes-title">
+      <span class="scanline" aria-hidden="true"></span>
+      <div class="spine-container">
+        <div class="section-head">
+          <hr class="section-rule">
+          <p class="kicker"><span class="tick">▪</span>CH. 02 § Field Notes — Reproduced at 1:1</p>
+          <h2 id="field-notes-title" class="display-m" data-reveal-lines>Field Notes</h2>
         </div>
+
+        <div class="grid lg:grid-cols-12 gap-10 items-start relative pl-5 lg:pl-8">
+          <div class="field-rule" aria-hidden="true"></div>
+
+          <div class="lg:col-span-7 plate-reveal">
+            <div class="field-notes-frame">
+              <div class="field-notes-bar">
+                <span>FIELD NOTES — CAREER LOG — REPRODUCED AT 1:1</span>
+                <span class="hidden sm:inline">herman@tech-hub:~ (Live Career Log)</span>
+              </div>
+              <!-- Terminal Body — protected ids, typewriter script untouched -->
+              <div class="p-6 font-mono text-[13px] sm:text-sm h-[380px] overflow-y-auto scrollbar-hide" id="terminal-body">
+                <div id="terminal-content" class="space-y-2 text-cyber-400"></div>
+                <div class="mt-2 flex items-center">
+                  <span class="text-green-400 mr-2">➜</span>
+                  <span class="text-blue-400 mr-2">~</span>
+                  <span id="typewriter-cursor" class="text-cyber-400"></span><span class="animate-pulse text-cyber-400">_</span>
+                </div>
+              </div>
+            </div>
+            <p class="caption mt-3">FIG. 01 — LIVE TERMINAL, CAREER LOG DAEMON. CYCLES CONTINUOUSLY.</p>
+          </div>
+
+          <!-- Serif marginal annotation (P1: every mono block gets one) -->
+          <aside class="lg:col-span-4 lg:col-start-9 lg:pt-12">
+            <p class="kicker mb-4">Marginalia</p>
+            <p class="serif-italic text-xl leading-relaxed ink-soft">“This is where I taught myself to code.”</p>
+          </aside>
+        </div>
+      </div>
     </section>
 
-    <!-- BROADCAST & MEDIA (New Section) -->
-    <section id="broadcast" class="py-24 relative overflow-hidden">
-        <!-- Background Glow -->
-        <div class="absolute top-0 right-0 w-96 h-96 bg-cyber-500/10 rounded-full blur-[100px] pointer-events-none"></div>
-        
-        <div class="container mx-auto px-6 relative z-10">
-            <div class="flex flex-col lg:flex-row items-center gap-16">
-                <!-- Text Content -->
-                <div class="lg:w-1/2 reveal">
-                    <span class="text-cyber-400 font-mono text-sm tracking-wider uppercase">Thought Leadership</span>
-                    <h2 class="text-4xl font-bold text-white mt-2 mb-6">Broadcasting the <span class="text-gradient">Future</span></h2>
-                    <p class="text-slate-400 text-lg leading-relaxed mb-8">
-                        Beyond code and systems, I believe in the power of narrative. Through live broadcasts and media production, 
-                        I explore how technology shapes our psychological landscape and cultural evolution.
-                    </p>
-                    
-                    <div class="flex flex-col gap-4">
-                        <div class="flex items-center gap-4 p-4 rounded-lg bg-slate-800/50 border border-slate-700">
-                            <div class="w-10 h-10 rounded-full bg-cyber-900/50 flex items-center justify-center text-cyber-400">
-                                <i data-lucide="mic" class="w-5 h-5"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-white font-bold">Tech-Psych Discourse</h4>
-                                <p class="text-sm text-slate-400">Bridging the gap between algorithms and human behavior.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4 p-4 rounded-lg bg-slate-800/50 border border-slate-700">
-                            <div class="w-10 h-10 rounded-full bg-cyber-900/50 flex items-center justify-center text-cyber-400">
-                                <i data-lucide="video" class="w-5 h-5"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-white font-bold">Digital Culture Analysis</h4>
-                                <p class="text-sm text-slate-400">Deconstructing trends in the digital age.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <!-- ================================================================
+         03 · PLATES & FIGURES — Digital Ecosystem (protected explorer)
+         ================================================================ -->
+    <section id="ecosystem" class="spine-section min-h-[800px]" aria-labelledby="ecosystem-title">
+      <span class="scanline" aria-hidden="true"></span>
+      <div class="spine-container">
+        <div class="section-head">
+          <hr class="section-rule">
+          <p class="kicker"><span class="tick">▪</span>CH. 02 § Plates &amp; Figures — The Archive</p>
+          <h2 id="ecosystem-title" class="display-m" data-reveal-lines>Digital <span class="accent-deep serif-italic">Ecosystem</span></h2>
+          <p class="standfirst">Explore the codebase. Navigate through production systems, research tools, and prototypes.</p>
+          <p class="caption mt-4 flex items-center gap-2">
+            <i data-lucide="mouse-pointer-click" class="w-4 h-4"></i>
+            <span>Click folders to explore • Double-click files to preview</span>
+          </p>
+        </div>
 
-                <!-- Media Card -->
-                <div class="lg:w-1/2 w-full reveal">
-                    <a href="https://live.bilibili.com/13081069" target="_blank" rel="noopener" class="block glass-card rounded-2xl overflow-hidden group cursor-pointer relative hover:border-cyber-400 transition-colors">
-                        <!-- Thumbnail -->
-                        <div class="relative aspect-video bg-slate-800 overflow-hidden"></div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60"></div>
-                            <!-- Play Button Overlay -->
-                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
-                                <div class="w-16 h-16 rounded-full bg-cyber-500/90 flex items-center justify-center backdrop-blur-sm transform scale-50 group-hover:scale-100 transition-transform duration-300">
-                                    <i data-lucide="play" class="w-6 h-6 text-white fill-current"></i>
-                                </div>
-                            </div>
-                            <div class="absolute bottom-4 left-4 z-20">
-                                <span class="bg-red-500/80 backdrop-blur px-2 py-1 rounded text-xs text-white flex items-center gap-1">
-                                    <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span> Live
-                                </span>
-                            </div>
-                            <div class="w-full h-full bg-slate-700 flex items-center justify-center">
-                                <i data-lucide="radio" class="w-16 h-16 text-slate-600"></i>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-lg font-bold text-white mb-2 group-hover:text-cyber-400 transition-colors">Herman's Live Channel</h3>
-                            <p class="text-slate-400 text-sm line-clamp-2">Join the live discussion on Tech, Culture, and Psychology on Bilibili.</p>
-                            <div class="mt-4 flex items-center gap-4 text-xs text-slate-400">
-                                <span class="flex items-center gap-1 text-cyber-400"><i data-lucide="radio" class="w-3 h-3"></i> Live Status</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+        <!-- File Explorer Interface — page-owned chrome, protected internals.
+             Perspective container: shell rises rotateX(8deg)→0 on entry. -->
+        <div class="max-w-5xl mx-auto" style="perspective: 1200px">
+        <div id="explorer-shell" class="frame-hairline bg-[var(--paper)]">
+          <!-- Window Header -->
+          <div class="explorer-chrome-bar">
+            <div class="flex items-center gap-3 min-w-0">
+              <button id="explorer-back" aria-label="Go back" class="p-3 frame-hairline text-[var(--ink)] hover:border-[var(--accent)] transition-all opacity-0 pointer-events-none">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+              </button>
+              <!-- Breadcrumbs -->
+              <div id="explorer-breadcrumbs" class="flex items-center gap-2 text-sm font-mono ml-1 min-w-0 overflow-x-auto scrollbar-hide normal-case tracking-normal">
+                <!-- Injected via JS -->
+              </div>
             </div>
+            <!-- Search Bar (Visual Only) -->
+            <div class="hidden md:flex items-center gap-2 frame-hairline px-3 py-1.5">
+              <i data-lucide="search" class="w-3 h-3"></i>
+              <span class="text-[10px] font-mono">Search ecosystem...</span>
+            </div>
+          </div>
+
+          <!-- Main Content Area -->
+          <div class="p-5 md:p-8 min-h-[400px]">
+            <div id="explorer-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 transition-all duration-300">
+              <!-- Content Injected via JS -->
+            </div>
+          </div>
+
+          <!-- Status Bar -->
+          <div class="explorer-status-bar">
+            <div class="flex gap-4">
+              <span><span class="w-2 h-2 rounded-full bg-[var(--accent)] inline-block mr-1"></span>System Online</span>
+              <span>14 Items</span>
+            </div>
+            <div>
+              UTF-8
+            </div>
+          </div>
+        </div>
+        </div>
+        <p class="caption mt-3 max-w-5xl mx-auto">FIG. SERIES — THE ARCHIVE OF PRODUCTION SYSTEMS, CATALOGUED AS PLATES.</p>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         03B · THE WORKSHOP — INNOVATIONS LEDGER (new CV content)
+         ================================================================ -->
+    <section id="innovations" class="spine-section" aria-labelledby="innovations-title">
+      <span class="scanline" aria-hidden="true"></span>
+      <div class="spine-container">
+        <div class="section-head">
+          <hr class="section-rule">
+          <div class="flex flex-wrap gap-x-8 gap-y-2">
+            <p class="kicker"><span class="tick">▪</span>CH. 02 § The Workshop — Innovations Ledger</p>
+            <p class="kicker hidden md:block">Seven Entries — All Still Running</p>
+          </div>
+          <h2 id="innovations-title" class="display-m mt-6" data-reveal-lines>The <em class="serif-italic accent-deep">Workshop</em> — Innovations Ledger</h2>
+          <p class="standfirst">
+            Every builder keeps a ledger. These are seven machines from mine — each one began as a
+            human bottleneck (a researcher drowning in video timestamps, a committee buried in
+            spreadsheets, a child fighting to remember), and each one ended as running code.
+            No procurement cycle, no vendor. One builder, one problem, one working system.
+          </p>
+        </div>
+
+        <div class="ledger max-w-5xl mx-auto workshop-ledger">
+
+          <!-- Entry 01 -->
+          <details class="ledger-row" open>
+            <summary class="grid grid-cols-[minmax(0,1fr)_32px] md:grid-cols-[190px_minmax(0,1fr)_32px] gap-x-6 gap-y-1 items-baseline py-1">
+              <span class="ledger-year col-start-1 row-start-1">ENTRY 01</span>
+              <span class="col-start-1 row-start-2 md:col-start-2 md:row-start-1">
+                <span class="ledger-role">4Set System Evolution</span>
+                <span class="block caption mt-1">Sole Developer</span>
+              </span>
+              <span class="ledger-chevron justify-self-end col-start-2 row-start-1 md:col-start-3" aria-hidden="true">▾</span>
+            </summary>
+            <div class="mt-5 md:ml-[214px] prose-measure">
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="chip-mono">PowerShell</span>
+                <span class="chip-mono">Python</span>
+                <span class="chip-mono">Supabase</span>
+                <span class="chip-mono">Vanilla JS</span>
+              </div>
+              <p class="serif-italic ink-soft">"Replaced enterprise platform for 8,000+ students data collection; streamlined checking system; headless server for full hands-off automation."</p>
+            </div>
+          </details>
+
+          <!-- Entry 02 -->
+          <details class="ledger-row">
+            <summary class="grid grid-cols-[minmax(0,1fr)_32px] md:grid-cols-[190px_minmax(0,1fr)_32px] gap-x-6 gap-y-1 items-baseline py-1">
+              <span class="ledger-year col-start-1 row-start-1">ENTRY 02</span>
+              <span class="col-start-1 row-start-2 md:col-start-2 md:row-start-1">
+                <span class="ledger-role">Video Tagger App</span>
+                <span class="block caption mt-1">Sole Developer</span>
+              </span>
+              <span class="ledger-chevron justify-self-end col-start-2 row-start-1 md:col-start-3" aria-hidden="true">▾</span>
+            </summary>
+            <div class="mt-5 md:ml-[214px] prose-measure">
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="chip-mono">JS</span>
+                <span class="chip-mono">Canvas API</span>
+                <span class="chip-mono">YouTube IFrame API</span>
+              </div>
+              <p class="serif-italic ink-soft">"Zero-cost, browser-native alternative to NVivo with frame-accurate time coding."</p>
+            </div>
+          </details>
+
+          <!-- Entry 03 -->
+          <details class="ledger-row">
+            <summary class="grid grid-cols-[minmax(0,1fr)_32px] md:grid-cols-[190px_minmax(0,1fr)_32px] gap-x-6 gap-y-1 items-baseline py-1">
+              <span class="ledger-year col-start-1 row-start-1">ENTRY 03</span>
+              <span class="col-start-1 row-start-2 md:col-start-2 md:row-start-1">
+                <span class="ledger-role">RCT Allocation System</span>
+                <span class="block caption mt-1">Statistical Modelling; GUI Tool Developer</span>
+              </span>
+              <span class="ledger-chevron justify-self-end col-start-2 row-start-1 md:col-start-3" aria-hidden="true">▾</span>
+            </summary>
+            <div class="mt-5 md:ml-[214px] prose-measure">
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="chip-mono">R (blockTools)</span>
+                <span class="chip-mono">Python (Tkinter)</span>
+              </div>
+              <p class="serif-italic ink-soft">"Hybrid pipeline balancing statistical rigor with operational logistics for 120 schools."</p>
+            </div>
+          </details>
+
+          <!-- Entry 04 -->
+          <details class="ledger-row">
+            <summary class="grid grid-cols-[minmax(0,1fr)_32px] md:grid-cols-[190px_minmax(0,1fr)_32px] gap-x-6 gap-y-1 items-baseline py-1">
+              <span class="ledger-year col-start-1 row-start-1">ENTRY 04</span>
+              <span class="col-start-1 row-start-2 md:col-start-2 md:row-start-1">
+                <span class="ledger-role">Qualtrics Automated DL</span>
+                <span class="block caption mt-1">Sole Developer</span>
+              </span>
+              <span class="ledger-chevron justify-self-end col-start-2 row-start-1 md:col-start-3" aria-hidden="true">▾</span>
+            </summary>
+            <div class="mt-5 md:ml-[214px] prose-measure">
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="chip-mono">Python (Eel)</span>
+                <span class="chip-mono">Qualtrics API v3</span>
+              </div>
+              <p class="serif-italic ink-soft">"Desktop GUI automating asynchronous large-scale survey exports and error recovery."</p>
+            </div>
+          </details>
+
+          <!-- Entry 05 -->
+          <details class="ledger-row">
+            <summary class="grid grid-cols-[minmax(0,1fr)_32px] md:grid-cols-[190px_minmax(0,1fr)_32px] gap-x-6 gap-y-1 items-baseline py-1">
+              <span class="ledger-year col-start-1 row-start-1">ENTRY 05</span>
+              <span class="col-start-1 row-start-2 md:col-start-2 md:row-start-1">
+                <span class="ledger-role">SEC Publication Records</span>
+                <span class="block caption mt-1">Sole Developer</span>
+              </span>
+              <span class="ledger-chevron justify-self-end col-start-2 row-start-1 md:col-start-3" aria-hidden="true">▾</span>
+            </summary>
+            <div class="mt-5 md:ml-[214px] prose-measure">
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="chip-mono">Excel VBA</span>
+                <span class="chip-mono">Power Query</span>
+                <span class="chip-mono">SQL Logic</span>
+              </div>
+              <p class="serif-italic ink-soft">"DSS automating tenure scoring logic via multi-model algorithmic calculation."</p>
+            </div>
+          </details>
+
+          <!-- Entry 06 -->
+          <details class="ledger-row">
+            <summary class="grid grid-cols-[minmax(0,1fr)_32px] md:grid-cols-[190px_minmax(0,1fr)_32px] gap-x-6 gap-y-1 items-baseline py-1">
+              <span class="ledger-year col-start-1 row-start-1">ENTRY 06</span>
+              <span class="col-start-1 row-start-2 md:col-start-2 md:row-start-1">
+                <span class="ledger-role">KeySteps Project Masterlist</span>
+                <span class="block caption mt-1">Sole Developer</span>
+              </span>
+              <span class="ledger-chevron justify-self-end col-start-2 row-start-1 md:col-start-3" aria-hidden="true">▾</span>
+            </summary>
+            <div class="mt-5 md:ml-[214px] prose-measure">
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="chip-mono">Power Query</span>
+                <span class="chip-mono">Pivot Tables</span>
+                <span class="chip-mono">Slicers</span>
+              </div>
+              <p class="serif-italic ink-soft">"Operational command center managing logistics for multi-district longitudinal study."</p>
+            </div>
+          </details>
+
+          <!-- Entry 07 -->
+          <details class="ledger-row">
+            <summary class="grid grid-cols-[minmax(0,1fr)_32px] md:grid-cols-[190px_minmax(0,1fr)_32px] gap-x-6 gap-y-1 items-baseline py-1">
+              <span class="ledger-year col-start-1 row-start-1">ENTRY 07</span>
+              <span class="col-start-1 row-start-2 md:col-start-2 md:row-start-1">
+                <span class="ledger-role">i-Maze (i世代之記憶迷宮)</span>
+                <span class="block caption mt-1">Audio Director</span>
+              </span>
+              <span class="ledger-chevron justify-self-end col-start-2 row-start-1 md:col-start-3" aria-hidden="true">▾</span>
+            </summary>
+            <div class="mt-5 md:ml-[214px] prose-measure">
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="chip-mono">iOS Native</span>
+              </div>
+              <p class="serif-italic ink-soft">"First Chinese-character SEN gaming app; 100+ ADHD/RD students showed significant working memory improvement."</p>
+            </div>
+          </details>
+
+        </div>
+
+        <!-- Bench notes — small mono footnotes from the CV margins -->
+        <div class="max-w-5xl mx-auto mt-12 grid gap-x-12 gap-y-4 md:grid-cols-2">
+          <p class="caption flex flex-wrap items-center gap-2">
+            <span class="chip-mono chip-accent">Bench Note 01</span>
+            <span>Operator throughput — English typing 90wpm / Chinese 95wpm</span>
+          </p>
+          <p class="caption flex flex-wrap items-center gap-2">
+            <span class="chip-mono chip-accent">Bench Note 02</span>
+            <span>AI &amp; ML stack — API, Stable Diffusion, OpenAI, DallE, Anthropic, PyTorch</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         04 · BROADCASTS — protected carousel, reskinned shell
+         ================================================================ -->
+    <section id="broadcast" class="spine-section" aria-labelledby="broadcast-title">
+      <span class="scanline" aria-hidden="true"></span>
+      <div class="spine-container">
+        <div class="section-head">
+          <hr class="section-rule">
+          <p class="kicker"><span class="tick">▪</span>CH. 02 § Broadcasts — Thought Leadership</p>
+          <h2 id="broadcast-title" class="display-m" data-reveal-lines>Broadcasting the <em class="serif-italic accent-deep">Future</em></h2>
+          <p class="standfirst">Beyond code and systems, I believe in the power of narrative. Through live broadcasts and media production, I explore how technology shapes our psychological landscape and cultural evolution.</p>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-12 items-start">
+          <!-- Discourse strands -->
+          <div class="lg:col-span-5 flex flex-col gap-5">
+            <div class="frame-hairline bg-[var(--paper-soft)] p-5 flex items-start gap-4 plate-reveal">
+              <div class="w-10 h-10 frame-hairline grid place-items-center text-[var(--accent-deep)] flex-none">
+                <i data-lucide="mic" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h3 class="font-display font-semibold text-lg">Tech-Psych Discourse</h3>
+                <p class="body-small ink-soft mt-1">Bridging the gap between algorithms and human behavior.</p>
+              </div>
+            </div>
+            <div class="frame-hairline bg-[var(--paper-soft)] p-5 flex items-start gap-4 plate-reveal">
+              <div class="w-10 h-10 frame-hairline grid place-items-center text-[var(--accent-deep)] flex-none">
+                <i data-lucide="video" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h3 class="font-display font-semibold text-lg">Digital Culture Analysis</h3>
+                <p class="body-small ink-soft mt-1">Deconstructing trends in the digital age.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live channel plate (mis-nested thumbnail markup from the
+               original rebuilt cleanly) -->
+          <div class="lg:col-span-7">
+            <a href="https://live.bilibili.com/13081069" target="_blank" rel="noopener" class="block frame-hairline bg-[var(--paper-soft)] group cursor-pointer relative hover:border-[var(--accent)] transition-colors plate-reveal">
+              <div class="relative aspect-video bg-[var(--paper)] overflow-hidden border-b border-[var(--hairline)]">
+                <div class="absolute inset-0 flex items-center justify-center text-[var(--ink-soft)] opacity-40">
+                  <i data-lucide="radio" class="w-16 h-16"></i>
+                </div>
+                <!-- Play overlay -->
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+                  <div class="w-16 h-16 frame-hairline bg-[var(--paper)] grid place-items-center text-[var(--accent-deep)]">
+                    <i data-lucide="play" class="w-6 h-6 fill-current"></i>
+                  </div>
+                </div>
+                <div class="absolute bottom-4 left-4 z-20">
+                  <span class="chip-mono chip-accent bg-[var(--paper)]">
+                    <span class="w-2 h-2 bg-[var(--accent)] rounded-full animate-pulse"></span> Live
+                  </span>
+                </div>
+              </div>
+              <div class="p-6">
+                <h3 class="font-display font-semibold text-xl mb-2 group-hover:text-[var(--accent-deep)] transition-colors">Herman's Live Channel</h3>
+                <p class="body-small ink-soft line-clamp-2">Join the live discussion on Tech, Culture, and Psychology on Bilibili.</p>
+                <div class="mt-4 flex items-center gap-4 caption">
+                  <span class="flex items-center gap-1 text-[var(--accent-deep)]"><i data-lucide="radio" class="w-3 h-3"></i> Live Status</span>
+                </div>
+              </div>
+            </a>
+            <p class="caption mt-3">FIG. 02 — LIVE CHANNEL, BILIBILI. SIGNAL CONTINUOUS.</p>
+          </div>
         </div>
 
         <!-- Broadcast Highlights -->
-        <div class="w-full mt-16 reveal">
-            <div class="container mx-auto px-6">
-                <h3 class="text-2xl font-bold text-white mb-8 flex items-center gap-2">
-                    <i data-lucide="film" class="text-cyber-400"></i> Broadcast Highlights
-                </h3>
+        <div class="mt-20">
+          <div class="flex flex-wrap items-baseline justify-between gap-4 mb-6">
+            <h3 class="font-display font-semibold text-2xl flex items-center gap-2">
+              <i data-lucide="film" class="text-[var(--accent)] w-5 h-5"></i> Broadcast Highlights
+            </h3>
+            <p class="kicker" id="broadcast-counter" aria-live="polite">Broadcast 01 / 05</p>
+          </div>
+
+          <div class="frame-hairline p-4 md:p-6" style="perspective: 1200px">
+            <!-- Carousel Container — protected id, carousel.js drag intact.
+                 Cards rise rotateX(8deg)→0 inside this perspective container. -->
+            <div id="broadcast-carousel" class="flex gap-6 overflow-x-auto pb-4 cursor-grab scrollbar-hide select-none">
+              <!-- Video 1 -->
+              <a href="https://www.bilibili.com/video/BV1U2KizEECu" target="_blank" rel="noopener" class="frame-hairline bg-[var(--paper-soft)] p-4 group hover:border-[var(--accent)] transition-all min-w-[300px] md:min-w-[350px] flex-shrink-0">
+                <div class="aspect-video bg-[var(--paper)] mb-4 overflow-hidden relative border-b border-[var(--hairline)]">
+                  <div class="absolute inset-0 flex items-center justify-center text-[var(--ink-soft)] opacity-40 group-hover:text-[var(--accent)] group-hover:opacity-100 transition-colors">
+                    <i data-lucide="play-circle" class="w-12 h-12"></i>
+                  </div>
+                </div>
+                <h4 class="font-semibold text-sm line-clamp-2 group-hover:text-[var(--accent-deep)] transition-colors">《效率神器的浪漫與秩序 001》秒搜萬檔：一招擺脫搜尋煩惱！</h4>
+                <p class="caption mt-2">Live Tutorial</p>
+              </a>
+
+              <!-- Video 2 -->
+              <a href="https://www.bilibili.com/video/BV18RgdzJE7f" target="_blank" rel="noopener" class="frame-hairline bg-[var(--paper-soft)] p-4 group hover:border-[var(--accent)] transition-all min-w-[300px] md:min-w-[350px] flex-shrink-0">
+                <div class="aspect-video bg-[var(--paper)] mb-4 overflow-hidden relative border-b border-[var(--hairline)]">
+                  <div class="absolute inset-0 flex items-center justify-center text-[var(--ink-soft)] opacity-40 group-hover:text-[var(--accent)] group-hover:opacity-100 transition-colors">
+                    <i data-lucide="play-circle" class="w-12 h-12"></i>
+                  </div>
+                </div>
+                <h4 class="font-semibold text-sm line-clamp-2 group-hover:text-[var(--accent-deep)] transition-colors">AI：啟示與未來 - 多智能體！Genspark打破AI框架！</h4>
+                <p class="caption mt-2">Live Highlight 8/1</p>
+              </a>
+
+              <!-- Video 3 -->
+              <a href="https://www.bilibili.com/video/BV1FETBzgEg5" target="_blank" rel="noopener" class="frame-hairline bg-[var(--paper-soft)] p-4 group hover:border-[var(--accent)] transition-all min-w-[300px] md:min-w-[350px] flex-shrink-0">
+                <div class="aspect-video bg-[var(--paper)] mb-4 overflow-hidden relative border-b border-[var(--hairline)]">
+                  <div class="absolute inset-0 flex items-center justify-center text-[var(--ink-soft)] opacity-40 group-hover:text-[var(--accent)] group-hover:opacity-100 transition-colors">
+                    <i data-lucide="play-circle" class="w-12 h-12"></i>
+                  </div>
+                </div>
+                <h4 class="font-semibold text-sm line-clamp-2 group-hover:text-[var(--accent-deep)] transition-colors">AI：從入門到未來 - 揭秘API！AI的核心技術竟是這個！？</h4>
+                <p class="caption mt-2">Live Highlight 6/1</p>
+              </a>
+
+              <!-- Video 4 (Duplicate for Demo) -->
+              <a href="https://www.bilibili.com/video/BV1U2KizEECu" target="_blank" rel="noopener" class="frame-hairline bg-[var(--paper-soft)] p-4 group hover:border-[var(--accent)] transition-all min-w-[300px] md:min-w-[350px] flex-shrink-0">
+                <div class="aspect-video bg-[var(--paper)] mb-4 overflow-hidden relative border-b border-[var(--hairline)]">
+                  <div class="absolute inset-0 flex items-center justify-center text-[var(--ink-soft)] opacity-40 group-hover:text-[var(--accent)] group-hover:opacity-100 transition-colors">
+                    <i data-lucide="play-circle" class="w-12 h-12"></i>
+                  </div>
+                </div>
+                <h4 class="font-semibold text-sm line-clamp-2 group-hover:text-[var(--accent-deep)] transition-colors">《效率神器的浪漫與秩序 001》秒搜萬檔：一招擺脫搜尋煩惱！</h4>
+                <p class="caption mt-2">Live Tutorial</p>
+              </a>
+
+              <!-- Video 5 (Duplicate for Demo) -->
+              <a href="https://www.bilibili.com/video/BV18RgdzJE7f" target="_blank" rel="noopener" class="frame-hairline bg-[var(--paper-soft)] p-4 group hover:border-[var(--accent)] transition-all min-w-[300px] md:min-w-[350px] flex-shrink-0">
+                <div class="aspect-video bg-[var(--paper)] mb-4 overflow-hidden relative border-b border-[var(--hairline)]">
+                  <div class="absolute inset-0 flex items-center justify-center text-[var(--ink-soft)] opacity-40 group-hover:text-[var(--accent)] group-hover:opacity-100 transition-colors">
+                    <i data-lucide="play-circle" class="w-12 h-12"></i>
+                  </div>
+                </div>
+                <h4 class="font-semibold text-sm line-clamp-2 group-hover:text-[var(--accent-deep)] transition-colors">AI：啟示與未來 - 多智能體！Genspark打破AI框架！</h4>
+                <p class="caption mt-2">Live Highlight 8/1</p>
+              </a>
             </div>
-            <!-- Carousel Container -->
-            <div id="broadcast-carousel" class="flex gap-6 overflow-x-auto pb-8 cursor-grab scrollbar-hide select-none px-6">
-                    <!-- Video 1 -->
-                    <a href="https://www.bilibili.com/video/BV1U2KizEECu" target="_blank" rel="noopener" class="glass-card p-4 rounded-xl group hover:bg-slate-800/50 transition-all border border-transparent hover:border-cyber-500/30 min-w-[300px] md:min-w-[350px] flex-shrink-0">
-                        <div class="aspect-video bg-slate-800 rounded-lg mb-4 overflow-hidden relative">
-                             <div class="absolute inset-0 flex items-center justify-center text-slate-600 group-hover:text-cyber-400 transition-colors">
-                                <i data-lucide="play-circle" class="w-12 h-12"></i>
-                             </div>
-                        </div>
-                        <h4 class="text-white font-bold text-sm line-clamp-2 group-hover:text-cyber-400 transition-colors">《效率神器的浪漫與秩序 001》秒搜萬檔：一招擺脫搜尋煩惱！</h4>
-                        <p class="text-xs text-slate-400 mt-2">Live Tutorial</p>
-                    </a>
-
-                    <!-- Video 2 -->
-                    <a href="https://www.bilibili.com/video/BV18RgdzJE7f" target="_blank" rel="noopener" class="glass-card p-4 rounded-xl group hover:bg-slate-800/50 transition-all border border-transparent hover:border-cyber-500/30 min-w-[300px] md:min-w-[350px] flex-shrink-0">
-                        <div class="aspect-video bg-slate-800 rounded-lg mb-4 overflow-hidden relative">
-                             <div class="absolute inset-0 flex items-center justify-center text-slate-600 group-hover:text-cyber-400 transition-colors">
-                                <i data-lucide="play-circle" class="w-12 h-12"></i>
-                             </div>
-                        </div>
-                        <h4 class="text-white font-bold text-sm line-clamp-2 group-hover:text-cyber-400 transition-colors">AI：啟示與未來 - 多智能體！Genspark打破AI框架！</h4>
-                        <p class="text-xs text-slate-400 mt-2">Live Highlight 8/1</p>
-                    </a>
-
-                    <!-- Video 3 -->
-                    <a href="https://www.bilibili.com/video/BV1FETBzgEg5" target="_blank" rel="noopener" class="glass-card p-4 rounded-xl group hover:bg-slate-800/50 transition-all border border-transparent hover:border-cyber-500/30 min-w-[300px] md:min-w-[350px] flex-shrink-0">
-                        <div class="aspect-video bg-slate-800 rounded-lg mb-4 overflow-hidden relative">
-                             <div class="absolute inset-0 flex items-center justify-center text-slate-600 group-hover:text-cyber-400 transition-colors">
-                                <i data-lucide="play-circle" class="w-12 h-12"></i>
-                             </div>
-                        </div>
-                        <h4 class="text-white font-bold text-sm line-clamp-2 group-hover:text-cyber-400 transition-colors">AI：從入門到未來 - 揭秘API！AI的核心技術竟是這個！？</h4>
-                        <p class="text-xs text-slate-400 mt-2">Live Highlight 6/1</p>
-                    </a>
-
-                    <!-- Video 4 (Duplicate for Demo) -->
-                    <a href="https://www.bilibili.com/video/BV1U2KizEECu" target="_blank" rel="noopener" class="glass-card p-4 rounded-xl group hover:bg-slate-800/50 transition-all border border-transparent hover:border-cyber-500/30 min-w-[300px] md:min-w-[350px] flex-shrink-0">
-                        <div class="aspect-video bg-slate-800 rounded-lg mb-4 overflow-hidden relative">
-                             <div class="absolute inset-0 flex items-center justify-center text-slate-600 group-hover:text-cyber-400 transition-colors">
-                                <i data-lucide="play-circle" class="w-12 h-12"></i>
-                             </div>
-                        </div>
-                        <h4 class="text-white font-bold text-sm line-clamp-2 group-hover:text-cyber-400 transition-colors">《效率神器的浪漫與秩序 001》秒搜萬檔：一招擺脫搜尋煩惱！</h4>
-                        <p class="text-xs text-slate-400 mt-2">Live Tutorial</p>
-                    </a>
-
-                    <!-- Video 5 (Duplicate for Demo) -->
-                    <a href="https://www.bilibili.com/video/BV18RgdzJE7f" target="_blank" rel="noopener" class="glass-card p-4 rounded-xl group hover:bg-slate-800/50 transition-all border border-transparent hover:border-cyber-500/30 min-w-[300px] md:min-w-[350px] flex-shrink-0">
-                        <div class="aspect-video bg-slate-800 rounded-lg mb-4 overflow-hidden relative">
-                             <div class="absolute inset-0 flex items-center justify-center text-slate-600 group-hover:text-cyber-400 transition-colors">
-                                <i data-lucide="play-circle" class="w-12 h-12"></i>
-                             </div>
-                        </div>
-                        <h4 class="text-white font-bold text-sm line-clamp-2 group-hover:text-cyber-400 transition-colors">AI：啟示與未來 - 多智能體！Genspark打破AI框架！</h4>
-                        <p class="text-xs text-slate-400 mt-2">Live Highlight 8/1</p>
-                    </a>
-                </div>
-            </div>
-    </section>
-
-    <!-- NARRATIVES (Stories) -->
-    <section id="stories" class="py-24 bg-slate-900/50 border-t border-slate-800/50">
-        <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-bold text-white mb-16 text-center">Narratives & <span class="text-cyber-400">Journey</span></h2>
-            
-            <div class="relative max-w-4xl mx-auto">
-                <!-- Center Line -->
-                <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-px bg-gradient-to-b from-cyber-500/0 via-cyber-500/50 to-cyber-500/0 hidden md:block"></div>
-
-                <!-- Story 1: The Reality Check (2015) - ORIGIN -->
-                <div class="flex flex-col md:flex-row items-center gap-8 mb-16 reveal group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
-                    <div class="md:w-1/2 md:text-right">
-                        <span class="text-cyber-400 font-mono text-sm tracking-wider uppercase">2015 • Origin Story</span>
-                        <h3 class="text-2xl font-bold text-white mt-2 mb-4 group-hover:text-cyber-400 transition-colors">The Reality Check</h3>
-                        <p class="text-slate-400 leading-relaxed mb-6">
-                            "I thought I was tech-savvy because I could design slides. Then I failed an interview because I couldn't do a VLOOKUP. I was humbled. That failure sparked a vow: never be incompetent again. I didn't just learn Excel; I mastered its very DNA."
-                        </p>
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-xs text-cyber-400">
-                            <i data-lucide="alert-triangle" class="w-3 h-3 text-yellow-400"></i> Humbled
-                        </div>
-                    </div>
-                    <div class="relative z-10">
-                        <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-cyber-500 flex items-center justify-center text-cyber-400 shadow-[0_0_15px_rgba(128,100,162,0.5)] group-hover:bg-cyber-500 group-hover:text-white transition-colors">
-                            1
-                        </div>
-                    </div>
-                    <div class="md:w-1/2">
-                        <div class="glass-card p-5 rounded-lg text-sm text-slate-400 italic group-hover:border-cyber-500/50 transition-colors">
-                            It wasn't about "playing games" vs "work." It was realizing I only knew the surface. That shame drove me to understand the <em>mechanisms</em> behind the tools, laying the groundwork for every system I've built since.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Story 2: The First System (2017 - ISS HK) -->
-                <div class="flex flex-col md:flex-row-reverse items-center gap-8 mb-16 reveal group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
-                    <div class="md:w-1/2">
-                        <span class="text-cyber-400 font-mono text-sm tracking-wider uppercase">2017 • First Build</span>
-                        <h3 class="text-2xl font-bold text-white mt-2 mb-4 group-hover:text-cyber-400 transition-colors">The First System</h3>
-                        <p class="text-slate-400 leading-relaxed mb-6">
-                            "200 active cases. No AI. No shortcuts. Just me, Stack Overflow, and 6 months of brute-force learning."
-                        </p>
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-xs text-cyber-400">
-                            <i data-lucide="hammer" class="w-3 h-3 text-red-400"></i> Grit
-                        </div>
-                    </div>
-                    <div class="relative z-10">
-                        <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-cyber-500 flex items-center justify-center text-cyber-400 shadow-[0_0_15px_rgba(128,100,162,0.5)] group-hover:bg-cyber-500 group-hover:text-white transition-colors">
-                            2
-                        </div>
-                    </div>
-                    <div class="md:w-1/2 md:text-right">
-                         <div class="glass-card p-5 rounded-lg text-sm text-slate-400 italic group-hover:border-cyber-500/50 transition-colors">
-                            I built a VBA-powered "One-Stop Portal" from scratch at ISSHK. It required learning SQL queries and complex macros on the fly. It was the most painful learning curve of my life, but it transformed a chaotic workflow into a precision engine for my team.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Story 3: Scaling Complexity (2018-2020 - EdUHK SEC) -->
-                <div class="flex flex-col md:flex-row items-center gap-8 mb-16 reveal group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
-                    <div class="md:w-1/2 md:text-right">
-                        <span class="text-cyber-400 font-mono text-sm tracking-wider uppercase">2018–2020 • Levelling Up</span>
-                        <h3 class="text-2xl font-bold text-white mt-2 mb-4 group-hover:text-cyber-400 transition-colors">Scaling Complexity</h3>
-                        <p class="text-slate-400 leading-relaxed mb-6">
-                            "That first victory proved I could build anything if I dug deep enough. The tools just got better."
-                        </p>
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-xs text-cyber-400">
-                            <i data-lucide="layers" class="w-3 h-3 text-blue-400"></i> Evolution
-                        </div>
-                    </div>
-                    <div class="relative z-10">
-                        <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-cyber-500 flex items-center justify-center text-cyber-400 shadow-[0_0_15px_rgba(128,100,162,0.5)] group-hover:bg-cyber-500 group-hover:text-white transition-colors">
-                            3
-                        </div>
-                    </div>
-                    <div class="md:w-1/2">
-                         <div class="glass-card p-5 rounded-lg text-sm text-slate-400 italic group-hover:border-cyber-500/50 transition-colors">
-                            At EdUHK's SEC Department, I built the <strong>SEC Departmental OSP</strong> — a full workflow automation suite for teacher training programmes. Same "mechanism-first" mindset, but now with Python, PowerQuery, and proper database design.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Story 4: The 4Set Evolution (2023-2025) -->
-                <div class="flex flex-col md:flex-row-reverse items-center gap-8 mb-16 reveal group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
-                    <div class="md:w-1/2">
-                        <span class="text-cyber-400 font-mono text-sm tracking-wider uppercase">2023–2025 • Enterprise Architecture</span>
-                        <h3 class="text-2xl font-bold text-white mt-2 mb-4">The 4Set Evolution</h3>
-                        <p class="text-slate-400 leading-relaxed mb-6">
-                            A 4-generation journey from a fragile Excel monolith to a distributed hybrid-cloud infrastructure.
-                            Born from the "Data Starvation" of Gen 0, refined by the "Sneakernet" PWA of Gen 1,
-                            saved by the "Ghost Monitor" of Gen 2, and perfected by the async power of Gen 3.
-                        </p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-cyber-400 border border-slate-700">Gen 0: Excel</span>
-                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-cyber-400 border border-slate-700">Gen 1: PWA</span>
-                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-cyber-400 border border-slate-700">Gen 2: Python</span>
-                            <span class="px-3 py-1 rounded-full bg-cyber-900/50 text-xs text-cyber-400 border border-cyber-500/50">Gen 3: Server</span>
-                        </div>
-                    </div>
-                    <div class="relative z-10">
-                        <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-cyber-500 flex items-center justify-center text-cyber-400 shadow-[0_0_20px_rgba(139,92,246,0.3)] group-hover:scale-110 transition-transform duration-300">
-                            4
-                        </div>
-                    </div>
-                    <div class="md:w-1/2 md:text-right">
-                        <div class="glass-card p-6 rounded-xl border border-slate-700/50 group-hover:border-cyber-500/30 transition-colors">
-                            <h4 class="text-white font-bold mb-2 flex items-center gap-2 justify-end">
-                                <i data-lucide="alert-triangle" class="w-4 h-4 text-yellow-400"></i> The Catalyst
-                            </h4>
-                            <p class="text-sm text-slate-400 italic mb-4">
-                                "The Qualtrics API was horrible. 1-second polling per record. It locked the UI and made mass uploads impossible."
-                            </p>
-                            <div class="space-y-3">
-                                <div class="flex items-center gap-3 text-sm text-cyber-400 justify-end">
-                                    <span>Gen 2: Synchronous Polling (Fragile)</span>
-                                    <i data-lucide="x-circle" class="w-4 h-4 text-red-400"></i>
-                                </div>
-                                <div class="flex items-center gap-3 text-sm text-cyber-400 justify-end">
-                                    <i data-lucide="arrow-down" class="w-4 h-4 text-slate-400"></i>
-                                </div>
-                                <div class="flex items-center gap-3 text-sm text-white font-medium justify-end">
-                                    <span>Gen 3: Async Background Daemon (Robust)</span>
-                                    <i data-lucide="check-circle" class="w-4 h-4 text-green-400"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Story 5: Beyond the Workplace (2025 - Community Impact) -->
-                <div class="flex flex-col md:flex-row items-center gap-8 reveal group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
-                    <div class="md:w-1/2 md:text-right">
-                        <span class="text-cyber-400 font-mono text-sm tracking-wider uppercase">2025 • Social Innovation</span>
-                        <h3 class="text-2xl font-bold text-white mt-2 mb-4 group-hover:text-cyber-400 transition-colors">Beyond the Workplace</h3>
-                        <p class="text-slate-400 leading-relaxed mb-6">
-                            For years, my systems focused on making teams faster, calmer, and more reliable. In 2025, I started pushing that same mindset outward —
-                            building for the community, not just the organisation.
-                        </p>
-                        <div class="flex flex-wrap justify-end gap-2">
-                            <span class="px-3 py-1 rounded-full bg-cyber-900/50 text-xs text-cyber-400 border border-cyber-500/50">Equal Play • Awardee</span>
-                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-cyber-400 border border-slate-700">BESGO FoundRise</span>
-                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-cyber-400 border border-slate-700">Assistive Tech</span>
-                            <span class="px-3 py-1 rounded-full bg-slate-800 text-xs text-cyber-400 border border-slate-700">AI + Games</span>
-                        </div>
-                    </div>
-                    <div class="relative z-10">
-                        <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-cyber-500 flex items-center justify-center text-cyber-400 shadow-[0_0_20px_rgba(139,92,246,0.3)] group-hover:scale-110 transition-transform duration-300">
-                            5
-                        </div>
-                    </div>
-                    <div class="md:w-1/2">
-                        <div class="glass-card p-6 rounded-xl border border-slate-700/50 group-hover:border-cyber-500/30 transition-colors">
-                            <h4 class="text-white font-bold mb-2 flex items-center gap-2">
-                                <i data-lucide="music" class="w-4 h-4 text-cyber-400"></i> Equal Play (2025)
-                            </h4>
-                            <p class="text-sm text-slate-400 leading-relaxed mb-4">
-                                A musical/rehab gadget: a glove with gentle air-bag guidance for hand posture, paired with an AI-powered piano score writer.
-                                The goal is to help children build piano habits through fun games, guided practice, and AI-generated learning content.
-                            </p>
-                            <p class="text-xs text-slate-400">
-                                Supported through the CUHK Business School BESGO FoundRise (GBA Youth Entrepreneurship Support Scheme).
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+          </div>
         </div>
+      </div>
     </section>
 
-    <!-- TIMELINE (Restored) -->
-    <section id="timeline" class="py-24 bg-slate-900/30 border-t border-slate-800/50">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16 reveal">
-                <h2 class="text-4xl font-bold text-white mb-2">Career <span class="text-cyber-400">Timeline</span></h2>
-                <p class="text-slate-400 max-w-xl mx-auto">
-                    A chronological view of roles where technology amplified delivery, reduced risk, and created reusable assets.
+    <!-- ================================================================
+         05 · NARRATIVES & JOURNEY — scrubbed teal line-draw, 5 nodes
+         ================================================================ -->
+    <section id="stories" class="spine-section" aria-labelledby="stories-title">
+      <span class="scanline" aria-hidden="true"></span>
+      <div class="spine-container">
+        <div class="section-head">
+          <hr class="section-rule">
+          <p class="kicker"><span class="tick">▪</span>CH. 02 § Origin — The Line of Descent</p>
+          <h2 id="stories-title" class="display-m" data-reveal-lines>Narratives &amp; <em class="serif-italic accent-deep">Journey</em></h2>
+        </div>
+
+        <div id="origin-track" class="relative max-w-5xl mx-auto">
+          <svg class="origin-line-svg" viewBox="0 0 2 100" preserveAspectRatio="none" aria-hidden="true">
+            <path id="origin-line" d="M1 0 V 100"></path>
+          </svg>
+
+          <!-- Node 1 — 2015 The Reality Check -->
+          <div class="origin-row relative grid grid-cols-[44px_minmax(0,1fr)] md:grid-cols-[minmax(0,1fr)_56px_minmax(0,1fr)] gap-x-5 md:gap-x-8 gap-y-4 mb-20">
+            <div class="col-start-1 row-start-1 md:col-start-2 flex md:justify-center">
+              <div class="origin-node">1</div>
+            </div>
+            <div class="col-start-2 row-start-1 md:col-start-1 md:row-start-1 md:text-right">
+              <p class="kicker"><span class="tick">▪</span>2015 • Origin Story</p>
+              <h3 class="font-display font-semibold text-2xl mt-2 mb-4">The Reality Check</h3>
+              <p class="ink-soft body-small leading-relaxed mb-5">
+                "I thought I was tech-savvy because I could design slides. Then I failed an interview because I couldn't do a VLOOKUP. I was humbled. That failure sparked a vow: never be incompetent again. I didn't just learn Excel; I mastered its very DNA."
+              </p>
+              <span class="chip-mono"><i data-lucide="alert-triangle" class="w-3 h-3"></i> Humbled</span>
+            </div>
+            <div class="col-start-2 row-start-2 md:col-start-3 md:row-start-1">
+              <div class="frame-hairline bg-[var(--paper-soft)] p-5 serif-italic text-[15px] leading-relaxed ink-soft">
+                It wasn't about "playing games" vs "work." It was realizing I only knew the surface. That shame drove me to understand the <em>mechanisms</em> behind the tools, laying the groundwork for every system I've built since.
+              </div>
+            </div>
+          </div>
+
+          <!-- Node 2 — 2017 The First System -->
+          <div class="origin-row relative grid grid-cols-[44px_minmax(0,1fr)] md:grid-cols-[minmax(0,1fr)_56px_minmax(0,1fr)] gap-x-5 md:gap-x-8 gap-y-4 mb-20">
+            <div class="col-start-1 row-start-1 md:col-start-2 flex md:justify-center">
+              <div class="origin-node">2</div>
+            </div>
+            <div class="col-start-2 row-start-1 md:col-start-3 md:row-start-1">
+              <p class="kicker"><span class="tick">▪</span>2017 • First Build</p>
+              <h3 class="font-display font-semibold text-2xl mt-2 mb-4">The First System</h3>
+              <p class="ink-soft body-small leading-relaxed mb-5">
+                "200 active cases. No AI. No shortcuts. Just me, Stack Overflow, and 6 months of brute-force learning."
+              </p>
+              <span class="chip-mono"><i data-lucide="hammer" class="w-3 h-3"></i> Grit</span>
+            </div>
+            <div class="col-start-2 row-start-2 md:col-start-1 md:row-start-1 md:text-right">
+              <div class="frame-hairline bg-[var(--paper-soft)] p-5 serif-italic text-[15px] leading-relaxed ink-soft">
+                I built a VBA-powered "One-Stop Portal" from scratch at ISSHK. It required learning SQL queries and complex macros on the fly. It was the most painful learning curve of my life, but it transformed a chaotic workflow into a precision engine for my team.
+              </div>
+            </div>
+          </div>
+
+          <!-- Node 3 — 2018–2020 Scaling Complexity -->
+          <div class="origin-row relative grid grid-cols-[44px_minmax(0,1fr)] md:grid-cols-[minmax(0,1fr)_56px_minmax(0,1fr)] gap-x-5 md:gap-x-8 gap-y-4 mb-20">
+            <div class="col-start-1 row-start-1 md:col-start-2 flex md:justify-center">
+              <div class="origin-node">3</div>
+            </div>
+            <div class="col-start-2 row-start-1 md:col-start-1 md:row-start-1 md:text-right">
+              <p class="kicker"><span class="tick">▪</span>2018–2020 • Levelling Up</p>
+              <h3 class="font-display font-semibold text-2xl mt-2 mb-4">Scaling Complexity</h3>
+              <p class="ink-soft body-small leading-relaxed mb-5">
+                "That first victory proved I could build anything if I dug deep enough. The tools just got better."
+              </p>
+              <span class="chip-mono"><i data-lucide="layers" class="w-3 h-3"></i> Evolution</span>
+            </div>
+            <div class="col-start-2 row-start-2 md:col-start-3 md:row-start-1">
+              <div class="frame-hairline bg-[var(--paper-soft)] p-5 serif-italic text-[15px] leading-relaxed ink-soft">
+                At EdUHK's SEC Department, I built the <strong>SEC Departmental OSP</strong> — a full workflow automation suite for teacher training programmes. Same "mechanism-first" mindset, but now with Python, PowerQuery, and proper database design.
+              </div>
+            </div>
+          </div>
+
+          <!-- Node 4 — 2023–2025 The 4Set Evolution -->
+          <div class="origin-row relative grid grid-cols-[44px_minmax(0,1fr)] md:grid-cols-[minmax(0,1fr)_56px_minmax(0,1fr)] gap-x-5 md:gap-x-8 gap-y-4 mb-20">
+            <div class="col-start-1 row-start-1 md:col-start-2 flex md:justify-center">
+              <div class="origin-node">4</div>
+            </div>
+            <div class="col-start-2 row-start-1 md:col-start-3 md:row-start-1">
+              <p class="kicker"><span class="tick">▪</span>2023–2025 • Enterprise Architecture</p>
+              <h3 class="font-display font-semibold text-2xl mt-2 mb-4">The 4Set Evolution</h3>
+              <p class="ink-soft body-small leading-relaxed mb-5">
+                A 4-generation journey from a fragile Excel monolith to a distributed hybrid-cloud infrastructure.
+                Born from the "Data Starvation" of Gen 0, refined by the "Sneakernet" PWA of Gen 1,
+                saved by the "Ghost Monitor" of Gen 2, and perfected by the async power of Gen 3.
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <span class="chip-mono">Gen 0: Excel</span>
+                <span class="chip-mono">Gen 1: PWA</span>
+                <span class="chip-mono">Gen 2: Python</span>
+                <span class="chip-mono chip-accent">Gen 3: Server</span>
+              </div>
+            </div>
+            <div class="col-start-2 row-start-2 md:col-start-1 md:row-start-1 md:text-right">
+              <div class="frame-hairline bg-[var(--paper-soft)] p-6">
+                <h4 class="font-display font-semibold mb-2 flex items-center gap-2 md:justify-end">
+                  <i data-lucide="alert-triangle" class="w-4 h-4 text-[var(--accent-deep)]"></i> The Catalyst
+                </h4>
+                <p class="serif-italic text-[15px] ink-soft mb-4">
+                  "The Qualtrics API was horrible. 1-second polling per record. It locked the UI and made mass uploads impossible."
                 </p>
+                <div class="space-y-3 font-mono text-xs tracking-[0.06em]">
+                  <div class="flex items-center gap-3 ink-soft md:justify-end">
+                    <span>Gen 2: Synchronous Polling (Fragile)</span>
+                    <i data-lucide="x-circle" class="w-4 h-4"></i>
+                  </div>
+                  <div class="flex items-center gap-3 ink-soft md:justify-end">
+                    <i data-lucide="arrow-down" class="w-4 h-4"></i>
+                  </div>
+                  <div class="flex items-center gap-3 text-[var(--accent-deep)] font-medium md:justify-end">
+                    <span>Gen 3: Async Background Daemon (Robust)</span>
+                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                  </div>
+                </div>
+              </div>
             </div>
-            
-            <div class="max-w-4xl mx-auto relative">
-                <!-- Vertical Line -->
-                <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-px bg-slate-800"></div>
+          </div>
 
-                <!-- Item 1 -->
-                <div class="relative flex flex-col md:flex-row gap-8 mb-12 reveal group">
-                    <div class="md:w-1/2 md:text-right">
-                        <div class="inline-block px-3 py-1 rounded-full bg-cyber-900/50 border border-cyber-500/30 text-cyber-400 text-xs font-mono mb-2">
-                            Mar 2023 – Present
-                        </div>
-                        <h3 class="text-xl font-bold text-white group-hover:text-cyber-400 transition-colors">Senior Research Assistant</h3>
-                        <p class="text-slate-400 text-sm">ECE, EdUHK</p>
-                    </div>
-                    <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-slate-900 border-2 border-cyber-500 z-10 group-hover:scale-125 transition-transform"></div>
-                    <div class="md:w-1/2 pl-8 md:pl-0">
-                        <div class="glass-card p-6 rounded-xl border-l-2 border-cyber-500/50">
-                            <p class="text-slate-400 text-sm mb-3">Run multi-school research operations with tech-enabled tracking, reporting, and stakeholder alignment.</p>
-                            <ul class="list-disc list-inside text-xs text-slate-400 space-y-1">
-                                <li>Translate field needs into lightweight tooling and repeatable workflows.</li>
-                                <li>Standardise data collection + reporting to reduce friction across sites.</li>
-                                <li>Ship internal utilities (Python/PowerQuery/Excel) that save hours every cycle.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Item 2 -->
-                <div class="relative flex flex-col md:flex-row-reverse gap-8 mb-12 reveal group">
-                    <div class="md:w-1/2">
-                        <div class="inline-block px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-400 text-xs font-mono mb-2">
-                            Jan 2021 – Mar 2023
-                        </div>
-                        <div class="flex flex-wrap items-center gap-2">
-                            <h3 class="text-xl font-bold text-white group-hover:text-cyber-400 transition-colors">Project Officer</h3>
-                        </div>
-                        <p class="text-slate-400 text-sm">AADO, EdUHK</p>
-                    </div>
-                    <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-slate-900 border-2 border-slate-600 z-10 group-hover:border-cyber-500 transition-colors"></div>
-                    <div class="md:w-1/2 pl-8 md:pl-0 md:text-right">
-                        <div class="glass-card p-6 rounded-xl border-r-2 border-slate-700/50">
-                            <p class="text-slate-400 text-sm mb-3">Acted as an internal tech/ops consultant — turning messy requirements into clear systems, standards, and usable outputs.</p>
-                            <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 inline-block text-left">
-                                <li>Website revamp work that improved information clarity and reduced staff back-and-forth on routine enquiries.</li>
-                                <li>Salesforce CRM vendor support: clarified requirements, QAd features, and pushed for scalable standards (not one-off fixes).</li>
-                                <li>Supported the EdFlix platform by translating user pain points into prioritized fixes and operational guidance.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Item 3 -->
-                <div class="relative flex flex-col md:flex-row gap-8 mb-12 reveal group">
-                    <div class="md:w-1/2 md:text-right">
-                        <div class="inline-block px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-400 text-xs font-mono mb-2">
-                            Sep 2020 – Jan 2021
-                        </div>
-                        <h3 class="text-xl font-bold text-white group-hover:text-cyber-400 transition-colors">Project Officer (EOCP)</h3>
-                        <p class="text-slate-400 text-sm">SPFEO, EdUHK</p>
-                    </div>
-                    <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-slate-900 border-2 border-slate-600 z-10 group-hover:border-cyber-500 transition-colors"></div>
-                    <div class="md:w-1/2 pl-8 md:pl-0">
-                        <div class="glass-card p-6 rounded-xl border-l-2 border-slate-700/50">
-                            <p class="text-slate-400 text-sm mb-3">Drove adoption of a university-wide online classes platform by turning requirements into usable flows.</p>
-                            <ul class="list-disc list-inside text-xs text-slate-400 space-y-1">
-                                <li>Bridged academics + IT to reduce rollout risk and support load.</li>
-                                <li>Codified process steps, edge-cases, and training materials for scale.</li>
-                                <li>Protected delivery timelines through clear triage and issue routing.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Item 4 -->
-                <div class="relative flex flex-col md:flex-row-reverse gap-8 mb-12 reveal group">
-                    <div class="md:w-1/2">
-                        <div class="inline-block px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-400 text-xs font-mono mb-2">
-                            Sep 2018 – Sep 2020
-                        </div>
-                        <div class="flex flex-wrap items-center gap-2">
-                            <h3 class="text-xl font-bold text-white group-hover:text-cyber-400 transition-colors">Project Officer</h3>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold border border-cyber-500/40 bg-cyber-500/10 text-cyber-400">
-                                Smart Work Practice Award (2018/19, 2019/20)
-                            </span>
-                        </div>
-                        <p class="text-slate-400 text-sm">SEC, EdUHK</p>
-                    </div>
-                    <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-slate-900 border-2 border-slate-600 z-10 group-hover:border-cyber-500 transition-colors"></div>
-                    <div class="md:w-1/2 pl-8 md:pl-0 md:text-right">
-                        <div class="glass-card p-6 rounded-xl border-r-2 border-slate-700/50">
-                            <p class="text-slate-400 text-sm mb-3">Built departmental systems and led 2020 pandemic-era upskilling so staff could teach online confidently.</p>
-                            <ul class="list-disc list-inside text-xs text-slate-400 space-y-1 inline-block text-left">
-                                <li>Built the <span class="text-cyber-400">SEC Departmental OSP</span> (Excel/VBA) as a “department operating system” covering guest speaker workflows (JotForm ingestion + payment), course mass timetables, part-time records/pay tracking, equipment loan tracking, staff directory, and reference lists.</li>
-                                <li>Shipped the <span class="text-cyber-400">SEC Publication Records System</span> (Excel/VBA + JCR/SJR lookups) to quantify research output and support reporting decisions.</li>
-                                <li>Built internal automation/templates that reduced manual processing time (up to 85%) and improved consistency across staff workflows.</li>
-                                <li>Recognised as the department’s go-to tech lead; later invited to serve as a judge. Led training on Google Workspace, online teaching tools, and Zoom.</li>
-                                <li>Authored the <span class="text-cyber-400">SEC Zoom guidebook</span> (based on Zoom client 4.6.11; by Herman CHAN, PO/SEC), later adopted 100% by LTTC for wider teaching and learning rollout.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Item 5 -->
-                <div class="relative flex flex-col md:flex-row gap-8 mb-12 reveal group">
-                    <div class="md:w-1/2 md:text-right">
-                        <div class="inline-block px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-400 text-xs font-mono mb-2">
-                            Jan 2018 – Sep 2018
-                        </div>
-                        <h3 class="text-xl font-bold text-white group-hover:text-cyber-400 transition-colors">Project Officer</h3>
-                        <p class="text-slate-400 text-sm">EPL / ELPS, EdUHK – CUHK</p>
-                    </div>
-                    <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-slate-900 border-2 border-slate-600 z-10 group-hover:border-cyber-500 transition-colors"></div>
-                    <div class="md:w-1/2 pl-8 md:pl-0">
-                        <div class="glass-card p-6 rounded-xl border-l-2 border-slate-700/50">
-                            <p class="text-slate-400 text-sm mb-3">Supported cross-institution delivery by turning field requirements into clear processes and reliable tracking.</p>
-                            <ul class="list-disc list-inside text-xs text-slate-400 space-y-1">
-                                <li>Standardised data capture + reporting for multi-party coordination (schools, partners, and internal teams).</li>
-                                <li>Created reusable checklists and templates that reduced admin friction and improved handover quality.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
+          <!-- Node 5 — 2025 Beyond the Workplace -->
+          <div class="origin-row relative grid grid-cols-[44px_minmax(0,1fr)] md:grid-cols-[minmax(0,1fr)_56px_minmax(0,1fr)] gap-x-5 md:gap-x-8 gap-y-4">
+            <div class="col-start-1 row-start-1 md:col-start-2 flex md:justify-center">
+              <div class="origin-node">5</div>
             </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-24 relative">
-         <div class="container mx-auto px-6 max-w-4xl">
-            <div class="glass-card rounded-2xl p-10 border-t border-cyber-500/30 text-center reveal">
-                <i data-lucide="mail" class="w-12 h-12 text-cyber-400 mx-auto mb-6"></i>
-                <h2 class="text-4xl font-bold text-white mb-4">Initiate Connection</h2>
-                <p class="text-slate-400 mb-8 max-w-xl mx-auto">
-                    I am currently seeking opportunities to lead transformative projects. 
-                    Whether it's about platform development, AI integration, or educational strategy, let's talk.
+            <div class="col-start-2 row-start-1 md:col-start-1 md:row-start-1 md:text-right">
+              <p class="kicker"><span class="tick">▪</span>2025 • Social Innovation</p>
+              <h3 class="font-display font-semibold text-2xl mt-2 mb-4">Beyond the Workplace</h3>
+              <p class="ink-soft body-small leading-relaxed mb-5">
+                For years, my systems focused on making teams faster, calmer, and more reliable. In 2025, I started pushing that same mindset outward —
+                building for the community, not just the organisation.
+              </p>
+              <div class="flex flex-wrap md:justify-end gap-2">
+                <span class="chip-mono chip-accent">Equal Play • Awardee</span>
+                <span class="chip-mono">BESGO FoundRise</span>
+                <span class="chip-mono">Assistive Tech</span>
+                <span class="chip-mono">AI + Games</span>
+              </div>
+            </div>
+            <div class="col-start-2 row-start-2 md:col-start-3 md:row-start-1">
+              <div class="frame-hairline bg-[var(--paper-soft)] p-6">
+                <h4 class="font-display font-semibold mb-2 flex items-center gap-2">
+                  <i data-lucide="music" class="w-4 h-4 text-[var(--accent-deep)]"></i> Equal Play (2025)
+                </h4>
+                <p class="body-small ink-soft leading-relaxed mb-4">
+                  A musical/rehab gadget: a glove with gentle air-bag guidance for hand posture, paired with an AI-powered piano score writer.
+                  The goal is to help children build piano habits through fun games, guided practice, and AI-generated learning content.
                 </p>
-                
-                <div class="flex flex-col md:flex-row justify-center gap-6 mb-10">
-                    <a href="mailto:hermanchan_925@hotmail.com" class="flex items-center justify-center gap-2 px-6 py-3 bg-cyber-600 hover:bg-cyber-500 text-white rounded-lg font-semibold transition-all">
-                        <i data-lucide="send" class="w-4 h-4"></i> Send Email
-                    </a>
-                    <a href="#" class="flex items-center justify-center gap-2 px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-semibold transition-all">
-                        <i data-lucide="linkedin" class="w-4 h-4"></i> LinkedIn Profile
-                    </a>
-                </div>
-                
-                <div class="pt-8 border-t border-slate-700/50 flex flex-col md:flex-row justify-center gap-8 text-slate-400 text-sm">
-                    <span class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4"></i> Tai Po, Hong Kong</span>
-                    <span class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4"></i> 97278202</span>
-                    <span class="flex items-center gap-2"><i data-lucide="github" class="w-4 h-4"></i> @herman925</span>
-                </div>
+                <p class="caption">
+                  Supported through the CUHK Business School BESGO FoundRise (GBA Youth Entrepreneurship Support Scheme).
+                </p>
+              </div>
             </div>
-            
-            <footer class="text-center mt-12 text-slate-600 text-sm">
-                <p>&copy; 2025 Herman Koon Kiu 'Joseph' Chan. System Status: Optimal.</p>
-            </footer>
-         </div>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- MODAL OVERLAY -->
-    <div id="project-modal" role="dialog" aria-modal="true" class="fixed inset-0 z-[100] hidden flex items-start md:items-center justify-center px-4 py-6 md:py-10 overflow-y-auto">
-        <!-- Backdrop -->
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
-        
-        <!-- Modal Content -->
-        <div id="modal-wrapper" class="relative w-full max-w-[95vw] sm:max-w-3xl lg:max-w-4xl p-4 sm:p-6 transition-none">
-            <div class="glass-card bg-slate-900 border border-cyber-500/50 rounded-2xl shadow-[0_0_50px_rgba(128,100,162,0.2)] overflow-hidden relative max-h-[90vh] overflow-y-auto">
-                <!-- Close Button -->
-                <button onclick="closeModal()" aria-label="Close project modal" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors z-50">
-                    <i data-lucide="x" class="w-6 h-6"></i>
-                </button>
-
-                <div id="modal-content" class="p-2">
-                    <!-- Content injected via JS -->
-                </div>
-            </div>
+    <!-- ================================================================
+         06 · CAREER TIMELINE — the ledger
+         ================================================================ -->
+    <section id="timeline" class="spine-section" aria-labelledby="timeline-title">
+      <span class="scanline" aria-hidden="true"></span>
+      <div class="spine-container">
+        <div class="section-head">
+          <hr class="section-rule">
+          <p class="kicker"><span class="tick">▪</span>CH. 02 § The Ledger — Roles on Record</p>
+          <h2 id="timeline-title" class="display-m" data-reveal-lines>Career <em class="serif-italic accent-deep">Timeline</em></h2>
+          <p class="standfirst">A chronological view of roles where technology amplified delivery, reduced risk, and created reusable assets.</p>
         </div>
-    </div>
 
-    <!-- KEYWORD MODAL (Lore Dictionary) -->
-    <div id="keyword-modal" role="dialog" aria-modal="true" aria-labelledby="keyword-modal-title" class="fixed inset-0 z-[95] hidden items-start md:items-center justify-center px-4 py-6 md:py-10 overflow-y-auto">
-        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeKeywordModal()"></div>
-        <div class="relative w-full max-w-xl p-4 sm:p-5">
-            <div class="glass-card bg-slate-900 border border-cyber-500/40 rounded-2xl shadow-[0_0_40px_rgba(37,166,221,0.25)] max-h-[85vh] overflow-y-auto">
-                <button onclick="closeKeywordModal()" aria-label="Close keyword modal" class="absolute top-3 right-3 text-slate-400 hover:text-white transition-colors z-10">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-                <div class="p-5 space-y-3" id="keyword-modal-content">
-                    <div class="flex items-start gap-3">
-                        <div class="p-2 rounded-lg bg-cyber-500/10 border border-cyber-500/30">
-                            <i data-lucide="sparkles" class="w-5 h-5 text-cyber-300"></i>
-                        </div>
-                        <div>
-                            <h3 id="keyword-modal-title" class="text-xl font-bold text-white">Keyword</h3>
-                            <p class="text-sm text-slate-400">Tap a highlighted keyword to read the quick lore entry.</p>
-                        </div>
-                    </div>
-                    <div class="space-y-2 text-slate-300 text-sm leading-relaxed" id="keyword-modal-body"></div>
-                    <div class="pt-2 text-xs text-slate-500">Click outside or press Esc to close.</div>
-                </div>
+        <div class="ledger max-w-5xl mx-auto">
+
+          <!-- Entry 1 -->
+          <details class="ledger-row" open>
+            <summary class="grid grid-cols-[minmax(0,1fr)_32px] md:grid-cols-[190px_minmax(0,1fr)_32px] gap-x-6 gap-y-1 items-baseline py-1">
+              <span class="ledger-year col-start-1 row-start-1">Mar 2023 – Present</span>
+              <span class="col-start-1 row-start-2 md:col-start-2 md:row-start-1">
+                <span class="ledger-role">Senior Research Assistant</span>
+                <span class="block caption mt-1">ECE, EdUHK</span>
+              </span>
+              <span class="ledger-chevron justify-self-end col-start-2 row-start-1 md:col-start-3" aria-hidden="true">▾</span>
+            </summary>
+            <div class="mt-5 md:ml-[214px] prose-measure">
+              <p class="body-small ink-soft mb-3">Run multi-school research operations with tech-enabled tracking, reporting, and stakeholder alignment.</p>
+              <ul class="list-disc list-inside body-small ink-soft space-y-1">
+                <li>Translate field needs into lightweight tooling and repeatable workflows.</li>
+                <li>Standardise data collection + reporting to reduce friction across sites.</li>
+                <li>Ship internal utilities (Python/PowerQuery/Excel) that save hours every cycle.</li>
+              </ul>
             </div>
+          </details>
+
+          <!-- Entry 2 -->
+          <details class="ledger-row">
+            <summary class="grid grid-cols-[minmax(0,1fr)_32px] md:grid-cols-[190px_minmax(0,1fr)_32px] gap-x-6 gap-y-1 items-baseline py-1">
+              <span class="ledger-year col-start-1 row-start-1">Jan 2021 – Mar 2023</span>
+              <span class="col-start-1 row-start-2 md:col-start-2 md:row-start-1">
+                <span class="ledger-role">Project Officer</span>
+                <span class="block caption mt-1">AADO, EdUHK</span>
+              </span>
+              <span class="ledger-chevron justify-self-end col-start-2 row-start-1 md:col-start-3" aria-hidden="true">▾</span>
+            </summary>
+            <div class="mt-5 md:ml-[214px] prose-measure">
+              <p class="body-small ink-soft mb-3">Acted as an internal tech/ops consultant — turning messy requirements into clear systems, standards, and usable outputs.</p>
+              <ul class="list-disc list-inside body-small ink-soft space-y-1">
+                <li>Website revamp work that improved information clarity and reduced staff back-and-forth on routine enquiries.</li>
+                <li>Salesforce CRM vendor support: clarified requirements, QAd features, and pushed for scalable standards (not one-off fixes).</li>
+                <li>Supported the EdFlix platform by translating user pain points into prioritized fixes and operational guidance.</li>
+              </ul>
+            </div>
+          </details>
+
+          <!-- Entry 3 -->
+          <details class="ledger-row">
+            <summary class="grid grid-cols-[minmax(0,1fr)_32px] md:grid-cols-[190px_minmax(0,1fr)_32px] gap-x-6 gap-y-1 items-baseline py-1">
+              <span class="ledger-year col-start-1 row-start-1">Sep 2020 – Jan 2021</span>
+              <span class="col-start-1 row-start-2 md:col-start-2 md:row-start-1">
+                <span class="ledger-role">Project Officer (EOCP)</span>
+                <span class="block caption mt-1">SPFEO, EdUHK</span>
+              </span>
+              <span class="ledger-chevron justify-self-end col-start-2 row-start-1 md:col-start-3" aria-hidden="true">▾</span>
+            </summary>
+            <div class="mt-5 md:ml-[214px] prose-measure">
+              <p class="body-small ink-soft mb-3">Drove adoption of a university-wide online classes platform by turning requirements into usable flows.</p>
+              <ul class="list-disc list-inside body-small ink-soft space-y-1">
+                <li>Bridged academics + IT to reduce rollout risk and support load.</li>
+                <li>Codified process steps, edge-cases, and training materials for scale.</li>
+                <li>Protected delivery timelines through clear triage and issue routing.</li>
+              </ul>
+            </div>
+          </details>
+
+          <!-- Entry 4 -->
+          <details class="ledger-row">
+            <summary class="grid grid-cols-[minmax(0,1fr)_32px] md:grid-cols-[190px_minmax(0,1fr)_32px] gap-x-6 gap-y-1 items-baseline py-1">
+              <span class="ledger-year col-start-1 row-start-1">Sep 2018 – Sep 2020</span>
+              <span class="col-start-1 row-start-2 md:col-start-2 md:row-start-1">
+                <span class="ledger-role">Project Officer</span>
+                <span class="block caption mt-1">SEC, EdUHK</span>
+                <span class="chip-mono chip-accent mt-2">Smart Work Practice Award (2018/19, 2019/20)</span>
+              </span>
+              <span class="ledger-chevron justify-self-end col-start-2 row-start-1 md:col-start-3" aria-hidden="true">▾</span>
+            </summary>
+            <div class="mt-5 md:ml-[214px] prose-measure">
+              <p class="body-small ink-soft mb-3">Built departmental systems and led 2020 pandemic-era upskilling so staff could teach online confidently.</p>
+              <ul class="list-disc list-inside body-small ink-soft space-y-1">
+                <li>Built the <span class="text-[var(--accent-deep)] font-medium">SEC Departmental OSP</span> (Excel/VBA) as a “department operating system” covering guest speaker workflows (JotForm ingestion + payment), course mass timetables, part-time records/pay tracking, equipment loan tracking, staff directory, and reference lists.</li>
+                <li>Shipped the <span class="text-[var(--accent-deep)] font-medium">SEC Publication Records System</span> (Excel/VBA + JCR/SJR lookups) to quantify research output and support reporting decisions.</li>
+                <li>Built internal automation/templates that reduced manual processing time (up to 85%) and improved consistency across staff workflows.</li>
+                <li>Recognised as the department’s go-to tech lead; later invited to serve as a judge. Led training on Google Workspace, online teaching tools, and Zoom.</li>
+                <li>Authored the <span class="text-[var(--accent-deep)] font-medium">SEC Zoom guidebook</span> (based on Zoom client 4.6.11; by Herman CHAN, PO/SEC), later adopted 100% by LTTC for wider teaching and learning rollout.</li>
+              </ul>
+            </div>
+          </details>
+
+          <!-- Entry 5 -->
+          <details class="ledger-row">
+            <summary class="grid grid-cols-[minmax(0,1fr)_32px] md:grid-cols-[190px_minmax(0,1fr)_32px] gap-x-6 gap-y-1 items-baseline py-1">
+              <span class="ledger-year col-start-1 row-start-1">Jan 2018 – Sep 2018</span>
+              <span class="col-start-1 row-start-2 md:col-start-2 md:row-start-1">
+                <span class="ledger-role">Project Officer</span>
+                <span class="block caption mt-1">EPL / ELPS, EdUHK – CUHK</span>
+              </span>
+              <span class="ledger-chevron justify-self-end col-start-2 row-start-1 md:col-start-3" aria-hidden="true">▾</span>
+            </summary>
+            <div class="mt-5 md:ml-[214px] prose-measure">
+              <p class="body-small ink-soft mb-3">Supported cross-institution delivery by turning field requirements into clear processes and reliable tracking.</p>
+              <ul class="list-disc list-inside body-small ink-soft space-y-1">
+                <li>Standardised data capture + reporting for multi-party coordination (schools, partners, and internal teams).</li>
+                <li>Created reusable checklists and templates that reduced admin friction and improved handover quality.</li>
+              </ul>
+            </div>
+          </details>
+
         </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         07 · INITIATE CONNECTION — correspondence above the colophon
+         ================================================================ -->
+    <section id="contact" class="spine-section" aria-labelledby="contact-title">
+      <span class="scanline" aria-hidden="true"></span>
+      <div class="spine-container">
+        <div class="section-head">
+          <hr class="section-rule">
+          <div class="flex flex-wrap gap-x-8 gap-y-2">
+            <p class="kicker"><span class="tick">▪</span>CH. 02 § Transmission</p>
+            <p class="kicker">System Status: Optimal</p>
+          </div>
+          <h2 id="contact-title" class="display-m mt-6" data-reveal-lines>Initiate Connection</h2>
+          <p class="standfirst">
+            I am currently seeking opportunities to lead transformative projects.
+            Whether it's about platform development, AI integration, or educational strategy, let's talk.
+          </p>
+        </div>
+
+        <div class="max-w-5xl">
+          <div class="flex flex-wrap gap-x-12 gap-y-5 mb-12">
+            <a href="mailto:hermanchan_925@hotmail.com" class="link-editorial py-2"><i data-lucide="send" class="w-4 h-4"></i> Send Email →</a>
+            <a href="https://github.com/herman925" target="_blank" rel="noopener noreferrer" class="link-editorial py-2"><i data-lucide="github" class="w-4 h-4"></i> github.com/herman925 ↗</a>
+          </div>
+
+          <hr class="hairline mb-8">
+          <div class="flex flex-col md:flex-row gap-6 md:gap-12 font-mono text-xs tracking-[0.12em] uppercase text-[var(--ink-soft)]">
+            <span class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-[var(--accent-deep)]"></i> Tai Po, Hong Kong</span>
+            <span class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4 text-[var(--accent-deep)]"></i> 97278202</span>
+            <span class="flex items-center gap-2"><i data-lucide="github" class="w-4 h-4 text-[var(--accent-deep)]"></i> @herman925</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================================================================
+       COLOPHON
+       ================================================================== -->
+  <footer class="colophon">
+    <div class="spine-container">
+      <p class="kicker"><span class="tick">▪</span>COLOPHON</p>
+      <h2 class="colophon-name">Herman Koon Kiu “Joseph” Chan</h2>
+      <p class="ink-soft">The Digital Humanist — Hong Kong</p>
+      <div class="colophon-cols">
+        <div>
+          <p class="kicker">Correspondence</p>
+          <p class="mt-3"><a class="link-editorial" href="mailto:hermanchan_925@hotmail.com">hermanchan_925@hotmail.com</a></p>
+        </div>
+        <div>
+          <p class="kicker">Archive</p>
+          <p class="mt-3"><a class="link-editorial" href="https://github.com/herman925" target="_blank" rel="noopener">github.com/herman925 ↗</a></p>
+        </div>
+        <div>
+          <p class="kicker">Chapters</p>
+          <nav class="mt-3 flex flex-col gap-2">
+            <a class="link-editorial" href="counselling.html">01 Counselling</a>
+            <a class="link-editorial" href="technology.html">02 Technology</a>
+            <a class="link-editorial" href="project-management.html">03 Project Management</a>
+            <a class="link-editorial" href="education-culture.html">04 Education &amp; Culture</a>
+          </nav>
+        </div>
+      </div>
+      <div class="colophon-fine">
+        <span>Set in Fraunces &amp; Outfit. Bound in Hong Kong.</span>
+        <span>© 2026 Herman Koon Kiu “Joseph” Chan</span>
+      </div>
     </div>
+  </footer>
 
-    <!-- SCRIPTS -->
-    <script src="js/navbar.js"></script>
-    <script src="js/github-cards.js"></script>
-    <script src="js/explorer.js"></script>
-    <script src="js/carousel.js"></script>
-    <script>
-        function initReveal() {
-            const reveals = document.querySelectorAll('.reveal');
-            const handleReveal = () => {
-                const trigger = window.innerHeight * 0.8;
-                reveals.forEach(el => {
-                    const top = el.getBoundingClientRect().top;
-                    if (top < trigger) {
-                        el.classList.add('active');
-                    }
-                });
-            };
-            window.addEventListener('scroll', handleReveal, { passive: true });
-            handleReveal();
-        }
+  <!-- MODAL OVERLAY (protected — same hidden-state mechanism as original) -->
+  <div id="project-modal" role="dialog" aria-modal="true" class="fixed inset-0 z-[100] hidden flex items-start md:items-center justify-center px-4 py-6 md:py-10 overflow-y-auto">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
 
-        function initNeuralCanvas() {
-            const canvas = document.getElementById('neuralCanvas');
-            if (!canvas) return;
+    <!-- Modal Content -->
+    <div id="modal-wrapper" class="relative w-full max-w-[95vw] sm:max-w-3xl lg:max-w-4xl p-4 sm:p-6 transition-none">
+      <div class="glass-card bg-slate-900 border border-cyber-500/50 rounded-2xl shadow-[0_0_50px_rgba(128,100,162,0.2)] overflow-hidden relative max-h-[90vh] overflow-y-auto">
+        <!-- Close Button -->
+        <button onclick="closeModal()" aria-label="Close project modal" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors z-50">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
 
-            const ctx = canvas.getContext('2d');
-            let width = canvas.width = window.innerWidth;
-            let height = canvas.height = window.innerHeight;
+        <div id="modal-content" class="p-2">
+          <!-- Content injected via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
 
-            window.addEventListener('resize', () => {
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
-            });
+  <!-- KEYWORD MODAL (Lore Dictionary — protected) -->
+  <div id="keyword-modal" role="dialog" aria-modal="true" aria-labelledby="keyword-modal-title" class="fixed inset-0 z-[95] hidden items-start md:items-center justify-center px-4 py-6 md:py-10 overflow-y-auto">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeKeywordModal()"></div>
+    <div class="relative w-full max-w-xl p-4 sm:p-5">
+      <div class="glass-card bg-slate-900 border border-cyber-500/40 rounded-2xl shadow-[0_0_40px_rgba(37,166,221,0.25)] max-h-[85vh] overflow-y-auto">
+        <button onclick="closeKeywordModal()" aria-label="Close keyword modal" class="absolute top-3 right-3 text-slate-400 hover:text-white transition-colors z-10">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        <div class="p-5 space-y-3" id="keyword-modal-content">
+          <div class="flex items-start gap-3">
+            <div class="p-2 rounded-lg bg-cyber-500/10 border border-cyber-500/30">
+              <i data-lucide="sparkles" class="w-5 h-5 text-cyber-300"></i>
+            </div>
+            <div>
+              <h3 id="keyword-modal-title" class="text-xl font-bold text-white">Keyword</h3>
+              <p class="text-sm text-slate-400">Tap a highlighted keyword to read the quick lore entry.</p>
+            </div>
+          </div>
+          <div class="space-y-2 text-slate-300 text-sm leading-relaxed" id="keyword-modal-body"></div>
+          <div class="pt-2 text-xs text-slate-500">Click outside or press Esc to close.</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-            class Particle {
-                constructor() {
-                    this.x = Math.random() * width;
-                    this.y = Math.random() * height;
-                    this.vx = (Math.random() - 0.5) * 0.5;
-                    this.vy = (Math.random() - 0.5) * 0.5;
-                    this.size = Math.random() * 2;
-                }
-                update() {
-                    this.x += this.vx;
-                    this.y += this.vy;
-                    if (this.x < 0 || this.x > width) this.vx *= -1;
-                    if (this.y < 0 || this.y > height) this.vy *= -1;
-                }
-                draw() {
-                    ctx.fillStyle = 'rgba(45, 212, 191, 0.5)';
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
-                }
+  <!-- Chapter dock (mobile) -->
+  <nav class="chapter-dock" aria-label="Chapters">
+    <a href="counselling.html" data-ink="sienna" title="Counselling"><span></span></a>
+    <a href="technology.html" data-ink="tealink" title="Technology" aria-current="page"><span></span></a>
+    <a href="project-management.html" data-ink="oxblood" title="Project Management"><span></span></a>
+    <a href="education-culture.html" data-ink="moss" title="Education &amp; Culture"><span></span></a>
+  </nav>
+
+  <!-- SCRIPTS — order is contractual: navbar, github-cards BEFORE explorer, carousel -->
+  <script src="js/navbar.js"></script>
+  <script src="js/github-cards.js"></script>
+  <script src="js/explorer.js"></script>
+  <script src="js/carousel.js"></script>
+
+  <!-- Page inline script: navbar init, terminal typewriter (verbatim),
+       broadcast counter, and page-specific GSAP (origin line-draw) -->
+  <script>
+    function initTerminal() {
+        const content = document.getElementById('terminal-content');
+        const cursor = document.getElementById('typewriter-cursor');
+        const shell = document.getElementById('terminal-body');
+        if (!content || !cursor) return;
+
+        const lines = [
+            // Session start
+            { text: 'connect herman-chan --profile=full', type: 'command', thinkMs: () => 650 + Math.floor(Math.random() * 450) },
+            { text: 'Password: ', type: 'prompt', mask: true, input: 'Hrmn2025!', typo: 'Herman2025!' },
+            { text: '→ Authentication failed. Try again.', type: 'system' },
+            { text: 'Password: ', type: 'prompt', mask: true, input: 'Herman2025!' },
+            { text: '→ Authenticated. Establishing secure connection...', type: 'system' },
+            { text: '→ BSocSc (HKBU) • MASGC (CUHK) • 15+ years exp', type: 'response' },
+            { text: '→ Profile loaded. Welcome.', type: 'success' },
+            { text: '', type: 'break' },
+
+            // Identity
+            { text: 'whois --taget', type: 'command', typo: 'whoami --target' },
+            { text: '→ Herman Chan | Digital Humanist', type: 'response' },
+            { text: '→ "Tech should serve people, not vice versa"', type: 'philosophy' },
+            { text: '→ Hong Kong • Bilingual • 90wpm', type: 'response' },
+            { text: '', type: 'break' },
+
+            // Core programming - reordered per user's ranking
+            { text: 'list skiils --dev', type: 'command', typo: 'list skills --dev' },
+            { text: '→ Excel ........... ████████████ Master [LinkedIn Certified Expert]', type: 'skill' },
+            { text: '→ Python .......... ██████████░░ Strong', type: 'skill' },
+            { text: '→ PowerShell ...... ██████████░░ Strong', type: 'skill' },
+            { text: '→ HTML/CSS ........ █████████░░░ Proficient', type: 'skill' },
+            { text: '→ JavaScript ...... ████████░░░░ Good', type: 'skill' },
+            { text: '→ JSON/TOML ....... ████████░░░░ Good', type: 'skill' },
+            { text: '→ SQL/MySQL ....... ███████░░░░░ Competent', type: 'skill' },
+            { text: '→ VBA ............. █████░░░░░░░ Rusty (legacy)', type: 'skill' },
+            { text: '→ C#/C++ .......... ████░░░░░░░░ Basic', type: 'skill' },
+            { text: '', type: 'break' },
+
+            // Creative Media Production - ordered by mastery
+            { text: 'list skills --media', type: 'command', thinkMs: () => 800 + Math.floor(Math.random() * 500) },
+            { text: '→ Lightroom ....... ████████████ Master', type: 'skill' },
+            { text: '→ Lovable/Stitch .. ████████████ Master', type: 'skill' },
+            { text: '→ Premiere Pro .... ██████████░░ Strong', type: 'skill' },
+            { text: '→ Photoshop ....... ██████████░░ Strong', type: 'skill' },
+            { text: '→ Figma ........... █████████░░░ Proficient', type: 'skill' },
+            { text: '→ Illustrator ..... ████████░░░░ Good', type: 'skill' },
+            { text: '', type: 'break' },
+
+            // Certifications
+            { text: 'show certs', type: 'command', thinkMs: () => 900 + Math.floor(Math.random() * 700) },
+            { text: '→ LinkedIn: Excel (Certified)', type: 'cert' },
+            { text: '→ (Other non-IT certificates omitted)', type: 'system' },
+            { text: '', type: 'break' },
+
+            // DevOps & Infrastructure
+            { text: 'query infra', type: 'command' },
+            { text: '→ IDEs: VSCode, Windsurf, Antigravity, Cursor, Jules', type: 'infra' },
+            { text: '→ Containers: Docker, headless daemons', type: 'infra' },
+            { text: '→ APIs: REST, OpenRouter, JotForm, Qualtrics, Supabase', type: 'infra' },
+            { text: '→ Package Managers: npm, pip, Chocolatey, winget', type: 'infra' },
+            { text: '→ Frameworks: Tailwind, React, Node', type: 'infra' },
+            { text: '', type: 'break' },
+
+            // AI Ecosystem - comprehensive
+            { text: 'lsit ai-stack', type: 'command', typo: 'list ai-skills --all' },
+            { text: '→ LLMs: Claude, GPT, Gemini, Copilot', type: 'ai' },
+            { text: '→ Agents: Manus, Genspark, NotebookLM', type: 'ai' },
+            { text: '→ Creative: Midjourney, Suno, DALL-E', type: 'ai' },
+            { text: '→ Other: POE, NanoBanana, Ideogram', type: 'ai' },
+            { text: '→ Infra: MCP servers, RAG, embeddings', type: 'ai' },
+            { text: '', type: 'break' },
+
+            // Data & Statistics
+            { text: 'list tolls --stats', type: 'command', typo: 'list tools --stats' },
+            { text: '→ Stats: SPSS (Advanced), R, M-Plus', type: 'data' },
+            { text: '→ Python: pandas, numpy, scipy, pystats', type: 'data' },
+            { text: '→ BI: PowerBI, PowerQuery, Salesforce', type: 'data' },
+            { text: '', type: 'break' },
+
+            // The 4Set showcase
+            { text: 'cat projects/4set.md', type: 'command' },
+            { text: '→ 4Set-Server (Gen 3)', type: 'system' },
+            { text: '→ Autonomous hybrid-local infrastructure', type: 'achievement' },
+            { text: '→ 8,000+ students • 110+ schools', type: 'achievement' },
+            { text: '→ 6 months uptime, zero crashes', type: 'achievement' },
+            { text: '', type: 'break' },
+
+            // Social-impact innovation
+            { text: 'show projects --social-impact', type: 'command', thinkMs: () => 1100 + Math.floor(Math.random() * 900) },
+            { text: '→ CUHK Business School: BESGO FoundRise (GBA Youth Entrepreneurship Support Scheme)', type: 'achievement' },
+            { text: '→ 2025 Awardee: Equal Play', type: 'achievement' },
+            { text: '→ Building a musical/rehab glove + AI piano score writer', type: 'achievement' },
+            { text: '→ Fun games + AI-generated practice content for kids', type: 'achievement' },
+            { text: '→ Gesture-forming support via gentle air-bag pressure guidance', type: 'achievement' },
+            { text: '', type: 'break' },
+
+            // Superpower
+            { text: 'get superpwoer', type: 'command', typo: 'get superpower' },
+            { text: '→ UNIQUE COMBO:', type: 'system' },
+            { text: '→ Psychology degree + Self-taught dev', type: 'superpower' },
+            { text: '→ Trained counsellor (MASGC)', type: 'superpower' },
+            { text: '→ Speaks user, not just code', type: 'superpower' },
+            { text: '', type: 'break' },
+
+            // Values
+            { text: 'cat values.json', type: 'command' },
+            { text: '→ { altruism, creativity, equality }', type: 'trait' },
+            { text: '→ { "perfectionist who ships" }', type: 'trait' },
+            { text: '', type: 'break' },
+
+            // Status
+            { text: 'staus', type: 'command', typo: 'status' },
+            { text: '→ Building something meaningful', type: 'success' },
+            { text: '→ Always learning, always shipping', type: 'success' },
+            { text: '', type: 'break' },
+
+            // Loop
+            { text: './refresh', type: 'command' },
+            { text: '→ Cycling...', type: 'system' },
+            { text: '', type: 'break' }
+        ];
+
+        const typeColors = {
+            command: 'text-green-400',
+            system: 'text-slate-400 text-xs',
+            prompt: 'text-cyber-400',
+            response: 'text-cyber-400',
+            success: 'text-emerald-400',
+            skill: 'text-cyan-400 font-mono text-xs',
+            cert: 'text-lime-400 text-xs',
+            ai: 'text-purple-400',
+            data: 'text-indigo-400',
+            infra: 'text-orange-400',
+            creative: 'text-pink-300',
+            philosophy: 'text-pink-400 italic',
+            style: 'text-blue-400',
+            superpower: 'text-yellow-400 font-medium',
+            achievement: 'text-amber-400',
+            trait: 'text-orange-300 font-mono text-xs',
+            info: 'text-slate-400',
+            break: 'hidden'
+        };
+
+        let lineIndex = 0;
+        let charIndex = 0;
+        let typoPhase = 0; // 0=typing typo, 1=pausing, 2=deleting, 3=typing correct
+        let didThinkForLine = false; // track if we already paused for this line
+        let didPreTypeDelay = false; // track if we added delay before human typing
+
+        const getTypingDelay = (isHumanInput, char, lineObj) => {
+            if (isHumanInput) {
+                const base = 80 + Math.random() * 160; // 80-240ms
+                if (Math.random() < 0.06) return base + 350 + Math.random() * 650;
+                if (char === ' ') return base + 80;
+                if (lineObj && lineObj.type === 'prompt') return base + 40;
+                return base;
+            }
+            return 12 + Math.random() * 25;
+        };
+
+        const typeNext = () => {
+            const lineObj = lines[lineIndex];
+            const isCommand = lineObj.type === 'command';
+            const isPrompt = lineObj.type === 'prompt';
+            const isHumanInput = isCommand || isPrompt;
+            const hasTypo = Boolean(lineObj.typo) && isHumanInput;
+
+            // Handle "thinking" pause before typing (only once per line)
+            const thinkMs = typeof lineObj.thinkMs === 'function' ? lineObj.thinkMs() : lineObj.thinkMs;
+            if (charIndex === 0 && !didThinkForLine && isHumanInput && typeof thinkMs === 'number' && thinkMs > 0) {
+                didThinkForLine = true;
+                setTimeout(typeNext, thinkMs);
+                return;
             }
 
-            const particles = Array.from({ length: 50 }, () => new Particle());
-
-            function animate() {
-                ctx.clearRect(0, 0, width, height);
-                for (let i = 0; i < particles.length; i++) {
-                    const p = particles[i];
-                    p.update();
-                    p.draw();
-                    for (let j = i + 1; j < particles.length; j++) {
-                        const q = particles[j];
-                        const dx = p.x - q.x;
-                        const dy = p.y - q.y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 150) {
-                            ctx.strokeStyle = `rgba(45, 212, 191, ${0.1 - dist / 1500})`;
-                            ctx.lineWidth = 1;
-                            ctx.beginPath();
-                            ctx.moveTo(p.x, p.y);
-                            ctx.lineTo(q.x, q.y);
-                            ctx.stroke();
-                        }
-                    }
-                }
-                requestAnimationFrame(animate);
+            // Add delay before human starts typing (after prompt appears or at line start)
+            if (charIndex === 0 && !didPreTypeDelay && isHumanInput) {
+                didPreTypeDelay = true;
+                const preDelay = 300 + Math.random() * 400; // 300-700ms before typing starts
+                setTimeout(typeNext, preDelay);
+                return;
             }
 
-            animate();
-        }
+            const promptLabel = isPrompt ? (lineObj.text || '') : '';
+            const promptInput = isPrompt ? (lineObj.input || '') : '';
+            const promptTypo = isPrompt ? (lineObj.typo || '') : '';
 
-        function initTerminal() {
-            const content = document.getElementById('terminal-content');
-            const cursor = document.getElementById('typewriter-cursor');
-            const shell = document.getElementById('terminal-body');
-            if (!content || !cursor) return;
+            let targetText = isPrompt ? promptInput : lineObj.text;
+            if (hasTypo && typoPhase < 2) {
+                targetText = isPrompt ? promptInput : lineObj.text;
+            } else if (hasTypo && typoPhase >= 2) {
+                targetText = isPrompt ? promptTypo : lineObj.typo;
+            }
 
-            const lines = [
-                // Session start
-                { text: 'connect herman-chan --profile=full', type: 'command', thinkMs: () => 650 + Math.floor(Math.random() * 450) },
-                { text: 'Password: ', type: 'prompt', mask: true, input: 'Hrmn2025!', typo: 'Herman2025!' },
-                { text: '→ Authentication failed. Try again.', type: 'system' },
-                { text: 'Password: ', type: 'prompt', mask: true, input: 'Herman2025!' },
-                { text: '→ Authenticated. Establishing secure connection...', type: 'system' },
-                { text: '→ BSocSc (HKBU) • MASGC (CUHK) • 15+ years exp', type: 'response' },
-                { text: '→ Profile loaded. Welcome.', type: 'success' },
-                { text: '', type: 'break' },
-                
-                // Identity
-                { text: 'whois --taget', type: 'command', typo: 'whoami --target' },
-                { text: '→ Herman Chan | Digital Humanist', type: 'response' },
-                { text: '→ "Tech should serve people, not vice versa"', type: 'philosophy' },
-                { text: '→ Hong Kong • Bilingual • 90wpm', type: 'response' },
-                { text: '', type: 'break' },
-                
-                // Core programming - reordered per user's ranking
-                { text: 'list skiils --dev', type: 'command', typo: 'list skills --dev' },
-                { text: '→ Excel ........... ████████████ Master [LinkedIn Certified Expert]', type: 'skill' },
-                { text: '→ Python .......... ██████████░░ Strong', type: 'skill' },
-                { text: '→ PowerShell ...... ██████████░░ Strong', type: 'skill' },
-                { text: '→ HTML/CSS ........ █████████░░░ Proficient', type: 'skill' },
-                { text: '→ JavaScript ...... ████████░░░░ Good', type: 'skill' },
-                { text: '→ JSON/TOML ....... ████████░░░░ Good', type: 'skill' },
-                { text: '→ SQL/MySQL ....... ███████░░░░░ Competent', type: 'skill' },
-                { text: '→ VBA ............. █████░░░░░░░ Rusty (legacy)', type: 'skill' },
-                { text: '→ C#/C++ .......... ████░░░░░░░░ Basic', type: 'skill' },
-                { text: '', type: 'break' },
-                
-                // Creative Media Production - ordered by mastery
-                { text: 'list skills --media', type: 'command', thinkMs: () => 800 + Math.floor(Math.random() * 500) },
-                { text: '→ Lightroom ....... ████████████ Master', type: 'skill' },
-                { text: '→ Lovable/Stitch .. ████████████ Master', type: 'skill' },
-                { text: '→ Premiere Pro .... ██████████░░ Strong', type: 'skill' },
-                { text: '→ Photoshop ....... ██████████░░ Strong', type: 'skill' },
-                { text: '→ Figma ........... █████████░░░ Proficient', type: 'skill' },
-                { text: '→ Illustrator ..... ████████░░░░ Good', type: 'skill' },
-                { text: '', type: 'break' },
-                
-                // Certifications
-                { text: 'show certs', type: 'command', thinkMs: () => 900 + Math.floor(Math.random() * 700) },
-                { text: '→ LinkedIn: Excel (Certified)', type: 'cert' },
-                { text: '→ (Other non-IT certificates omitted)', type: 'system' },
-                { text: '', type: 'break' },
-                
-                // DevOps & Infrastructure
-                { text: 'query infra', type: 'command' },
-                { text: '→ IDEs: VSCode, Windsurf, Antigravity, Cursor, Jules', type: 'infra' },
-                { text: '→ Containers: Docker, headless daemons', type: 'infra' },
-                { text: '→ APIs: REST, OpenRouter, JotForm, Qualtrics, Supabase', type: 'infra' },
-                { text: '→ Package Managers: npm, pip, Chocolatey, winget', type: 'infra' },
-                { text: '→ Frameworks: Tailwind, React, Node', type: 'infra' },
-                { text: '', type: 'break' },
-                
-                // AI Ecosystem - comprehensive
-                { text: 'lsit ai-stack', type: 'command', typo: 'list ai-skills --all' },
-                { text: '→ LLMs: Claude, GPT, Gemini, Copilot', type: 'ai' },
-                { text: '→ Agents: Manus, Genspark, NotebookLM', type: 'ai' },
-                { text: '→ Creative: Midjourney, Suno, DALL-E', type: 'ai' },
-                { text: '→ Other: POE, NanoBanana, Ideogram', type: 'ai' },
-                { text: '→ Infra: MCP servers, RAG, embeddings', type: 'ai' },
-                { text: '', type: 'break' },
-                
-                // Data & Statistics
-                { text: 'list tolls --stats', type: 'command', typo: 'list tools --stats' },
-                { text: '→ Stats: SPSS (Advanced), R, M-Plus', type: 'data' },
-                { text: '→ Python: pandas, numpy, scipy, pystats', type: 'data' },
-                { text: '→ BI: PowerBI, PowerQuery, Salesforce', type: 'data' },
-                { text: '', type: 'break' },
-                
-                // The 4Set showcase
-                { text: 'cat projects/4set.md', type: 'command' },
-                { text: '→ 4Set-Server (Gen 3)', type: 'system' },
-                { text: '→ Autonomous hybrid-local infrastructure', type: 'achievement' },
-                { text: '→ 8,000+ students • 110+ schools', type: 'achievement' },
-                { text: '→ 6 months uptime, zero crashes', type: 'achievement' },
-                { text: '', type: 'break' },
-
-                // Social-impact innovation
-                { text: 'show projects --social-impact', type: 'command', thinkMs: () => 1100 + Math.floor(Math.random() * 900) },
-                { text: '→ CUHK Business School: BESGO FoundRise (GBA Youth Entrepreneurship Support Scheme)', type: 'achievement' },
-                { text: '→ 2025 Awardee: Equal Play', type: 'achievement' },
-                { text: '→ Building a musical/rehab glove + AI piano score writer', type: 'achievement' },
-                { text: '→ Fun games + AI-generated practice content for kids', type: 'achievement' },
-                { text: '→ Gesture-forming support via gentle air-bag pressure guidance', type: 'achievement' },
-                { text: '', type: 'break' },
-                
-                // Superpower
-                { text: 'get superpwoer', type: 'command', typo: 'get superpower' },
-                { text: '→ UNIQUE COMBO:', type: 'system' },
-                { text: '→ Psychology degree + Self-taught dev', type: 'superpower' },
-                { text: '→ Trained counsellor (MASGC)', type: 'superpower' },
-                { text: '→ Speaks user, not just code', type: 'superpower' },
-                { text: '', type: 'break' },
-                
-                // Values
-                { text: 'cat values.json', type: 'command' },
-                { text: '→ { altruism, creativity, equality }', type: 'trait' },
-                { text: '→ { "perfectionist who ships" }', type: 'trait' },
-                { text: '', type: 'break' },
-                
-                // Status
-                { text: 'staus', type: 'command', typo: 'status' },
-                { text: '→ Building something meaningful', type: 'success' },
-                { text: '→ Always learning, always shipping', type: 'success' },
-                { text: '', type: 'break' },
-                
-                // Loop
-                { text: './refresh', type: 'command' },
-                { text: '→ Cycling...', type: 'system' },
-                { text: '', type: 'break' }
-            ];
-
-            const typeColors = {
-                command: 'text-green-400',
-                system: 'text-slate-400 text-xs',
-                prompt: 'text-cyber-400',
-                response: 'text-cyber-400',
-                success: 'text-emerald-400',
-                skill: 'text-cyan-400 font-mono text-xs',
-                cert: 'text-lime-400 text-xs',
-                ai: 'text-purple-400',
-                data: 'text-indigo-400',
-                infra: 'text-orange-400',
-                creative: 'text-pink-300',
-                philosophy: 'text-pink-400 italic',
-                style: 'text-blue-400',
-                superpower: 'text-yellow-400 font-medium',
-                achievement: 'text-amber-400',
-                trait: 'text-orange-300 font-mono text-xs',
-                info: 'text-slate-400',
-                break: 'hidden'
-            };
-
-            let lineIndex = 0;
-            let charIndex = 0;
-            let typoPhase = 0; // 0=typing typo, 1=pausing, 2=deleting, 3=typing correct
-            let didThinkForLine = false; // track if we already paused for this line
-            let didPreTypeDelay = false; // track if we added delay before human typing
-
-            const getTypingDelay = (isHumanInput, char, lineObj) => {
-                if (isHumanInput) {
-                    const base = 80 + Math.random() * 160; // 80-240ms
-                    if (Math.random() < 0.06) return base + 350 + Math.random() * 650;
-                    if (char === ' ') return base + 80;
-                    if (lineObj && lineObj.type === 'prompt') return base + 40;
-                    return base;
-                }
-                return 12 + Math.random() * 25;
-            };
-
-            const typeNext = () => {
-                const lineObj = lines[lineIndex];
-                const isCommand = lineObj.type === 'command';
-                const isPrompt = lineObj.type === 'prompt';
-                const isHumanInput = isCommand || isPrompt;
-                const hasTypo = Boolean(lineObj.typo) && isHumanInput;
-
-                // Handle "thinking" pause before typing (only once per line)
-                const thinkMs = typeof lineObj.thinkMs === 'function' ? lineObj.thinkMs() : lineObj.thinkMs;
-                if (charIndex === 0 && !didThinkForLine && isHumanInput && typeof thinkMs === 'number' && thinkMs > 0) {
-                    didThinkForLine = true;
-                    setTimeout(typeNext, thinkMs);
-                    return;
-                }
-                
-                // Add delay before human starts typing (after prompt appears or at line start)
-                if (charIndex === 0 && !didPreTypeDelay && isHumanInput) {
-                    didPreTypeDelay = true;
-                    const preDelay = 300 + Math.random() * 400; // 300-700ms before typing starts
-                    setTimeout(typeNext, preDelay);
-                    return;
-                }
-                
-                const promptLabel = isPrompt ? (lineObj.text || '') : '';
-                const promptInput = isPrompt ? (lineObj.input || '') : '';
-                const promptTypo = isPrompt ? (lineObj.typo || '') : '';
-
-                let targetText = isPrompt ? promptInput : lineObj.text;
-                if (hasTypo && typoPhase < 2) {
-                    targetText = isPrompt ? promptInput : lineObj.text;
-                } else if (hasTypo && typoPhase >= 2) {
-                    targetText = isPrompt ? promptTypo : lineObj.typo;
-                }
-                
-                // Handle breaks (spacing)
-                if (lineObj.type === 'break') {
-                    const spacer = document.createElement('div');
-                    spacer.className = 'h-3';
-                    content.appendChild(spacer);
-                    if (shell) shell.scrollTop = shell.scrollHeight;
-                    lineIndex += 1;
-                    typoPhase = 0;
-                    didThinkForLine = false;
-                    didPreTypeDelay = false;
-                    if (lineIndex < lines.length) {
-                        // Longer pause between blocks
-                        setTimeout(typeNext, 500 + Math.random() * 300);
-                    } else {
-                        setTimeout(() => {
-                            content.innerHTML = '';
-                            lineIndex = 0;
-                            charIndex = 0;
-                            typoPhase = 0;
-                            didThinkForLine = false;
-                            didPreTypeDelay = false;
-                            typeNext();
-                        }, 4000);
-                    }
-                    return;
-                }
-                
-                // Handle typo correction phases
-                if (hasTypo) {
-                    // Find where typo and correct version diverge
-                    const typoText = isPrompt ? promptInput : lineObj.text;
-                    const correctText = isPrompt ? promptTypo : lineObj.typo;
-                    let divergePoint = 0;
-                    for (let i = 0; i < Math.min(typoText.length, correctText.length); i++) {
-                        if (typoText[i] === correctText[i]) {
-                            divergePoint = i + 1;
-                        } else {
-                            break;
-                        }
-                    }
-                    
-                    if (typoPhase === 0) {
-                        // Phase 0: Typing the typo
-                        const prefix = isCommand ? '<span class="text-slate-400 mr-1">$</span> ' : '';
-                        const promptPrefix = isPrompt ? '<span class="text-slate-400">' + promptLabel + '</span>' : '';
-                        const rendered = isPrompt
-                            ? (lineObj.mask ? '*'.repeat(Math.max(0, charIndex)) : typoText.slice(0, charIndex))
-                            : (isCommand ? typoText.slice(0, charIndex) : typoText.slice(0, charIndex));
-                        cursor.innerHTML = prefix + promptPrefix + '<span class="text-green-400">' + rendered + '</span>';
-                        charIndex += 1;
-                        
-                        if (charIndex > typoText.length) {
-                            typoPhase = 1;
-                            charIndex = typoText.length;
-                            // Pause longer - "noticing the mistake", sometimes longer
-                            setTimeout(typeNext, 400 + Math.random() * 500);
-                            return;
-                        }
-                        const typedChar = typoText[charIndex - 1] || '';
-                        setTimeout(typeNext, getTypingDelay(true, typedChar, lineObj));
-                        return;
-                    } else if (typoPhase === 1) {
-                        // Phase 1: Deleting ONLY the typo part (backspace to diverge point)
-                        const prefix = isCommand ? '<span class="text-slate-400 mr-1">$</span> ' : '';
-                        const promptPrefix = isPrompt ? '<span class="text-slate-400">' + promptLabel + '</span>' : '';
-                        const rendered = isPrompt
-                            ? (lineObj.mask ? '*'.repeat(Math.max(0, charIndex)) : typoText.slice(0, charIndex))
-                            : (isCommand ? typoText.slice(0, charIndex) : typoText.slice(0, charIndex));
-                        cursor.innerHTML = prefix + promptPrefix + '<span class="text-green-400">' + rendered + '</span>';
-                        charIndex -= 1;
-                        
-                        // Stop backspacing when we reach the point where typo and correct text match
-                        if (charIndex < divergePoint) {
-                            typoPhase = 2;
-                            charIndex = divergePoint;
-                            // Brief pause before retyping the corrected portion
-                            setTimeout(typeNext, 150 + Math.random() * 100);
-                            return;
-                        }
-                        // Backspace is faster than typing
-                        setTimeout(typeNext, 35 + Math.random() * 20);
-                        return;
-                    } else {
-                        // Phase 2+: Typing the correct version (from diverge point onward)
-                        targetText = correctText;
-                    }
-                }
-                
-                // Normal typing
-                const prefix = isCommand ? '<span class="text-slate-400 mr-1">$</span> ' : '';
-                const promptPrefix = isPrompt ? '<span class="text-slate-400">' + promptLabel + '</span>' : '';
-                const textClass = isCommand || isPrompt ? 'text-green-400' : (typeColors[lineObj.type] || 'text-cyber-400');
-                const rendered = isPrompt
-                    ? (lineObj.mask ? '*'.repeat(Math.max(0, charIndex)) : targetText.slice(0, charIndex))
-                    : targetText.slice(0, charIndex);
-                cursor.innerHTML = prefix + promptPrefix + '<span class="' + textClass + '">' + rendered + '</span>';
-                charIndex += 1;
-
-                if (charIndex <= targetText.length) {
-                    const char = targetText[charIndex - 1] || '';
-                    setTimeout(typeNext, getTypingDelay(isHumanInput, char, lineObj));
+            // Handle breaks (spacing)
+            if (lineObj.type === 'break') {
+                const spacer = document.createElement('div');
+                spacer.className = 'h-3';
+                content.appendChild(spacer);
+                if (shell) shell.scrollTop = shell.scrollHeight;
+                lineIndex += 1;
+                typoPhase = 0;
+                didThinkForLine = false;
+                didPreTypeDelay = false;
+                if (lineIndex < lines.length) {
+                    // Longer pause between blocks
+                    setTimeout(typeNext, 500 + Math.random() * 300);
                 } else {
-                    // Line complete - commit to content
-                    const div = document.createElement('div');
-                    div.className = 'flex items-start gap-1 transition-all duration-200';
-                    
-                    if (isCommand) {
-                        div.innerHTML = '<span class="text-slate-400 select-none">$</span> <span class="text-green-400">' + (hasTypo ? lineObj.typo : lineObj.text) + '</span>';
-                    } else if (isPrompt) {
-                        const committed = (hasTypo ? promptTypo : promptInput);
-                        const committedRendered = lineObj.mask ? '*'.repeat(committed.length) : committed;
-                        div.innerHTML = '<span class="text-slate-400">' + promptLabel + '</span><span class="text-green-400">' + committedRendered + '</span>';
+                    setTimeout(() => {
+                        content.innerHTML = '';
+                        lineIndex = 0;
+                        charIndex = 0;
+                        typoPhase = 0;
+                        didThinkForLine = false;
+                        didPreTypeDelay = false;
+                        typeNext();
+                    }, 4000);
+                }
+                return;
+            }
+
+            // Handle typo correction phases
+            if (hasTypo) {
+                // Find where typo and correct version diverge
+                const typoText = isPrompt ? promptInput : lineObj.text;
+                const correctText = isPrompt ? promptTypo : lineObj.typo;
+                let divergePoint = 0;
+                for (let i = 0; i < Math.min(typoText.length, correctText.length); i++) {
+                    if (typoText[i] === correctText[i]) {
+                        divergePoint = i + 1;
                     } else {
-                        div.className = typeColors[lineObj.type] || 'text-cyber-400';
-                        div.textContent = lineObj.text;
-                    }
-                    
-                    content.appendChild(div);
-                    if (shell) shell.scrollTop = shell.scrollHeight;
-                    
-                    // Reset for next line
-                    lineIndex += 1;
-                    charIndex = 0;
-                    typoPhase = 0;
-                    didThinkForLine = false;
-                    didPreTypeDelay = false;
-                    cursor.innerHTML = '';
-                    
-                    if (lineIndex < lines.length) {
-                        const nextIsCommand = lines[lineIndex].type === 'command';
-                        // Much longer pause before commands (user thinking what to type)
-                        const delay = nextIsCommand ? 1200 + Math.random() * 800 : 100 + Math.random() * 50;
-                        setTimeout(typeNext, delay);
-                    } else {
-                        setTimeout(() => {
-                            content.innerHTML = '';
-                            lineIndex = 0;
-                            charIndex = 0;
-                            typoPhase = 0;
-                            didThinkForLine = false;
-                            didPreTypeDelay = false;
-                            typeNext();
-                        }, 4000);
+                        break;
                     }
                 }
-            };
 
-            typeNext();
+                if (typoPhase === 0) {
+                    // Phase 0: Typing the typo
+                    const prefix = isCommand ? '<span class="text-slate-400 mr-1">$</span> ' : '';
+                    const promptPrefix = isPrompt ? '<span class="text-slate-400">' + promptLabel + '</span>' : '';
+                    const rendered = isPrompt
+                        ? (lineObj.mask ? '*'.repeat(Math.max(0, charIndex)) : typoText.slice(0, charIndex))
+                        : (isCommand ? typoText.slice(0, charIndex) : typoText.slice(0, charIndex));
+                    cursor.innerHTML = prefix + promptPrefix + '<span class="text-green-400">' + rendered + '</span>';
+                    charIndex += 1;
+
+                    if (charIndex > typoText.length) {
+                        typoPhase = 1;
+                        charIndex = typoText.length;
+                        // Pause longer - "noticing the mistake", sometimes longer
+                        setTimeout(typeNext, 400 + Math.random() * 500);
+                        return;
+                    }
+                    const typedChar = typoText[charIndex - 1] || '';
+                    setTimeout(typeNext, getTypingDelay(true, typedChar, lineObj));
+                    return;
+                } else if (typoPhase === 1) {
+                    // Phase 1: Deleting ONLY the typo part (backspace to diverge point)
+                    const prefix = isCommand ? '<span class="text-slate-400 mr-1">$</span> ' : '';
+                    const promptPrefix = isPrompt ? '<span class="text-slate-400">' + promptLabel + '</span>' : '';
+                    const rendered = isPrompt
+                        ? (lineObj.mask ? '*'.repeat(Math.max(0, charIndex)) : typoText.slice(0, charIndex))
+                        : (isCommand ? typoText.slice(0, charIndex) : typoText.slice(0, charIndex));
+                    cursor.innerHTML = prefix + promptPrefix + '<span class="text-green-400">' + rendered + '</span>';
+                    charIndex -= 1;
+
+                    // Stop backspacing when we reach the point where typo and correct text match
+                    if (charIndex < divergePoint) {
+                        typoPhase = 2;
+                        charIndex = divergePoint;
+                        // Brief pause before retyping the corrected portion
+                        setTimeout(typeNext, 150 + Math.random() * 100);
+                        return;
+                    }
+                    // Backspace is faster than typing
+                    setTimeout(typeNext, 35 + Math.random() * 20);
+                    return;
+                } else {
+                    // Phase 2+: Typing the correct version (from diverge point onward)
+                    targetText = correctText;
+                }
+            }
+
+            // Normal typing
+            const prefix = isCommand ? '<span class="text-slate-400 mr-1">$</span> ' : '';
+            const promptPrefix = isPrompt ? '<span class="text-slate-400">' + promptLabel + '</span>' : '';
+            const textClass = isCommand || isPrompt ? 'text-green-400' : (typeColors[lineObj.type] || 'text-cyber-400');
+            const rendered = isPrompt
+                ? (lineObj.mask ? '*'.repeat(Math.max(0, charIndex)) : targetText.slice(0, charIndex))
+                : targetText.slice(0, charIndex);
+            cursor.innerHTML = prefix + promptPrefix + '<span class="' + textClass + '">' + rendered + '</span>';
+            charIndex += 1;
+
+            if (charIndex <= targetText.length) {
+                const char = targetText[charIndex - 1] || '';
+                setTimeout(typeNext, getTypingDelay(isHumanInput, char, lineObj));
+            } else {
+                // Line complete - commit to content
+                const div = document.createElement('div');
+                div.className = 'flex items-start gap-1 transition-all duration-200';
+
+                if (isCommand) {
+                    div.innerHTML = '<span class="text-slate-400 select-none">$</span> <span class="text-green-400">' + (hasTypo ? lineObj.typo : lineObj.text) + '</span>';
+                } else if (isPrompt) {
+                    const committed = (hasTypo ? promptTypo : promptInput);
+                    const committedRendered = lineObj.mask ? '*'.repeat(committed.length) : committed;
+                    div.innerHTML = '<span class="text-slate-400">' + promptLabel + '</span><span class="text-green-400">' + committedRendered + '</span>';
+                } else {
+                    div.className = typeColors[lineObj.type] || 'text-cyber-400';
+                    div.textContent = lineObj.text;
+                }
+
+                content.appendChild(div);
+                if (shell) shell.scrollTop = shell.scrollHeight;
+
+                // Reset for next line
+                lineIndex += 1;
+                charIndex = 0;
+                typoPhase = 0;
+                didThinkForLine = false;
+                didPreTypeDelay = false;
+                cursor.innerHTML = '';
+
+                if (lineIndex < lines.length) {
+                    const nextIsCommand = lines[lineIndex].type === 'command';
+                    // Much longer pause before commands (user thinking what to type)
+                    const delay = nextIsCommand ? 1200 + Math.random() * 800 : 100 + Math.random() * 50;
+                    setTimeout(typeNext, delay);
+                } else {
+                    setTimeout(() => {
+                        content.innerHTML = '';
+                        lineIndex = 0;
+                        charIndex = 0;
+                        typoPhase = 0;
+                        didThinkForLine = false;
+                        didPreTypeDelay = false;
+                        typeNext();
+                    }, 4000);
+                }
+            }
+        };
+
+        typeNext();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initNavbar({
+            activePage: 'technology',
+            sections: [
+                { id: 'ecosystem', label: 'Ecosystem' },
+                { id: 'innovations', label: 'Workshop' },
+                { id: 'broadcast', label: 'Broadcast' },
+                { id: 'stories', label: 'Stories' },
+                { id: 'timeline', label: 'Timeline' },
+                { id: 'contact', label: 'Contact' }
+            ],
+            themeColor: 'tealink',
+            isDark: true
+        });
+
+        if (window.lucide && typeof lucide.createIcons === 'function') {
+            lucide.createIcons();
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            initNavbar({
-                activePage: 'technology',
-                sections: [
-                    { id: 'ecosystem', label: 'Ecosystem' },
-                    { id: 'broadcast', label: 'Broadcast' },
-                    { id: 'stories', label: 'Stories' },
-                    { id: 'timeline', label: 'Timeline' },
-                    { id: 'contact', label: 'Contact' }
-                ],
-                themeColor: 'cyber',
-                isDark: true
+        initTerminal();
+
+        // --- Broadcast index counter (functional, motion-independent) ------
+        (function () {
+            var carousel = document.getElementById('broadcast-carousel');
+            var counter = document.getElementById('broadcast-counter');
+            if (!carousel || !counter) return;
+            var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+            var update = function () {
+                var cards = carousel.children;
+                if (!cards.length) return;
+                var step = cards[0].offsetWidth + 24; // card + gap-6
+                var idx = Math.min(cards.length, Math.max(1, Math.round(carousel.scrollLeft / step) + 1));
+                counter.textContent = 'Broadcast ' + pad(idx) + ' / ' + pad(cards.length);
+            };
+            carousel.addEventListener('scroll', update, { passive: true });
+            update();
+        })();
+
+        // --- H1 glitch: fires once on load (CSS-driven, hover handled in CSS).
+        //     Gated on prefers-reduced-motion; no GSAP needed.
+        (function () {
+            var title = document.getElementById('chapter-title');
+            if (!title) return;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            setTimeout(function () {
+                title.classList.add('glitch-fire');
+                title.addEventListener('animationend', function () {
+                    title.classList.remove('glitch-fire');
+                }, { once: true });
+            }, 1400);
+        })();
+
+        // --- Page-specific GSAP: origin line-draw + node pings + field rule
+        if (!window.SPINE || !SPINE.motionOK || !window.gsap || !window.ScrollTrigger) {
+            // Reduced motion / no GSAP: defaults already render final states
+            // (line fully drawn, nodes visible, rule full height).
+            return;
+        }
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Scrubbed teal SVG line-draw down the origin section (scrub-only, no pin)
+        var path = document.getElementById('origin-line');
+        if (path) {
+            var len = path.getTotalLength();
+            gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
+            gsap.to(path, {
+                strokeDashoffset: 0,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '#origin-track',
+                    start: 'top 75%',
+                    end: 'bottom 65%',
+                    scrub: true
+                }
             });
+        }
 
-            if (window.lucide && typeof lucide.createIcons === 'function') {
-                lucide.createIcons();
-            }
+        // Nodes ping as the line reaches them
+        document.querySelectorAll('.origin-node').forEach(function (node) {
+            gsap.fromTo(node,
+                { scale: 0.4, opacity: 0 },
+                {
+                    scale: 1, opacity: 1, duration: 0.5, ease: SPINE.EASE_ENTER,
+                    scrollTrigger: { trigger: node, start: 'top 72%', once: true },
+                    onComplete: function () { node.classList.add('pinged'); }
+                });
+        });
 
-            initReveal();
-            initNeuralCanvas();
-            initTerminal();
+        // FIELD NOTES: scrubbed teal rule down the left edge
+        var rule = document.querySelector('.field-rule');
+        if (rule) {
+            gsap.fromTo(rule, { scaleY: 0 }, {
+                scaleY: 1,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '#field-notes',
+                    start: 'top 70%',
+                    end: 'bottom 60%',
+                    scrub: true
+                }
+            });
+        }
+
+        // EXPLORER: shell rises rotateX(8deg)→0 from below inside its
+        // perspective container on entry (Z-axis entrance, once).
+        var explorerShell = document.getElementById('explorer-shell');
+        if (explorerShell) {
+            gsap.from(explorerShell, {
+                rotationX: 8,
+                y: 48,
+                opacity: 0,
+                duration: 1.1,
+                ease: SPINE.EASE_ENTER,
+                transformOrigin: 'center bottom',
+                scrollTrigger: { trigger: explorerShell, start: 'top 85%', once: true }
+            });
+        }
+
+        // BROADCASTS: carousel cards rise rotateX(8deg)→0, staggered, once.
+        var broadcastCards = gsap.utils.toArray('#broadcast-carousel > a');
+        if (broadcastCards.length) {
+            gsap.from(broadcastCards, {
+                rotationX: 8,
+                y: 36,
+                opacity: 0,
+                duration: 0.9,
+                ease: SPINE.EASE_ENTER,
+                stagger: 0.08,
+                transformOrigin: 'center bottom',
+                scrollTrigger: { trigger: '#broadcast-carousel', start: 'top 85%', once: true }
+            });
+        }
+
+        // SCANLINES: a 1px phosphor line sweeps down each major section once
+        // on enter. Transform/opacity only; decorative (opacity 0 at rest).
+        document.querySelectorAll('.scanline').forEach(function (line) {
+            var section = line.closest('section');
+            if (!section) return;
+            ScrollTrigger.create({
+                trigger: section,
+                start: 'top 70%',
+                once: true,
+                onEnter: function () {
+                    gsap.timeline()
+                        .set(line, { opacity: 0.7 })
+                        .to(line, {
+                            y: Math.max(0, section.offsetHeight - 2),
+                            duration: 1.2,
+                            ease: 'power2.inOut'
+                        })
+                        .to(line, { opacity: 0, duration: 0.3 }, '-=0.25');
+                }
+            });
         });
-    </script>
-    <script>
-        // Ensure Lucide icons render for modal content created later
-        document.addEventListener('githubCardsLoaded', () => {
-            if (window.lucide && typeof lucide.createIcons === 'function') {
-                lucide.createIcons();
-            }
-        });
-    </script>
+    });
+
+    // Ensure Lucide icons render for modal content created later
+    document.addEventListener('githubCardsLoaded', () => {
+        if (window.lucide && typeof lucide.createIcons === 'function') {
+            lucide.createIcons();
+        }
+    });
+  </script>
 </body>
 </html>

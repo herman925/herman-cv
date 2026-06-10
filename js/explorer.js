@@ -66,7 +66,8 @@ const explorerData = {
                                 { id: 'gen3-server', type: 'file', fileType: 'server' }
                             ]
                         },
-                        { id: 'teacher-survey-ece-2025', type: 'file', fileType: 'python' }
+                        { id: 'teacher-survey-ece-2025', type: 'file', fileType: 'python' },
+                        { id: 'emr-jotform-wrapper', type: 'file', fileType: 'react' }
                     ]
                 },
                 {
@@ -75,6 +76,7 @@ const explorerData = {
                     icon: 'brain-circuit',
                     children: [
                         { id: 'ai-tier-list', type: 'file', fileType: 'web' },
+                        { id: 'emr-art', type: 'file', fileType: 'react' },
                         { id: 'quick-dish-wizard', type: 'file', fileType: 'react' },
                         { id: 'video-tagger', type: 'file', fileType: 'cpp' }
                     ]
@@ -85,6 +87,7 @@ const explorerData = {
                     icon: 'wrench',
                     children: [
                         { id: 'ks-qrcode', type: 'file', fileType: 'web' },
+                        { id: 'ks-free-play-conference', type: 'file', fileType: 'web' },
                         { id: 'ks-retreat', type: 'file', fileType: 'web' },
                         { id: 'shoppingcart925', type: 'file', fileType: 'js' },
                         { id: 'sheet-sync-combine', type: 'file', fileType: 'react' }

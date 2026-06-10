@@ -363,6 +363,42 @@ const githubCardData = {
             ]
         }
     },
+    'emr-art': {
+        type: 'complex',
+        title: 'EMR-ART',
+        subtitle: 'AI Observational Training Generator',
+        tags: ['React 18', 'TypeScript', 'Tailwind CSS', 'IndexedDB', 'BFL FLUX.2'],
+        links: [
+            { label: 'Live App', url: 'https://herman925.github.io/emr-art/', icon: 'external-link', variant: 'primary' },
+            { label: 'Repository', url: 'https://github.com/herman925/emr-art', icon: 'github', variant: 'secondary' }
+        ],
+        challenge: {
+            icon: 'sparkles',
+            title: 'The Challenge',
+            text: 'Observational training for early-childhood environments depends on high-quality scenario variations, but manually editing dozens of photorealistic room layouts is painfully slow. We needed a <strong>browser-based generation studio</strong> that could turn real Hub photos into controlled spot-the-difference material without spinning up a backend or losing review history between sessions.'
+        },
+        solution: {
+            icon: 'image-plus',
+            title: 'The Solution: Browser-Only AI Art Pipeline',
+            text: 'I built a <strong>React + TypeScript production tool</strong> that uploads real environment photos, sends concurrent generation jobs to the <strong>BFL FLUX.2 API</strong>, stores everything in IndexedDB, and lets staff search, rate, flag, compare, and export approved variations as a ZIP. A <strong>Cloudflare Worker proxy</strong> solves production CORS constraints on GitHub Pages.'
+        },
+        features: [
+            { icon: 'zap', color: 'text-yellow-400', text: '<strong>Concurrent AI Generation:</strong> Up to 10 parallel polling jobs with per-photo aspect preservation, model selection, and configurable output scaling.' },
+            { icon: 'database', color: 'text-cyan-400', text: '<strong>Zero-Backend Persistence:</strong> Sessions, source photos, generated blobs, flags, and ratings survive refreshes through <strong>localforage/IndexedDB</strong>.' },
+            { icon: 'images', color: 'text-purple-400', text: '<strong>Review & Export Console:</strong> Album filters, lightbox comparison, star ratings, accept/reject workflow, and ZIP packaging for training-ready handoff.' }
+        ],
+        valuation: {
+            total: '$26,000',
+            note: 'AI-Audited • GPT-5.4',
+            rationale: 'This is not a toy prompt wrapper: it is a browser-resident asset pipeline that manages concurrency, blob persistence, QA review, and export packaging for a real observational-training workflow. The absence of a backend is a feature, not a shortcut, because it keeps sensitive photos local while still delivering product-grade behavior.',
+            items: [
+                { name: 'Generation Orchestrator', price: '$9,000', desc: 'Multi-upload job queue, semaphore-based concurrency, FLUX.2 model controls, and async polling lifecycle management.' },
+                { name: 'Local Asset Platform', price: '$7,000', desc: 'IndexedDB persistence for sessions, source blobs, generated images, restore logic, and race-safe save handling.' },
+                { name: 'Review & Curation UX', price: '$6,000', desc: 'Album search/filter/grouping, fullscreen lightbox, keyboard review shortcuts, ratings, and status tagging.' },
+                { name: 'Deployment & Delivery Layer', price: '$4,000', desc: 'Cloudflare Worker proxy, GitHub Pages deployment, ZIP export, and browser-safe image download flow.' }
+            ]
+        }
+    },
     'shoppingcart925': {
         type: 'complex',
         title: '925 Shopping Cart System',
@@ -487,6 +523,76 @@ const githubCardData = {
                 { name: 'Wizard UI Architecture', price: '$6,000', desc: 'Five-step orchestration with React 18, TypeScript state accumulation, Radix UI components, and Zod-validated forms.' },
                 { name: 'ExcelProcessor Engine', price: '$8,000', desc: 'Dual merge modes (key-based + position-based), conflict tracking, column normalization, and SheetJS integration.' },
                 { name: 'Audit & Trust Layer', price: '$4,000', desc: 'Cell-level merge logs, duplicate detection, unmapped-column reports, and type-safe data models.' }
+            ]
+        }
+    },
+    'emr-jotform-wrapper': {
+        type: 'complex',
+        title: 'EMR JotForm Wrapper',
+        subtitle: 'Dynamic Image-Picker Survey Bridge',
+        tags: ['React 18', 'Vite', 'Tailwind CSS', 'JotForm API', 'Supabase'],
+        links: [
+            { label: 'Repository', url: 'https://github.com/herman925/EMR-JotForm-Wrapper', icon: 'github', variant: 'secondary' }
+        ],
+        challenge: {
+            icon: 'form-input',
+            title: 'The Challenge',
+            text: 'JotForm could store responses, but it could not natively handle <strong>per-class dynamic image sets</strong> for the Event-Based Memory Test. Interviewers across <strong>five Hong Kong districts</strong> needed the right session images, live qid mappings, and safe submission behavior without forcing staff to manually swap assets or remember hidden field logic.'
+        },
+        solution: {
+            icon: 'workflow',
+            title: 'The Solution: Survey Workflow Interceptor',
+            text: 'I designed a <strong>static React wrapper</strong> that sits in front of JotForm. The app looks up a student, resolves class/session configuration from CSV, renders a custom <strong>2×2 image-picker interface</strong>, converts selections into the exact qid payload JotForm expects, and writes a backup JSON record to <strong>Supabase</strong> after submission.'
+        },
+        features: [
+            { icon: 'search-check', color: 'text-cyan-400', text: '<strong>Student-to-Session Resolution:</strong> Student lookup, school-class filtering, and class-specific image-block loading keep every interviewer on the correct test branch.' },
+            { icon: 'grid-2x2', color: 'text-purple-400', text: '<strong>Custom Assessment UI:</strong> Shuffled 2×2 image grids, follow-up prompts, observation boxes, progress tracking, and mobile-friendly Cantonese workflow design.' },
+            { icon: 'shield-check', color: 'text-green-400', text: '<strong>Dual-System Reliability:</strong> Exact JotForm field encoding plus Supabase backup reduce data-loss risk and make schema validation testable.' }
+        ],
+        valuation: {
+            total: 'HKD $68,000',
+            note: 'AI-Audited • GPT-5.4',
+            rationale: 'The commercial value comes from replacing a platform limitation with a reliable field-ready wrapper: it owns dynamic assets, preserves the institution’s existing JotForm workflow, and adds a second persistence path. That combination is exactly the sort of integration work organizations pay for because off-the-shelf form builders do not solve it cleanly.',
+            items: [
+                { name: 'Dynamic Survey Orchestration', price: '$24,000', desc: 'Student lookup flow, class/session resolution, progress model, and multi-section interview experience design.' },
+                { name: 'Assessment UI Engine', price: '$18,000', desc: 'ImagePicker/ImageBlock components, shuffled answer tiles, follow-up logic, and mobile-optimized data-entry controls.' },
+                { name: 'API & Backup Integration', price: '$16,000', desc: 'JotForm payload builder, qid mapping architecture, Supabase backup writes, and failure-handling logic.' },
+                { name: 'Validation & Maintainability', price: '$10,000', desc: 'Schema guides, dry-run submission tooling, deployment configuration, and update paths for future form revisions.' }
+            ]
+        }
+    },
+    'ks-free-play-conference': {
+        type: 'complex',
+        title: 'KS Free Play Conference',
+        subtitle: 'Role-Based Conference Operations Dashboard',
+        tags: ['HTML', 'CSS', 'Vanilla JS', 'CSV/JSON', 'Responsive Ops UI'],
+        links: [
+            { label: 'Repository', url: 'https://github.com/herman925/KSFreePlayConference', icon: 'github', variant: 'secondary' }
+        ],
+        challenge: {
+            icon: 'calendar-range',
+            title: 'The Challenge',
+            text: 'Running a one-day conference sounds simple until every facilitator, logistics staffer, and activity lead needs a different slice of truth. Schedules, task ownership, inventory zones, and activity instructions were scattered across static documents. The team needed a <strong>single coordination cockpit</strong> that could brief people fast on phones as well as laptops.'
+        },
+        solution: {
+            icon: 'layout-dashboard',
+            title: 'The Solution: Lightweight Conference Command Center',
+            text: 'I built a <strong>GitHub Pages-compatible dashboard</strong> for the KeySteps@JC Free Play Case Conference. It combines overview, schedule, role-specific tasks, activity playbooks, logistics, and inventory data in one navigable interface powered by <strong>CSV/JSON content files</strong> and plain JavaScript.'
+        },
+        features: [
+            { icon: 'users', color: 'text-cyan-400', text: '<strong>Role-Based Views:</strong> Staff can select their role and immediately see only the responsibilities and context relevant to them.' },
+            { icon: 'clipboard-list', color: 'text-purple-400', text: '<strong>Operational Playbook:</strong> Activity instructions, material checklists, CPS guidance, and conference schedule are kept in one browsable dashboard.' },
+            { icon: 'package-check', color: 'text-green-400', text: '<strong>Resource Coordination:</strong> Inventory, zones, boxes, logistics notes, and contact information become a reusable operational memory rather than a one-off event folder.' }
+        ],
+        valuation: {
+            total: 'HKD $48,000',
+            note: 'AI-Audited • GPT-5.4',
+            rationale: 'Its value is operational compression: instead of multiple PDFs, ad hoc chats, and spreadsheet hunting, the conference team gets a deployable control surface that shortens briefing time, reduces missed tasks, and leaves behind reusable event infrastructure for future runs.',
+            items: [
+                { name: 'Dashboard Information Architecture', price: '$14,000', desc: 'Cross-page structure for overview, schedule, activities, tasks, resources, and logistics with mobile-first navigation.' },
+                { name: 'Role & Task Coordination', price: '$12,000', desc: 'Role selector, dynamic responsibility views, and conference-day task communication patterns.' },
+                { name: 'Resource & Inventory Layer', price: '$14,000', desc: 'CSV/JSON-backed inventory, zones, boxes, and material management for on-site operations.' },
+                { name: 'Deployment & Reusability', price: '$8,000', desc: 'Static hosting readiness, maintainable data files, and event-to-event reuse without new infrastructure.' }
             ]
         }
     },
@@ -736,6 +842,28 @@ function renderComplexCard(data) {
     `;
 }
 
+function renderProjectLinks(data) {
+    if (!Array.isArray(data.links) || data.links.length === 0) {
+        return '';
+    }
+
+    const variantClasses = {
+        primary: 'bg-cyber-600 hover:bg-cyber-500 text-white border border-cyber-500/60',
+        secondary: 'bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 hover:border-cyber-500/40'
+    };
+
+    return `
+        <div class="flex flex-wrap gap-3 mt-3">
+            ${data.links.map(link => `
+                <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${variantClasses[link.variant] || variantClasses.secondary}">
+                    <i data-lucide="${link.icon || 'external-link'}" class="w-4 h-4"></i>
+                    <span>${link.label}</span>
+                </a>
+            `).join('')}
+        </div>
+    `;
+}
+
 /**
  * Keeps body scroll locked if any modal is open
  */
@@ -866,6 +994,7 @@ function openModal(id) {
                 <h2 class="text-2xl font-bold text-white mb-1">${data.title}</h2>
                 <p class="text-cyber-400 font-mono text-sm">${data.subtitle}</p>
                 ${valuationButton}
+                ${renderProjectLinks(data)}
             </div>
         </div>
         

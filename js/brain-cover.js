@@ -93,7 +93,7 @@
         }
 
         var isMobile = window.matchMedia('(max-width: 767px)').matches;
-        var COUNT = isMobile ? 1600 : 4200;
+        var COUNT = isMobile ? 1800 : 5200;
         var DPR = Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 1.5);
 
         /* ---- sample the head icon ----------------------------------------- */
@@ -153,8 +153,8 @@
             var dist = nearestBoundary(rx, ry);
             var shell = Math.max(0, 1 - dist / shellBand);
             shell = Math.pow(shell, 0.8);
-            // dense luminous cortex, interior matter still present
-            if (Math.random() > 0.50 + shell * 0.50) continue;
+            // luminous cortex, but the interior matter is fully present
+            if (Math.random() > 0.66 + shell * 0.34) continue;
             var g = toGL(rx, ry);
             var nx = (rx - bMinX) / bW, ny = (ry - bMinY) / bH;
             var zone = nx < BANDS[0] ? 0 : nx < BANDS[1] ? 1 : nx < BANDS[2] ? 2 : 3;
@@ -182,6 +182,44 @@
             if (p.x < gMinX) gMinX = p.x; if (p.x > gMaxX) gMaxX = p.x;
             if (p.y < gMinY) gMinY = p.y; if (p.y > gMaxY) gMaxY = p.y;
         });
+
+        // zone-picking grid: each cell holds the majority zone of the particles
+        // inside it (-1 = no brain there) — picking matches the cloud exactly
+        var GW = 56, GH = 40;
+        var zoneGrid = new Int8Array(GW * GH);
+        (function () {
+            var counts = new Uint16Array(GW * GH * 4);
+            pts.forEach(function (p) {
+                var gx = Math.min(GW - 1, Math.max(0, ((p.x - gMinX) / (gMaxX - gMinX) * GW) | 0));
+                var gy = Math.min(GH - 1, Math.max(0, ((p.y - gMinY) / (gMaxY - gMinY) * GH) | 0));
+                counts[(gy * GW + gx) * 4 + p.zone]++;
+            });
+            for (var ci = 0; ci < GW * GH; ci++) {
+                var best = -1, bestN = 0;
+                for (var zi = 0; zi < 4; zi++) {
+                    var n = counts[ci * 4 + zi];
+                    if (n > bestN) { bestN = n; best = zi; }
+                }
+                zoneGrid[ci] = best;
+            }
+            // one dilation pass so tiny gaps between particles do not flicker
+            var copy = zoneGrid.slice();
+            for (var gy2 = 0; gy2 < GH; gy2++) {
+                for (var gx2 = 0; gx2 < GW; gx2++) {
+                    var idx = gy2 * GW + gx2;
+                    if (copy[idx] !== -1) continue;
+                    var found = -1;
+                    for (var oy = -1; oy <= 1 && found === -1; oy++) {
+                        for (var ox = -1; ox <= 1 && found === -1; ox++) {
+                            var nx2 = gx2 + ox, ny2 = gy2 + oy;
+                            if (nx2 < 0 || ny2 < 0 || nx2 >= GW || ny2 >= GH) continue;
+                            if (copy[ny2 * GW + nx2] !== -1) found = copy[ny2 * GW + nx2];
+                        }
+                    }
+                    zoneGrid[idx] = found;
+                }
+            }
+        })();
 
         // per-zone centroids
         var centroids = ZONES.map(function () { return { x: 0, y: 0, n: 0 }; });
@@ -270,7 +308,7 @@
                 '  p.xy += dir * isBurst * uBurstT * 1.6;',
                 '  p.z += isBurst * uBurstT * 1.2 - (1.0 - isBurst) * uBurstT * 0.8;',
                 '  vec4 mv = modelViewMatrix * vec4(p, 1.0);',
-                '  float size = mix(1.7, 2.5, aShell);',
+                '  float size = mix(1.9, 2.5, aShell);',
                 '  size *= 1.0 + vHover * 0.7 + vFire * 1.8 + isBurst * uBurstT * 1.5;',
                 '  gl_PointSize = size * 2.0 * uPixelRatio * (1.6 / -mv.z);',
                 '  gl_Position = projectionMatrix * mv;',
@@ -296,8 +334,8 @@
                 '  else if (zi == 3) zc = uZoneColors[3];',
                 '  vec3 col = mix(gold, zc, 0.18 + vHover * 0.82);',
                 '  col = mix(col, vec3(1.0, 0.98, 0.92), vFire * 0.9);',
-                '  float band = 0.55 + 0.45 * vGyri;',
-                '  float alpha = glow * band * (0.62 + vShell * 0.28 + vHover * 0.14 + vFire * 0.55);',
+                '  float band = 0.68 + 0.32 * vGyri;',
+                '  float alpha = glow * band * (0.68 + vShell * 0.24 + vHover * 0.14 + vFire * 0.55);',
                 '  gl_FragColor = vec4(col, alpha);',
                 '}'
             ].join('\n')
@@ -357,7 +395,7 @@
            A burst begins at one origin (interior nodes included) and expands
            outward through branching paths, recoloring across lobes.
         ------------------------------------------------------------------- */
-        var PPTS = 260;
+        var PPTS = 560;
         var pulsePos = new Float32Array(PPTS * 3);
         var pulseCol = new Float32Array(PPTS * 3);
         var pulseSize = new Float32Array(PPTS);
@@ -399,7 +437,7 @@
         for (var ni = 0; ni < N; ni++) {
             if (pts[ni].shell > 0.25 || pts[ni].seed > 0.5) nodeIdx.push(ni);
         }
-        var NODE_CAP = isMobile ? 320 : 680;
+        var NODE_CAP = isMobile ? 360 : 900;
         if (nodeIdx.length > NODE_CAP) {
             var step = nodeIdx.length / NODE_CAP;
             var thinned = [];
@@ -419,7 +457,7 @@
         var adj = [];
         for (var ai = 0; ai < NN; ai++) {
             var nbrs = [];
-            for (var aj = 0; aj < NN && nbrs.length < 5; aj++) {
+            for (var aj = 0; aj < NN && nbrs.length < 7; aj++) {
                 if (ai === aj) continue;
                 var ddx = nodeX[ai] - nodeX[aj], ddy = nodeY[ai] - nodeY[aj], ddz = nodeZ[ai] - nodeZ[aj];
                 if (ddx * ddx + ddy * ddy + ddz * ddz < HOP2) nbrs.push(aj);
@@ -427,10 +465,12 @@
             adj.push(nbrs);
         }
 
-        var HOP_DUR = 0.24;
-        var LEVEL_GAP = 0.17;
-        var FLASH_DUR = 0.45;
-        var MAX_CASCADES = isMobile ? 2 : 3;
+        // Divergence, not haste: one origin fans out like ink in wet paper —
+        // each generation triggers several more, unhurried, over seconds.
+        var HOP_DUR = 0.55;
+        var LEVEL_GAP = 0.42;
+        var FLASH_DUR = 0.8;
+        var MAX_CASCADES = isMobile ? 1 : 2;
         var cascades = [];
         var simTime = 0;
         var spawnAt = 0.5;
@@ -447,13 +487,16 @@
             visited[origin] = true;
             var frontier = [origin];
             var edges = [];
-            for (var depth = 0; depth < 5 && frontier.length; depth++) {
+            var EDGE_CAP = isMobile ? 60 : 110;
+            for (var depth = 0; depth < 7 && frontier.length; depth++) {
                 var next = [];
                 for (var fi = 0; fi < frontier.length; fi++) {
                     var n = frontier[fi];
                     var cand = adj[n];
-                    var want = depth === 0 ? 3 : 1 + ((Math.random() * 2) | 0);
-                    for (var ci2 = 0; ci2 < cand.length && want > 0; ci2++) {
+                    // the multiplier effect: the first spark fans wide, every
+                    // later node keeps branching to 2-3 more
+                    var want = depth === 0 ? 4 : 2 + ((Math.random() * 2) | 0);
+                    for (var ci2 = 0; ci2 < cand.length * 2 && want > 0; ci2++) {
                         var m = cand[(Math.random() * cand.length) | 0];
                         if (visited[m]) continue;
                         visited[m] = true;
@@ -461,10 +504,10 @@
                         next.push(m);
                         want--;
                     }
-                    if (edges.length > 34) break;
+                    if (edges.length > EDGE_CAP) break;
                 }
                 frontier = next;
-                if (edges.length > 34) break;
+                if (edges.length > EDGE_CAP) break;
             }
             if (!edges.length) return null;
             return { edges: edges, t0: simTime, oz: nodeZoneArr[origin] };
@@ -475,7 +518,7 @@
             if (simTime >= spawnAt && cascades.length < MAX_CASCADES) {
                 var c = spawnCascade();
                 if (c) cascades.push(c);
-                spawnAt = simTime + 0.55 + Math.random() * 0.9;
+                spawnAt = simTime + 2.2 + Math.random() * 1.6;
             }
             var slot = 0;
             function put(x, y, z, r, g, b, size) {
@@ -597,8 +640,11 @@
             tl.call(function () { window.spineNavigate(href, z.ink); }, null, 0.38);
         }
 
-        /* true pointer picking on the canvas: screen → world (z=0 plane) */
+        /* true pointer picking: screen → world (z=0 plane) → group-local via
+           worldToLocal (handles scale AND the soft idle rotation), then the
+           particle-density grid decides which lobe — or none — is underneath */
         var frameEl = mount.parentElement || mount;
+        var pickV = new THREE.Vector3();
         function pointerZone(e) {
             var rect = renderer.domElement.getBoundingClientRect();
             if (!rect.width || !rect.height) return -1;
@@ -606,13 +652,14 @@
             var ndcY = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
             var halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
             var halfW = halfH * camera.aspect;
-            // world → group-local (group is centered, only scaled + softly rotated)
-            var lx = (ndcX * halfW) / GROUP_SCALE;
-            var ly = (ndcY * halfH) / GROUP_SCALE;
-            var m = 0.05; // pick margin
-            if (lx < gMinX - m || lx > gMaxX + m || ly < gMinY - m || ly > gMaxY + m) return -1;
-            var fx = (lx - gMinX) / (gMaxX - gMinX);
-            return fx < BANDS[0] ? 0 : fx < BANDS[1] ? 1 : fx < BANDS[2] ? 2 : 3;
+            pickV.set(ndcX * halfW, ndcY * halfH, 0);
+            group.worldToLocal(pickV);
+            var fx = (pickV.x - gMinX) / (gMaxX - gMinX);
+            var fy = (pickV.y - gMinY) / (gMaxY - gMinY);
+            if (fx < -0.03 || fx > 1.03 || fy < -0.03 || fy > 1.03) return -1;
+            var gx = Math.min(GW - 1, Math.max(0, (fx * GW) | 0));
+            var gy = Math.min(GH - 1, Math.max(0, (fy * GH) | 0));
+            return zoneGrid[gy * GW + gx];
         }
         frameEl.addEventListener('pointermove', function (e) {
             if (diving) return;

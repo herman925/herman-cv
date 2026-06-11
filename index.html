@@ -103,15 +103,15 @@
         #brainMapSVG a.brain-section:focus-visible .connector-line { stroke-dashoffset: 0; opacity: .8; }
         #brainMapSVG a.brain-section:focus-visible .connector-dot { opacity: 1; }
 
-        /* GL tier: canvas carries the glow; SVG stays present as the engraving,
-           and lights up in its FACET INK on hover/focus */
-        html.brain-gl #brainMapSVG .network-edge { opacity: .28; }
-        html.brain-gl #brainMapSVG .network-node { opacity: .35; }
-        html.brain-gl #brainMapSVG .highlight-edge { opacity: .18; }
+        /* GL tier: the procedural living brain IS the art — the SVG keeps only
+           its hit areas, focus rings and hover labels (strokes fully hidden) */
+        html.brain-gl #brainMapSVG .network-edge,
+        html.brain-gl #brainMapSVG .network-node,
+        html.brain-gl #brainMapSVG .highlight-edge { opacity: 0 !important; }
         html.brain-gl #brainMapSVG .brain-section:hover .network-edge,
-        html.brain-gl #brainMapSVG a.brain-section:focus-visible .network-edge { opacity: .9; }
+        html.brain-gl #brainMapSVG a.brain-section:focus-visible .network-edge,
         html.brain-gl #brainMapSVG .brain-section:hover .network-node,
-        html.brain-gl #brainMapSVG a.brain-section:focus-visible .network-node { opacity: 1; }
+        html.brain-gl #brainMapSVG a.brain-section:focus-visible .network-node { opacity: 0 !important; }
 
         /* Facet-ink hover identity — each region answers in its own colour */
         #brainMapSVG .zone-counselling:hover .network-edge,
@@ -407,7 +407,7 @@
                             <g transform="translate(40, 0)">
 
                             <!-- EDUCATION (Left) -->
-                            <a href="education-culture.html" class="brain-section zone-education" aria-label="Open Chapter 04 — Education &amp; Culture">
+                            <a href="education-culture.html" class="brain-section zone-education" aria-label="Open Chapter 02 — Education &amp; Culture">
                                 <path class="hit-area" d="M 5 100 L 90 100 L 90 350 L 5 350 Z" />
                                 <!-- Connections -->
                                 <line class="network-edge" x1="71" y1="113" x2="63" y2="153" />
@@ -514,7 +514,7 @@
                             </a>
 
                             <!-- TECHNOLOGY (Middle Right) -->
-                            <a href="technology.html" class="brain-section zone-technology" aria-label="Open Chapter 02 — Technology">
+                            <a href="technology.html" class="brain-section zone-technology" aria-label="Open Chapter 04 — Technology">
                                 <path class="hit-area" d="M 190 50 L 280 50 L 280 350 L 190 350 Z" />
                                 <!-- Connections -->
                                 <line class="network-edge" x1="221" y1="56" x2="200" y2="94" />
@@ -634,11 +634,11 @@
             <nav class="cover-toc mt-6" aria-label="Table of contents">
                 <a class="toc-entry" style="--toc-ink:#F97316" data-zone="counselling" href="counselling.html"><span class="toc-tick" aria-hidden="true">▪</span>01 Counselling</a>
                 <span class="toc-sep" aria-hidden="true">·</span>
-                <a class="toc-entry" style="--toc-ink:#2DD4BF" data-zone="technology" href="technology.html"><span class="toc-tick" aria-hidden="true">▪</span>02 Technology</a>
+                <a class="toc-entry" style="--toc-ink:#10B981" data-zone="education" href="education-culture.html"><span class="toc-tick" aria-hidden="true">▪</span>02 Education &amp; Culture</a>
                 <span class="toc-sep" aria-hidden="true">·</span>
                 <a class="toc-entry" style="--toc-ink:#E11D48" data-zone="project" href="project-management.html"><span class="toc-tick" aria-hidden="true">▪</span>03 Project Management</a>
                 <span class="toc-sep" aria-hidden="true">·</span>
-                <a class="toc-entry" style="--toc-ink:#10B981" data-zone="education" href="education-culture.html"><span class="toc-tick" aria-hidden="true">▪</span>04 Education &amp; Culture</a>
+                <a class="toc-entry" style="--toc-ink:#2DD4BF" data-zone="technology" href="technology.html"><span class="toc-tick" aria-hidden="true">▪</span>04 Technology</a>
             </nav>
         </div>
 
@@ -653,11 +653,11 @@
                 </span>
                 <span class="chapter-card-arrow" aria-hidden="true">→</span>
             </a>
-            <a class="chapter-card" style="--card-ink:#14998F" href="technology.html">
+            <a class="chapter-card" style="--card-ink:#4C8A6C" href="education-culture.html">
                 <span class="chapter-card-num" aria-hidden="true">02</span>
                 <span>
-                    <span class="block font-semibold">Technology</span>
-                    <span class="caption block" style="color:rgba(250,247,242,.6)">Modern, sleek, innovative.</span>
+                    <span class="block font-semibold">Education &amp; Culture</span>
+                    <span class="caption block" style="color:rgba(250,247,242,.6)">Informative, engaging, scholarly.</span>
                 </span>
                 <span class="chapter-card-arrow" aria-hidden="true">→</span>
             </a>
@@ -669,11 +669,11 @@
                 </span>
                 <span class="chapter-card-arrow" aria-hidden="true">→</span>
             </a>
-            <a class="chapter-card" style="--card-ink:#4C8A6C" href="education-culture.html">
+            <a class="chapter-card" style="--card-ink:#14998F" href="technology.html">
                 <span class="chapter-card-num" aria-hidden="true">04</span>
                 <span>
-                    <span class="block font-semibold">Education &amp; Culture</span>
-                    <span class="caption block" style="color:rgba(250,247,242,.6)">Informative, engaging, scholarly.</span>
+                    <span class="block font-semibold">Technology</span>
+                    <span class="caption block" style="color:rgba(250,247,242,.6)">Modern, sleek, innovative.</span>
                 </span>
                 <span class="chapter-card-arrow" aria-hidden="true">→</span>
             </a>
@@ -744,17 +744,17 @@
         </div>
     </section>
 
-    <section class="spine-section chapter-spread spread-tealink relative overflow-hidden" aria-labelledby="spread-02-title">
+    <section class="spine-section chapter-spread spread-moss relative overflow-hidden" aria-labelledby="spread-02-title">
         <span class="ghost-numeral top-[6%] left-[-3%]" aria-hidden="true">02</span>
         <div class="spine-container relative z-10">
             <div class="section-head">
                 <hr class="section-rule">
-                <p class="kicker"><span class="tick">▪</span>Chapter 02 — Technology · The Builder</p>
+                <p class="kicker"><span class="tick">▪</span>Chapter 02 — Education &amp; Culture · The Bridge</p>
             </div>
-            <h2 id="spread-02-title" class="display-l max-w-4xl md:ml-auto md:text-right" data-reveal-lines>Tools are empathy at scale — built precisely, shipped humbly.</h2>
-            <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption md:text-right">Accuracy, Efficiency, Automation &amp; AI · Modern, sleek, innovative.</p>
+            <h2 id="spread-02-title" class="display-l max-w-4xl md:ml-auto md:text-right" data-reveal-lines>Knowledge only matters when it crosses a bridge.</h2>
+            <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption md:text-right">Nurturing &amp; Knowledge Transfer · Informative, engaging, scholarly.</p>
             <div class="accent-bar w-44 max-w-full mt-10 md:ml-auto" data-accent-bar></div>
-            <p class="mt-10 md:text-right"><a class="link-editorial" href="technology.html">Open Chapter <span aria-hidden="true">→</span></a></p>
+            <p class="mt-10 md:text-right"><a class="link-editorial" href="education-culture.html">Open Chapter <span aria-hidden="true">→</span></a></p>
         </div>
     </section>
 
@@ -772,17 +772,17 @@
         </div>
     </section>
 
-    <section class="spine-section chapter-spread spread-moss relative overflow-hidden" aria-labelledby="spread-04-title">
+    <section class="spine-section chapter-spread spread-tealink relative overflow-hidden" aria-labelledby="spread-04-title">
         <span class="ghost-numeral top-[6%] left-[-3%]" aria-hidden="true">04</span>
         <div class="spine-container relative z-10">
             <div class="section-head">
                 <hr class="section-rule">
-                <p class="kicker"><span class="tick">▪</span>Chapter 04 — Education &amp; Culture · The Bridge</p>
+                <p class="kicker"><span class="tick">▪</span>Chapter 04 — Technology · The Builder</p>
             </div>
-            <h2 id="spread-04-title" class="display-l max-w-4xl md:ml-auto md:text-right" data-reveal-lines>Knowledge only matters when it crosses a bridge.</h2>
-            <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption md:text-right">Nurturing &amp; Knowledge Transfer · Informative, engaging, scholarly.</p>
+            <h2 id="spread-04-title" class="display-l max-w-4xl md:ml-auto md:text-right" data-reveal-lines>Tools are empathy at scale — built precisely, shipped humbly.</h2>
+            <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption md:text-right">Accuracy, Efficiency, Automation &amp; AI · Modern, sleek, innovative.</p>
             <div class="accent-bar w-44 max-w-full mt-10 md:ml-auto" data-accent-bar></div>
-            <p class="mt-10 md:text-right"><a class="link-editorial" href="education-culture.html">Open Chapter <span aria-hidden="true">→</span></a></p>
+            <p class="mt-10 md:text-right"><a class="link-editorial" href="technology.html">Open Chapter <span aria-hidden="true">→</span></a></p>
         </div>
     </section>
 
@@ -1028,9 +1028,9 @@
                     <p class="kicker">Chapters</p>
                     <nav class="mt-3 flex flex-col gap-2">
                         <a class="link-editorial" href="counselling.html">01 Counselling</a>
-                        <a class="link-editorial" href="technology.html">02 Technology</a>
+                        <a class="link-editorial" href="education-culture.html">02 Education &amp; Culture</a>
                         <a class="link-editorial" href="project-management.html">03 Project Management</a>
-                        <a class="link-editorial" href="education-culture.html">04 Education &amp; Culture</a>
+                        <a class="link-editorial" href="technology.html">04 Technology</a>
                     </nav>
                 </div>
             </div>

@@ -26,8 +26,8 @@ function initNavbar({ activePage, sections, themeColor, isDark = false }) {
     };
 
     const navLinks = [
-        { href: 'counselling.html', label: 'Counselling', key: 'counselling' },
         { href: 'education-culture.html', label: 'Education & Culture', key: 'education' },
+        { href: 'counselling.html', label: 'Counselling', key: 'counselling' },
         { href: 'project-management.html', label: 'Project Management', key: 'project' },
         { href: 'technology.html', label: 'Technology', key: 'technology' }
     ];

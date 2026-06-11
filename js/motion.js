@@ -288,6 +288,12 @@
             var mo = new MutationObserver(function () {
                 clearTimeout(pending);
                 pending = setTimeout(function () {
+                    // explorer.js re-renders raw <i data-lucide> tags on every
+                    // folder navigation — re-init icons or they vanish
+                    if (window.lucide && typeof lucide.createIcons === 'function') {
+                        try { lucide.createIcons(); } catch (e) { /* ignore */ }
+                    }
+                    fixGithubIcons();
                     grid.querySelectorAll(':scope > *').forEach(function (child) {
                         if (!child.__spineRevealed) {
                             child.__spineRevealed = true;

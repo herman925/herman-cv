@@ -121,7 +121,7 @@
         #brainMapSVG .zone-project .brain-label-title { fill: #FDA4AF; }
 
         /* GL tier: the procedural living brain IS the art — the SVG keeps only
-           its hit areas, focus rings and hover labels (strokes fully hidden) */
+           keyboard focus + labels; pointer picking happens on the canvas */
         html.brain-gl #brainMapSVG .network-edge,
         html.brain-gl #brainMapSVG .network-node,
         html.brain-gl #brainMapSVG .highlight-edge { opacity: 0 !important; }
@@ -129,6 +129,12 @@
         html.brain-gl #brainMapSVG a.brain-section:focus-visible .network-edge,
         html.brain-gl #brainMapSVG .brain-section:hover .network-node,
         html.brain-gl #brainMapSVG a.brain-section:focus-visible .network-node { opacity: 0 !important; }
+        html.brain-gl #brainMapSVG { pointer-events: none; }
+        /* JS sets .zone-hot on the anchor while its lobe is hovered/picked —
+           same reveal as :hover (label fades in, connector draws) */
+        #brainMapSVG .brain-section.zone-hot .brain-label-group { opacity: 1; }
+        #brainMapSVG .brain-section.zone-hot .connector-line { stroke-dashoffset: 0; opacity: .8; }
+        #brainMapSVG .brain-section.zone-hot .connector-dot { opacity: 1; }
 
         /* Facet-ink hover identity — each region answers in its own colour */
         #brainMapSVG .zone-counselling:hover .network-edge,
@@ -262,6 +268,37 @@
 
         /* Navbar gold legibility on ink (CSS-only, zero edits to navbar.js) */
         html[data-chapter="cover"] #navbar .text-gold-600 { color: #D4B274; }
+
+        /* ---- Chapter-spread meta: stat trio + contents list ----------------- */
+        .spread-meta .stat-v {
+            font-family: 'Space Grotesk', monospace;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            font-size: clamp(1.7rem, 2.6vw, 2.4rem);
+            line-height: 1;
+            color: #FAF7F2;
+        }
+        .spread-meta .stat-c {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 12px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: rgba(250, 247, 242, .55);
+            margin-top: 6px;
+        }
+        .spread-contents li {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 12px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: rgba(250, 247, 242, .7);
+            padding: 4px 0;
+        }
+        .spread-contents li::before {
+            content: '▪';
+            color: var(--spread-ink, var(--gold));
+            margin-right: .6em;
+        }
 
         /* ==================================================================
            NEW — Specifications marquee: thin double-hairline spec strip.
@@ -757,6 +794,21 @@
             <h2 id="spread-01-title" class="display-l max-w-4xl md:ml-auto md:text-right" data-reveal-lines>Knowledge only matters when it crosses a bridge.</h2>
             <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption md:text-right">Nurturing &amp; Knowledge Transfer · Informative, engaging, scholarly.</p>
             <div class="accent-bar w-44 max-w-full mt-10 md:ml-auto" data-accent-bar></div>
+            <div class="spread-meta mt-12 grid gap-10 md:grid-cols-[auto_auto] md:justify-end md:items-end md:text-right" style="--spread-ink:#10B981">
+                <div class="flex flex-wrap gap-x-12 gap-y-6 md:justify-end">
+                    <div><p class="stat-v"><span data-count="6" data-suffix="">6</span></p><p class="stat-c">Waypoints, three ports</p></div>
+                    <div><p class="stat-v"><span data-count="3" data-suffix="">3</span></p><p class="stat-c">Publications</p></div>
+                    <div><p class="stat-v"><span data-count="15" data-suffix="+">15+</span></p><p class="stat-c">Countries reached</p></div>
+                </div>
+                <div>
+                    <p class="kicker mb-2"><span class="tick">▪</span>In this chapter</p>
+                    <ul class="spread-contents">
+                        <li>The Learning Route</li>
+                        <li>Publications &amp; Research</li>
+                        <li>Stamps in the Margin</li>
+                    </ul>
+                </div>
+            </div>
             <p class="mt-10 md:text-right"><a class="link-editorial" href="education-culture.html">Open Chapter <span aria-hidden="true">→</span></a></p>
         </div>
     </section>
@@ -771,6 +823,21 @@
             <h2 id="spread-02-title" class="display-l max-w-4xl" data-reveal-lines>Before anything was built, someone had to be heard.</h2>
             <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption">Development &amp; Life-Learning · Empathic, warm, accessible.</p>
             <div class="accent-bar w-44 max-w-full mt-10" data-accent-bar></div>
+            <div class="spread-meta mt-12 grid gap-10 md:grid-cols-[auto_auto] md:justify-start md:items-end" style="--spread-ink:#F97316">
+                <div class="flex flex-wrap gap-x-12 gap-y-6">
+                    <div><p class="stat-v"><span data-count="200" data-suffix="+">200+</span></p><p class="stat-c">Families counselled</p></div>
+                    <div><p class="stat-v"><span data-count="30" data-suffix="+">30+</span></p><p class="stat-c">Hours freed weekly</p></div>
+                    <div><p class="stat-v"><span data-count="10" data-suffix="+">10+</span></p><p class="stat-c">Years listening</p></div>
+                </div>
+                <div>
+                    <p class="kicker mb-2"><span class="tick">▪</span>In this chapter</p>
+                    <ul class="spread-contents">
+                        <li>The Memoir</li>
+                        <li>The Toolkit</li>
+                        <li>The Breathing Ring</li>
+                    </ul>
+                </div>
+            </div>
             <p class="mt-10"><a class="link-editorial" href="counselling.html">Open Chapter <span aria-hidden="true">→</span></a></p>
         </div>
     </section>
@@ -785,6 +852,21 @@
             <h2 id="spread-03-title" class="display-l max-w-4xl" data-reveal-lines>Foresight is a structure: anticipate, design, deliver, repeat.</h2>
             <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption">Systems &amp; Delivery · Structured, efficient, clear.</p>
             <div class="accent-bar w-44 max-w-full mt-10" data-accent-bar></div>
+            <div class="spread-meta mt-12 grid gap-10 md:grid-cols-[auto_auto] md:justify-start md:items-end" style="--spread-ink:#E11D48">
+                <div class="flex flex-wrap gap-x-12 gap-y-6">
+                    <div><p class="stat-v"><span data-count="3500" data-suffix="+">3,500+</span></p><p class="stat-c">Platform users</p></div>
+                    <div><p class="stat-v"><span data-count="20" data-suffix="+">20+</span></p><p class="stat-c">Staff orchestrated</p></div>
+                    <div><p class="stat-v"><span data-count="7" data-suffix="">7</span></p><p class="stat-c">Press outlets</p></div>
+                </div>
+                <div>
+                    <p class="kicker mb-2"><span class="tick">▪</span>In this chapter</p>
+                    <ul class="spread-contents">
+                        <li>The Cycle Dial</li>
+                        <li>Competency Board</li>
+                        <li>Press Index</li>
+                    </ul>
+                </div>
+            </div>
             <p class="mt-10"><a class="link-editorial" href="project-management.html">Open Chapter <span aria-hidden="true">→</span></a></p>
         </div>
     </section>
@@ -799,6 +881,21 @@
             <h2 id="spread-04-title" class="display-l max-w-4xl md:ml-auto md:text-right" data-reveal-lines>Tools are empathy at scale — built precisely, shipped humbly.</h2>
             <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption md:text-right">Accuracy, Efficiency, Automation &amp; AI · Modern, sleek, innovative.</p>
             <div class="accent-bar w-44 max-w-full mt-10 md:ml-auto" data-accent-bar></div>
+            <div class="spread-meta mt-12 grid gap-10 md:grid-cols-[auto_auto] md:justify-end md:items-end md:text-right" style="--spread-ink:#2DD4BF">
+                <div class="flex flex-wrap gap-x-12 gap-y-6 md:justify-end">
+                    <div><p class="stat-v"><span data-count="8000" data-suffix="+">8,000+</span></p><p class="stat-c">Students' data</p></div>
+                    <div><p class="stat-v"><span data-count="7" data-suffix="">7</span></p><p class="stat-c">Innovations shipped</p></div>
+                    <div><p class="stat-v"><span data-count="110" data-suffix="+">110+</span></p><p class="stat-c">Schools served</p></div>
+                </div>
+                <div>
+                    <p class="kicker mb-2"><span class="tick">▪</span>In this chapter</p>
+                    <ul class="spread-contents">
+                        <li>Field Notes Terminal</li>
+                        <li>Plates &amp; Figures</li>
+                        <li>Innovations Ledger</li>
+                    </ul>
+                </div>
+            </div>
             <p class="mt-10 md:text-right"><a class="link-editorial" href="technology.html">Open Chapter <span aria-hidden="true">→</span></a></p>
         </div>
     </section>

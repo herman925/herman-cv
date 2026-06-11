@@ -10,16 +10,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,144,600;1,144,500&family=Outfit:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="js/tailwind-config.js?v=8"></script>
-  <link rel="stylesheet" href="global.css?v=8">
-  <link rel="stylesheet" href="css/spine.css?v=8">
+  <script src="js/tailwind-config.js?v=9"></script>
+  <link rel="stylesheet" href="global.css?v=9">
+  <link rel="stylesheet" href="css/spine.css?v=9">
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script defer src="js/motion.js?v=8"></script>
-  <script defer src="js/transitions.js?v=8"></script>
+  <script defer src="js/motion.js?v=9"></script>
+  <script defer src="js/transitions.js?v=9"></script>
+  <script defer src="js/cursor.js?v=9"></script>
   <style>
     /* ====================================================================
        Page-specific: Chapter 01 — CREAM & EMERALD ATLAS
@@ -199,7 +200,16 @@
               <li class="journey-stop">
                 <span class="journey-dot" aria-hidden="true"><span class="journey-ping"></span></span>
                 <div>
-                  <p class="kicker">WAYPOINT 04 · 2006–2010 — 22.34°N 114.18°E</p>
+                  <p class="kicker">WAYPOINT 04 · 2005–2006 — 22.42°N 114.21°E</p>
+                  <p class="journey-name mt-2">CUHK SCE</p>
+                  <p class="mt-3"><span class="waypoint-stamp" data-rot="3" style="--rot:3deg">Higher Diploma — Translation Studies</span></p>
+                  <p class="caption mt-3 max-w-[30ch]">Trilingual — English · Cantonese · Mandarin.</p>
+                </div>
+              </li>
+              <li class="journey-stop">
+                <span class="journey-dot" aria-hidden="true"><span class="journey-ping"></span></span>
+                <div>
+                  <p class="kicker">WAYPOINT 05 · 2006–2010 — 22.34°N 114.18°E</p>
                   <p class="journey-name mt-2">HKBU</p>
                   <p class="mt-3 flex flex-wrap gap-3">
                     <span class="waypoint-stamp" data-rot="-3" style="--rot:-3deg">AD then BSocSc Psychology, 1st Hons</span>
@@ -211,17 +221,12 @@
               <li class="journey-stop">
                 <span class="journey-dot" aria-hidden="true"><span class="journey-ping"></span></span>
                 <div>
-                  <p class="kicker">WAYPOINT 05 · 2013–2015 — 22.42°N 114.21°E</p>
-                  <p class="journey-name mt-2">CUHK</p>
-                  <p class="mt-3"><span class="waypoint-stamp" data-rot="-2.5" style="--rot:-2.5deg">MASGC</span></p>
-                </div>
-              </li>
-              <li class="journey-stop">
-                <span class="journey-dot" aria-hidden="true"><span class="journey-ping"></span></span>
-                <div>
-                  <p class="kicker">WAYPOINT 06 · ROUTE END — 22.30°N 114.17°E</p>
-                  <p class="journey-name mt-2">HONG KONG — THE BRIDGE</p>
-                  <p class="caption mt-3 max-w-[32ch]">Trilingual — English · Cantonese · Mandarin. Higher Diploma in Translation Studies, CUHK SCE, 2005–2006.</p>
+                  <p class="kicker">WAYPOINT 06 · 2013–2015 · ROUTE END — 22.42°N 114.21°E</p>
+                  <p class="journey-name mt-2">CUHK — THE BRIDGE</p>
+                  <p class="mt-3 flex flex-wrap gap-3">
+                    <span class="waypoint-stamp" data-rot="-2.5" style="--rot:-2.5deg">MASGC</span>
+                    <span class="waypoint-stamp" data-rot="2" style="--rot:2deg">President's Award</span>
+                  </p>
                 </div>
               </li>
             </ol>
@@ -244,9 +249,9 @@
             </p>
             <p class="ink-soft leading-relaxed mt-6">
               The route reads like a passport: stamped in Taipei, renewed in
-              Singapore, settled in Hong Kong — then deepened at HKBU and
-              CUHK, where the traveller became a psychologist, and the
-              psychologist a guidance counsellor.
+              Singapore, settled in Hong Kong — first as a translator between
+              languages at CUHK SCE, then between people: a psychologist at
+              HKBU, and finally a guidance counsellor at CUHK.
             </p>
           </div>
         </div>
@@ -578,7 +583,7 @@
     <a href="technology.html" data-ink="tealink" title="Technology"><span></span></a>
   </nav>
 
-  <script src="js/navbar.js?v=8"></script>
+  <script src="js/navbar.js?v=9"></script>
   <script>
     // Initialize Navbar
     initNavbar({

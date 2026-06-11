@@ -59,6 +59,66 @@
     document.addEventListener('githubCardsLoaded', fixGithubIcons);
     document.addEventListener('click', function () { setTimeout(fixGithubIcons, 80); }, true);
 
+    // --- Gadgets (functional — run regardless of motion preference) --------
+    document.addEventListener('DOMContentLoaded', function () {
+        // 1. Reading progress rule
+        var bar = document.createElement('div');
+        bar.id = 'spine-progress';
+        bar.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(bar);
+        var ticking = false;
+        function paintProgress() {
+            ticking = false;
+            var max = document.documentElement.scrollHeight - window.innerHeight;
+            bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(window.scrollY / max, 1) : 0) + ')';
+        }
+        window.addEventListener('scroll', function () {
+            if (!ticking) { ticking = true; requestAnimationFrame(paintProgress); }
+        }, { passive: true });
+        paintProgress();
+
+        // 2. Live Hong Kong clock in the colophon fine print
+        var fine = document.querySelector('.colophon-fine');
+        if (fine) {
+            var clock = document.createElement('span');
+            clock.className = 'hk-clock';
+            clock.innerHTML = '<span class="clock-dot" aria-hidden="true"></span>HONG KONG — <time></time> HKT';
+            fine.appendChild(clock);
+            var timeEl = clock.querySelector('time');
+            function tick() {
+                try {
+                    timeEl.textContent = new Intl.DateTimeFormat('en-GB', {
+                        hour: '2-digit', minute: '2-digit', second: '2-digit',
+                        hour12: false, timeZone: 'Asia/Hong_Kong'
+                    }).format(new Date());
+                } catch (e) { timeEl.textContent = new Date().toTimeString().slice(0, 8); }
+            }
+            tick();
+            setInterval(tick, 1000);
+        }
+
+        // 3. Copy-email button beside the colophon mailto link
+        var mail = document.querySelector('.colophon a[href^="mailto:"]');
+        if (mail && navigator.clipboard) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'copy-email-btn';
+            btn.textContent = 'Copy';
+            btn.setAttribute('aria-label', 'Copy email address');
+            mail.insertAdjacentElement('afterend', btn);
+            btn.addEventListener('click', function () {
+                navigator.clipboard.writeText(mail.getAttribute('href').replace('mailto:', '')).then(function () {
+                    btn.textContent = 'Copied ▪';
+                    btn.classList.add('copied');
+                    setTimeout(function () {
+                        btn.textContent = 'Copy';
+                        btn.classList.remove('copied');
+                    }, 1600);
+                });
+            });
+        }
+    });
+
     function releaseFOUC() {
         document.documentElement.classList.remove('loading');
     }
@@ -106,7 +166,10 @@
                             duration: 1.1,
                             ease: EASE_ENTER,
                             stagger: 0.08,
-                            scrollTrigger: { trigger: el, start: 'top 80%', once: true }
+                            scrollTrigger: { trigger: el, start: 'top 80%', once: true },
+                            // the line masks clip Fraunces descenders (g, y, p) —
+                            // restore the original unsplit markup once revealed
+                            onComplete: function () { self.revert(); }
                         });
                     }
                 });

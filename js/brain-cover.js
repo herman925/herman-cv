@@ -159,11 +159,11 @@
             if (Math.random() > 0.66 + shell * 0.34) continue;
             var g = toGL(rx, ry);
             var nx = (rx - bMinX) / bW, ny = (ry - bMinY) / bH;
-            var zone = nx < BANDS[0] ? 0 : nx < BANDS[1] ? 1 : nx < BANDS[2] ? 2 : 3;
-            // organic boundary wobble between lobes
-            var wob = Math.sin(ny * 9.1 + nx * 17.0) * 0.04;
+            // organic boundary wobble between lobes (kept subtle so the visual
+            // border and pointer picking stay coherent)
+            var wob = Math.sin(ny * 9.1 + nx * 17.0) * 0.015;
             var nxw = nx + wob;
-            zone = nxw < BANDS[0] ? 0 : nxw < BANDS[1] ? 1 : nxw < BANDS[2] ? 2 : 3;
+            var zone = nxw < BANDS[0] ? 0 : nxw < BANDS[1] ? 1 : nxw < BANDS[2] ? 2 : 3;
             var depth = 0.16 * (1 - shell * 0.8);
             pts.push({
                 x: g.x, y: g.y,
@@ -645,26 +645,29 @@
             tl.call(function () { window.spineNavigate(href, z.ink); }, null, 0.38);
         }
 
-        /* true pointer picking: screen → world (z=0 plane) → group-local via
-           worldToLocal (handles scale AND the soft idle rotation), then the
-           particle-density grid decides which lobe — or none — is underneath */
+        /* true pointer picking: project the node set through the LIVE camera
+           and rotation, take the nearest node to the cursor (within 28px).
+           Pick and glow come from the same particles — they cannot disagree. */
         var frameEl = mount.parentElement || mount;
         var pickV = new THREE.Vector3();
+        var PICK_RADIUS_PX = 28;
         function pointerZone(e) {
             var rect = renderer.domElement.getBoundingClientRect();
             if (!rect.width || !rect.height) return -1;
-            var ndcX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-            var ndcY = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
-            var halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
-            var halfW = halfH * camera.aspect;
-            pickV.set(ndcX * halfW, ndcY * halfH, 0);
-            group.worldToLocal(pickV);
-            var fx = (pickV.x - gMinX) / (gMaxX - gMinX);
-            var fy = (pickV.y - gMinY) / (gMaxY - gMinY);
-            if (fx < -0.03 || fx > 1.03 || fy < -0.03 || fy > 1.03) return -1;
-            var gx = Math.min(GW - 1, Math.max(0, (fx * GW) | 0));
-            var gy = Math.min(GH - 1, Math.max(0, (fy * GH) | 0));
-            return zoneGrid[gy * GW + gx];
+            var px = e.clientX, py = e.clientY;
+            var bestD = PICK_RADIUS_PX * PICK_RADIUS_PX;
+            var best = -1;
+            for (var k = 0; k < NN; k++) {
+                pickV.set(nodeX[k], nodeY[k], nodeZ[k]);
+                group.localToWorld(pickV);
+                pickV.project(camera);
+                var sx = rect.left + (pickV.x + 1) / 2 * rect.width;
+                var sy = rect.top + (1 - (pickV.y + 1) / 2) * rect.height;
+                var dx = sx - px, dy = sy - py;
+                var d = dx * dx + dy * dy;
+                if (d < bestD) { bestD = d; best = nodeZoneArr[k]; }
+            }
+            return best;
         }
         frameEl.addEventListener('pointermove', function (e) {
             if (diving) return;

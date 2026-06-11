@@ -16,11 +16,18 @@
     'use strict';
 
     var TIER_COLORS = {
-        gold: '#D4B274',
-        platinum: '#C9D8D6',
-        silver: '#AebFBC'.toLowerCase(),
-        bronze: '#C08A5A',
-        iron: '#8A9590'
+        gold: '#F2C14E',
+        platinum: '#E8F4F1',
+        silver: '#B9C7C4',
+        bronze: '#D2854C',
+        iron: '#6E7B76'
+    };
+    var TIER_GLOW = {
+        gold: 0xF2C14E,
+        platinum: 0xE8F4F1,
+        silver: 0xB9C7C4,
+        bronze: 0xD2854C,
+        iron: 0x6E7B76
     };
     var ACCENT = '#2DD4BF';
 
@@ -105,30 +112,36 @@
         }
         x.globalAlpha = 1;
 
-        // border + tier strip
+        // the whole frame carries the tier's metal; untiered plaques stay teal
         var tierCol = TIER_COLORS[en.tier] || ACCENT;
-        x.strokeStyle = 'rgba(45,212,191,.55)';
-        x.lineWidth = 3;
+        x.strokeStyle = tierCol;
+        x.globalAlpha = en.tier ? 0.95 : 0.5;
+        x.lineWidth = en.tier ? 6 : 3;
         x.strokeRect(6, 6, W - 12, H - 12);
-        x.fillStyle = tierCol;
-        x.fillRect(6, 6, 10, H - 12);
+        x.globalAlpha = 1;
+
+        // tier banner across the top — the medal is unmissable
+        if (en.tier) {
+            x.fillStyle = tierCol;
+            x.fillRect(9, 9, W - 18, 42);
+            x.fillStyle = '#0A1210';
+            x.font = '700 22px "Space Grotesk", monospace';
+            x.fillText('★ ' + en.tier.toUpperCase() + ' PLAQUE', 26, 38);
+            x.textAlign = 'right';
+            x.font = '500 20px "Space Grotesk", monospace';
+            x.fillText('FIG. ' + String(index + 1).padStart(2, '0'), W - 26, 38);
+            x.textAlign = 'left';
+        } else {
+            x.fillStyle = 'rgba(147,172,166,.9)';
+            x.font = '500 20px "Space Grotesk", monospace';
+            x.fillText('FIG. ' + String(index + 1).padStart(2, '0'), 40, 48);
+        }
 
         // screws
         x.fillStyle = 'rgba(212,178,116,.8)';
-        [[26, 24], [W - 26, 24], [26, H - 24], [W - 26, H - 24]].forEach(function (p) {
+        [[26, 70], [W - 26, 70], [26, H - 24], [W - 26, H - 24]].forEach(function (p) {
             x.beginPath(); x.arc(p[0], p[1], 5, 0, 7); x.fill();
         });
-
-        // index + tier label
-        x.fillStyle = 'rgba(147,172,166,.9)';
-        x.font = '500 20px "Space Grotesk", monospace';
-        x.fillText('FIG. ' + String(index + 1).padStart(2, '0'), 40, 56);
-        if (en.tier) {
-            x.fillStyle = tierCol;
-            x.textAlign = 'right';
-            x.fillText(en.tier.toUpperCase(), W - 40, 56);
-            x.textAlign = 'left';
-        }
 
         // title (wrap, max 3 lines)
         x.fillStyle = '#E9F4F1';
@@ -233,10 +246,13 @@
             wall.add(mesh);
             plaques.push(mesh);
 
-            // glow backing (teal halo, shown on hover)
+            // glow backing (tier-coloured halo, shown on hover)
             var glow = new THREE.Mesh(
                 new THREE.PlaneGeometry(plaqueW * 1.08, plaqueH * 1.12),
-                new THREE.MeshBasicMaterial({ color: 0x2DD4BF, transparent: true, opacity: 0 })
+                new THREE.MeshBasicMaterial({
+                    color: en.tier ? TIER_GLOW[en.tier] : 0x2DD4BF,
+                    transparent: true, opacity: 0
+                })
             );
             glow.position.copy(mesh.position).multiplyScalar(1.004);
             glow.quaternion.copy(mesh.quaternion);
@@ -289,9 +305,11 @@
             var ud = mesh.userData;
             if (gsapOK) {
                 var tl = gsap.timeline();
-                // sweep the wall so the chosen plaque faces the camera...
+                // sweep the wall so the chosen plaque faces the camera.
+                // apparent angle = theta + rotY (wall.rotation.y = -rotY),
+                // so facing front (0) requires rotY = -theta
                 tl.to({ r: rotY }, {
-                    r: ud.theta, duration: 0.55, ease: 'power3.inOut',
+                    r: -ud.theta, duration: 0.55, ease: 'power3.inOut',
                     onUpdate: function () { rotTarget = rotY = this.targets()[0].r; }
                 }, 0);
                 // ...then step right up to it

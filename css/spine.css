@@ -590,6 +590,13 @@ canvas.cursor-layer { opacity: 1; }
     mix-blend-mode: multiply;
     will-change: transform;
 }
+/* the zen garden canvas sits behind all content, above the paper */
+canvas.cursor-sand {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+}
 .crosshair-x, .crosshair-y {
     position: absolute;
     background: rgba(225, 29, 72, .25);

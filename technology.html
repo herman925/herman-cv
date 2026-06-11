@@ -10,10 +10,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,144,600;1,144,500&family=Outfit:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="js/tailwind-config.js?v=10"></script>
-  <link rel="stylesheet" href="global.css?v=10">
-  <link rel="stylesheet" href="css/spine.css?v=10">
-  <link rel="stylesheet" href="css/chapter-tech-overrides.css?v=10">
+  <script src="js/tailwind-config.js?v=11"></script>
+  <link rel="stylesheet" href="global.css?v=11">
+  <link rel="stylesheet" href="css/spine.css?v=11">
+  <link rel="stylesheet" href="css/chapter-tech-overrides.css?v=11">
   <style>
     /* ======================================================================
        CH. 04 page layer — DARK PHOSPHOR amplifiers (page-scoped only)
@@ -92,9 +92,9 @@
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script defer src="js/motion.js?v=10"></script>
-  <script defer src="js/transitions.js?v=10"></script>
-  <script defer src="js/cursor.js?v=10"></script>
+  <script defer src="js/motion.js?v=11"></script>
+  <script defer src="js/transitions.js?v=11"></script>
+  <script defer src="js/cursor.js?v=11"></script>
 </head>
 <body class="antialiased overflow-x-hidden">
 
@@ -186,11 +186,11 @@
           <hr class="section-rule">
           <p class="kicker"><span class="tick">▪</span>CH. 04 § THE ARCHIVE WALL — WORKING SYSTEMS, MOUNTED</p>
           <h2 id="archive-title" class="display-m" data-reveal-lines>The Archive Wall</h2>
-          <p class="standfirst">A curved wall of plaques — every system that shipped, mounted like specimens. Drag to sweep the wall; touch a plaque to step up to it.</p>
+          <p class="standfirst">A private museum of working systems — every project hung under its own spotlight, award metals framed accordingly. Drag to walk the gallery; touch a plaque to step up to it.</p>
         </header>
       </div>
       <div id="plaque-wall" class="relative h-[78svh] min-h-[540px] w-full overflow-hidden">
-        <p id="plaque-wall-hint" class="kicker absolute bottom-4 left-1/2 -translate-x-1/2 z-10 pointer-events-none"><span class="tick">▪</span>DRAG TO SWEEP · CLICK A PLAQUE TO OPEN</p>
+        <p id="plaque-wall-hint" class="kicker absolute bottom-4 left-1/2 -translate-x-1/2 z-10 pointer-events-none"><span class="tick">▪</span>DRAG TO WALK THE GALLERY · CLICK A PLAQUE TO STEP UP</p>
         <div id="plaque-wall-fallback" class="hidden spine-container py-8"></div>
       </div>
     </section>
@@ -918,9 +918,9 @@
   </nav>
 
   <!-- SCRIPTS — order is contractual: navbar, github-cards, carousel -->
-  <script src="js/navbar.js?v=10"></script>
-  <script src="js/github-cards.js?v=10"></script>
-  <script src="js/carousel.js?v=10"></script>
+  <script src="js/navbar.js?v=11"></script>
+  <script src="js/github-cards.js?v=11"></script>
+  <script src="js/carousel.js?v=11"></script>
 
   <!-- Page inline script: navbar init, terminal typewriter (verbatim),
        broadcast counter, and page-specific GSAP (origin line-draw) -->
@@ -1405,6 +1405,6 @@
 
   <!-- THE ARCHIVE WALL — three.js module (mounted into #plaque-wall) -->
   <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js" } }</script>
-  <script type="module" src="js/plaque-wall.js?v=10"></script>
+  <script type="module" src="js/plaque-wall.js?v=11"></script>
 </body>
 </html>

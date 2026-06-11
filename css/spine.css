@@ -544,6 +544,70 @@ html[data-chapter="cover"] .copy-email-btn { border-color: var(--hairline-inv); 
 .copy-email-btn.copied { border-color: var(--accent); color: var(--accent); }
 
 /* ---------------------------------------------------------------------------
+   Chapter cursors (injected by cursor.js — fine pointers, motion-OK only)
+--------------------------------------------------------------------------- */
+#spine-cursor {
+    position: fixed;
+    top: 0; left: 0;
+    width: 20px; height: 20px;
+    border: 1.5px solid var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2147483520;
+    opacity: 0;
+    transition: opacity .25s ease, width .18s ease, height .18s ease, border-radius .18s ease;
+    will-change: transform;
+}
+html[data-chapter="cover"] #spine-cursor { border-color: var(--gold-bright); }
+#spine-cursor.bracketed {
+    border-radius: 0;
+    border: none;
+    background:
+        linear-gradient(var(--accent), var(--accent)) top left / 12px 1.5px,
+        linear-gradient(var(--accent), var(--accent)) top left / 1.5px 12px,
+        linear-gradient(var(--accent), var(--accent)) top right / 12px 1.5px,
+        linear-gradient(var(--accent), var(--accent)) top right / 1.5px 12px,
+        linear-gradient(var(--accent), var(--accent)) bottom left / 12px 1.5px,
+        linear-gradient(var(--accent), var(--accent)) bottom left / 1.5px 12px,
+        linear-gradient(var(--accent), var(--accent)) bottom right / 12px 1.5px,
+        linear-gradient(var(--accent), var(--accent)) bottom right / 1.5px 12px;
+    background-repeat: no-repeat;
+}
+.cursor-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2147483510;
+    opacity: 0;
+    transition: opacity .3s ease;
+}
+canvas.cursor-layer { opacity: 1; }
+.cursor-warmth {
+    inset: auto;
+    width: 420px; height: 420px;
+    background: radial-gradient(circle, rgba(249, 115, 22, .13), rgba(249, 115, 22, 0) 65%);
+    border-radius: 50%;
+    mix-blend-mode: multiply;
+    will-change: transform;
+}
+.crosshair-x, .crosshair-y {
+    position: absolute;
+    background: rgba(225, 29, 72, .25);
+    will-change: transform;
+}
+.crosshair-x { left: 0; right: 0; top: 0; height: 1px; }
+.crosshair-y { top: 0; bottom: 0; left: 0; width: 1px; }
+.crosshair-readout {
+    position: absolute;
+    top: 0; left: 0;
+    font-family: 'Space Grotesk', monospace;
+    font-size: 10px;
+    letter-spacing: .12em;
+    color: var(--accent-deep);
+    will-change: transform;
+}
+
+/* ---------------------------------------------------------------------------
    Focus + a11y
 --------------------------------------------------------------------------- */
 html[data-chapter] :focus-visible {

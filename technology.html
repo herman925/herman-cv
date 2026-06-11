@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Herman Chan | The Digital Humanist</title>
-    <meta name="description" content="Chapter 04 — The Builder. Herman Chan's technology work: the 4Set platform (8,000+ students, 110+ schools), automation systems, AI integration and a self-taught engineering journey.">
+    <meta name="description" content="Chapter 04 — The Toolmaker. Herman Chan's technology work: the 4Set platform (8,000+ students, 110+ schools), automation systems, AI integration and a self-taught engineering journey.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,144,600;1,144,500&family=Outfit:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="js/tailwind-config.js?v=8"></script>
-  <link rel="stylesheet" href="global.css?v=8">
-  <link rel="stylesheet" href="css/spine.css?v=8">
-  <link rel="stylesheet" href="css/chapter-tech-overrides.css?v=8">
+  <script src="js/tailwind-config.js?v=9"></script>
+  <link rel="stylesheet" href="global.css?v=9">
+  <link rel="stylesheet" href="css/spine.css?v=9">
+  <link rel="stylesheet" href="css/chapter-tech-overrides.css?v=9">
   <style>
     /* ======================================================================
        CH. 04 page layer — DARK PHOSPHOR amplifiers (page-scoped only)
@@ -47,9 +47,9 @@
       z-index: 1;
     }
 
-    /* H1 "The Builder": ONE earned glitch — a 2-frame RGB-split jitter.
+    /* H1 "The Toolmaker": ONE earned glitch — a 2-frame RGB-split jitter.
        Fires once on load (JS adds .glitch-fire) and once on hover. No loop. */
-    @keyframes builder-glitch {
+    @keyframes toolmaker-glitch {
       0%, 49% {
         text-shadow: 2px 0 rgba(255, 77, 109, .85), -2px 0 rgba(45, 212, 191, .9);
         transform: translateX(-2px);
@@ -61,7 +61,7 @@
     }
     @media (prefers-reduced-motion: no-preference) {
       .glitch-title.glitch-fire,
-      .glitch-title:hover { animation: builder-glitch .18s steps(2, end) 1; }
+      .glitch-title:hover { animation: toolmaker-glitch .18s steps(2, end) 1; }
     }
 
     /* Ledger rows: teal underline draws across when opened (pure CSS —
@@ -92,12 +92,13 @@
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script defer src="js/motion.js?v=8"></script>
-  <script defer src="js/transitions.js?v=8"></script>
+  <script defer src="js/motion.js?v=9"></script>
+  <script defer src="js/transitions.js?v=9"></script>
+  <script defer src="js/cursor.js?v=9"></script>
 </head>
 <body class="antialiased overflow-x-hidden">
 
-  <div class="running-header">HERMAN CHAN — THE DIGITAL HUMANIST — CH. 04 — TECHNOLOGY</div>
+  <div class="running-header">HERMAN CHAN — THE DIGITAL HUMANIST — CH. 04 — THE TOOLMAKER</div>
 
   <!-- Navigation -->
   <div id="navbar-container"></div>
@@ -105,7 +106,7 @@
   <main>
 
     <!-- ================================================================
-         01 · TITLE PLATE — Ghost 04 / The Builder
+         01 · TITLE PLATE — Ghost 04 / The Toolmaker (terminal docked right)
          ================================================================ -->
     <section class="spine-section relative overflow-hidden min-h-[100svh] flex items-center pt-24" aria-labelledby="chapter-title">
       <span class="ghost-numeral top-[6%] right-[-4%] md:right-[2%]" aria-hidden="true">04</span>
@@ -114,17 +115,16 @@
         <!-- P8: kicker density doubled — the most machine-voiced chapter -->
         <div class="flex flex-wrap gap-x-8 gap-y-2 mb-10">
           <p class="kicker"><span class="tick">▪</span>Chapter 04</p>
-          <p class="kicker">CH. 04 § The Builder</p>
+          <p class="kicker">CH. 04 § The Toolmaker</p>
           <p class="kicker">System Status: Cognitive-First</p>
           <p class="kicker hidden md:block">Phosphor Teal — 2DD4BF</p>
           <p class="kicker hidden lg:block">Reproduced at 1:1</p>
         </div>
 
-        <h1 id="chapter-title" class="display-l glitch-title" data-reveal-lines>The Builder</h1>
-        <div class="accent-bar w-24 mt-6 mb-10" data-accent-bar></div>
-
         <div class="grid lg:grid-cols-12 gap-12 items-start">
           <div class="lg:col-span-7">
+            <h1 id="chapter-title" class="display-l glitch-title" data-reveal-lines>The Toolmaker</h1>
+            <div class="accent-bar w-24 mt-6 mb-10" data-accent-bar></div>
             <h2 class="display-m" data-reveal-lines>Engineering for the <em class="serif-italic accent-deep">Human Mind</em></h2>
             <p class="standfirst mt-6">"A technologist whose skill was born from <em>humility</em>, and whose goal is to lead with <em>empathy</em>."</p>
             <p class="prose-measure ink-soft mt-8">
@@ -132,16 +132,13 @@
             </p>
             <div class="flex flex-wrap gap-x-10 gap-y-5 pt-10">
               <a href="https://github.com/herman925" target="_blank" rel="noopener noreferrer" class="link-editorial py-2">GitHub ↗</a>
-              <a href="#ecosystem" class="link-editorial py-2">Projects →</a>
+              <a href="#archive" class="link-editorial py-2">Projects →</a>
               <a href="#broadcast" class="link-editorial py-2">Watch Videos →</a>
             </div>
-          </div>
-          <div class="lg:col-span-5">
-            <div class="frame-hairline p-6 bg-[var(--paper-soft)] plate-reveal">
+            <div class="frame-hairline p-6 bg-[var(--paper-soft)] plate-reveal mt-10">
               <p class="kicker mb-3"><span class="tick">▪</span>Index of this chapter</p>
               <ol class="font-mono text-xs tracking-[0.12em] uppercase text-[var(--ink-soft)] space-y-2">
-                <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#field-notes">§ Field Notes — Career Log</a></li>
-                <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#ecosystem">§ Plates &amp; Figures — Digital Ecosystem</a></li>
+                <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#archive">§ The Archive Wall</a></li>
                 <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#innovations">§ The Workshop — Innovations Ledger</a></li>
                 <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#broadcast">§ Broadcasts</a></li>
                 <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#stories">§ Narratives &amp; Journey</a></li>
@@ -150,6 +147,30 @@
               </ol>
             </div>
           </div>
+
+          <!-- FIELD NOTES terminal — moved up from its own section, markup intact -->
+          <div class="lg:col-span-5">
+            <div class="terminal-hud plate-reveal">
+              <div class="field-notes-frame">
+                <div class="field-notes-bar">
+                  <span>FIELD NOTES — CAREER LOG — REPRODUCED AT 1:1</span>
+                  <span class="hidden sm:inline">herman@tech-hub:~ (Live Career Log)</span>
+                </div>
+                <!-- Terminal Body — protected ids, typewriter script untouched -->
+                <div class="p-6 font-mono text-[13px] sm:text-sm h-[380px] overflow-y-auto scrollbar-hide" id="terminal-body">
+                  <div id="terminal-content" class="space-y-2 text-cyber-400"></div>
+                  <div class="mt-2 flex items-center">
+                    <span class="text-green-400 mr-2">➜</span>
+                    <span class="text-blue-400 mr-2">~</span>
+                    <span id="typewriter-cursor" class="text-cyber-400"></span><span class="animate-pulse text-cyber-400">_</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="terminal-status"><span class="status-dot" aria-hidden="true">●</span><span>LIVE — CAREER LOG DAEMON · UPTIME ∞</span></p>
+            <!-- Serif marginal annotation (P1: every mono block gets one) -->
+            <p class="serif-italic text-lg leading-relaxed ink-soft mt-4">“This is where I taught myself to code.”</p>
+          </div>
         </div>
 
         <p class="kicker mt-16">Scroll ↓</p>
@@ -157,107 +178,20 @@
     </section>
 
     <!-- ================================================================
-         02 · FIELD NOTES — the live typewriter terminal, reproduced 1:1
+         02 · THE ARCHIVE WALL — three.js plaque wall (js/plaque-wall.js)
          ================================================================ -->
-    <section id="field-notes" class="spine-section" aria-labelledby="field-notes-title">
-      <span class="scanline" aria-hidden="true"></span>
+    <section id="archive" class="spine-section" aria-labelledby="archive-title">
       <div class="spine-container">
-        <div class="section-head">
+        <header class="section-head">
           <hr class="section-rule">
-          <p class="kicker"><span class="tick">▪</span>CH. 04 § Field Notes — Reproduced at 1:1</p>
-          <h2 id="field-notes-title" class="display-m" data-reveal-lines>Field Notes</h2>
-        </div>
-
-        <div class="grid lg:grid-cols-12 gap-10 items-start relative pl-5 lg:pl-8">
-          <div class="field-rule" aria-hidden="true"></div>
-
-          <div class="lg:col-span-7 plate-reveal">
-            <div class="field-notes-frame">
-              <div class="field-notes-bar">
-                <span>FIELD NOTES — CAREER LOG — REPRODUCED AT 1:1</span>
-                <span class="hidden sm:inline">herman@tech-hub:~ (Live Career Log)</span>
-              </div>
-              <!-- Terminal Body — protected ids, typewriter script untouched -->
-              <div class="p-6 font-mono text-[13px] sm:text-sm h-[380px] overflow-y-auto scrollbar-hide" id="terminal-body">
-                <div id="terminal-content" class="space-y-2 text-cyber-400"></div>
-                <div class="mt-2 flex items-center">
-                  <span class="text-green-400 mr-2">➜</span>
-                  <span class="text-blue-400 mr-2">~</span>
-                  <span id="typewriter-cursor" class="text-cyber-400"></span><span class="animate-pulse text-cyber-400">_</span>
-                </div>
-              </div>
-            </div>
-            <p class="caption mt-3">FIG. 01 — LIVE TERMINAL, CAREER LOG DAEMON. CYCLES CONTINUOUSLY.</p>
-          </div>
-
-          <!-- Serif marginal annotation (P1: every mono block gets one) -->
-          <aside class="lg:col-span-4 lg:col-start-9 lg:pt-12">
-            <p class="kicker mb-4">Marginalia</p>
-            <p class="serif-italic text-xl leading-relaxed ink-soft">“This is where I taught myself to code.”</p>
-          </aside>
-        </div>
+          <p class="kicker"><span class="tick">▪</span>CH. 04 § THE ARCHIVE WALL — WORKING SYSTEMS, MOUNTED</p>
+          <h2 id="archive-title" class="display-m" data-reveal-lines>The Archive Wall</h2>
+          <p class="standfirst">A curved wall of plaques — every system that shipped, mounted like specimens. Drag to sweep the wall; touch a plaque to step up to it.</p>
+        </header>
       </div>
-    </section>
-
-    <!-- ================================================================
-         03 · PLATES & FIGURES — Digital Ecosystem (protected explorer)
-         ================================================================ -->
-    <section id="ecosystem" class="spine-section min-h-[800px]" aria-labelledby="ecosystem-title">
-      <span class="scanline" aria-hidden="true"></span>
-      <div class="spine-container">
-        <div class="section-head">
-          <hr class="section-rule">
-          <p class="kicker"><span class="tick">▪</span>CH. 04 § Plates &amp; Figures — The Archive</p>
-          <h2 id="ecosystem-title" class="display-m" data-reveal-lines>Digital <span class="accent-deep serif-italic">Ecosystem</span></h2>
-          <p class="standfirst">Explore the codebase. Navigate through production systems, research tools, and prototypes.</p>
-          <p class="caption mt-4 flex items-center gap-2">
-            <i data-lucide="mouse-pointer-click" class="w-4 h-4"></i>
-            <span>Click folders to explore • Double-click files to preview</span>
-          </p>
-        </div>
-
-        <!-- File Explorer Interface — page-owned chrome, protected internals.
-             Perspective container: shell rises rotateX(8deg)→0 on entry. -->
-        <div class="max-w-5xl mx-auto" style="perspective: 1200px">
-        <div id="explorer-shell" class="frame-hairline bg-[var(--paper)]">
-          <!-- Window Header -->
-          <div class="explorer-chrome-bar">
-            <div class="flex items-center gap-3 min-w-0">
-              <button id="explorer-back" aria-label="Go back" class="p-3 frame-hairline text-[var(--ink)] hover:border-[var(--accent)] transition-all opacity-0 pointer-events-none">
-                <i data-lucide="arrow-left" class="w-5 h-5"></i>
-              </button>
-              <!-- Breadcrumbs -->
-              <div id="explorer-breadcrumbs" class="flex items-center gap-2 text-sm font-mono ml-1 min-w-0 overflow-x-auto scrollbar-hide normal-case tracking-normal">
-                <!-- Injected via JS -->
-              </div>
-            </div>
-            <!-- Search Bar (Visual Only) -->
-            <div class="hidden md:flex items-center gap-2 frame-hairline px-3 py-1.5">
-              <i data-lucide="search" class="w-3 h-3"></i>
-              <span class="text-[10px] font-mono">Search ecosystem...</span>
-            </div>
-          </div>
-
-          <!-- Main Content Area -->
-          <div class="p-5 md:p-8 min-h-[400px]">
-            <div id="explorer-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 transition-all duration-300">
-              <!-- Content Injected via JS -->
-            </div>
-          </div>
-
-          <!-- Status Bar -->
-          <div class="explorer-status-bar">
-            <div class="flex gap-4">
-              <span><span class="w-2 h-2 rounded-full bg-[var(--accent)] inline-block mr-1"></span>System Online</span>
-              <span>14 Items</span>
-            </div>
-            <div>
-              UTF-8
-            </div>
-          </div>
-        </div>
-        </div>
-        <p class="caption mt-3 max-w-5xl mx-auto">FIG. SERIES — THE ARCHIVE OF PRODUCTION SYSTEMS, CATALOGUED AS PLATES.</p>
+      <div id="plaque-wall" class="relative h-[78svh] min-h-[540px] w-full overflow-hidden">
+        <p id="plaque-wall-hint" class="kicker absolute bottom-4 left-1/2 -translate-x-1/2 z-10 pointer-events-none"><span class="tick">▪</span>DRAG TO SWEEP · CLICK A PLAQUE TO OPEN</p>
+        <div id="plaque-wall-fallback" class="hidden spine-container py-8"></div>
       </div>
     </section>
 
@@ -983,11 +917,10 @@
     <a href="technology.html" data-ink="tealink" title="Technology" aria-current="page"><span></span></a>
   </nav>
 
-  <!-- SCRIPTS — order is contractual: navbar, github-cards BEFORE explorer, carousel -->
-  <script src="js/navbar.js?v=8"></script>
-  <script src="js/github-cards.js?v=8"></script>
-  <script src="js/explorer.js?v=8"></script>
-  <script src="js/carousel.js?v=8"></script>
+  <!-- SCRIPTS — order is contractual: navbar, github-cards, carousel -->
+  <script src="js/navbar.js?v=9"></script>
+  <script src="js/github-cards.js?v=9"></script>
+  <script src="js/carousel.js?v=9"></script>
 
   <!-- Page inline script: navbar init, terminal typewriter (verbatim),
        broadcast counter, and page-specific GSAP (origin line-draw) -->
@@ -1339,7 +1272,7 @@
         initNavbar({
             activePage: 'technology',
             sections: [
-                { id: 'ecosystem', label: 'Ecosystem' },
+                { id: 'archive', label: 'Archive Wall' },
                 { id: 'innovations', label: 'Workshop' },
                 { id: 'broadcast', label: 'Broadcast' },
                 { id: 'stories', label: 'Stories' },
@@ -1424,36 +1357,6 @@
                 });
         });
 
-        // FIELD NOTES: scrubbed teal rule down the left edge
-        var rule = document.querySelector('.field-rule');
-        if (rule) {
-            gsap.fromTo(rule, { scaleY: 0 }, {
-                scaleY: 1,
-                ease: 'none',
-                scrollTrigger: {
-                    trigger: '#field-notes',
-                    start: 'top 70%',
-                    end: 'bottom 60%',
-                    scrub: true
-                }
-            });
-        }
-
-        // EXPLORER: shell rises rotateX(8deg)→0 from below inside its
-        // perspective container on entry (Z-axis entrance, once).
-        var explorerShell = document.getElementById('explorer-shell');
-        if (explorerShell) {
-            gsap.from(explorerShell, {
-                rotationX: 8,
-                y: 48,
-                opacity: 0,
-                duration: 1.1,
-                ease: SPINE.EASE_ENTER,
-                transformOrigin: 'center bottom',
-                scrollTrigger: { trigger: explorerShell, start: 'top 85%', once: true }
-            });
-        }
-
         // BROADCASTS: carousel cards rise rotateX(8deg)→0, staggered, once.
         var broadcastCards = gsap.utils.toArray('#broadcast-carousel > a');
         if (broadcastCards.length) {
@@ -1499,5 +1402,9 @@
         }
     });
   </script>
+
+  <!-- THE ARCHIVE WALL — three.js module (mounted into #plaque-wall) -->
+  <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js" } }</script>
+  <script type="module" src="js/plaque-wall.js?v=9"></script>
 </body>
 </html>

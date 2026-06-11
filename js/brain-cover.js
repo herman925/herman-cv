@@ -120,9 +120,11 @@
             if (p[0] < iMinX) iMinX = p[0]; if (p[0] > iMaxX) iMaxX = p[0];
             if (p[1] < iMinY) iMinY = p[1]; if (p[1] > iMaxY) iMaxY = p[1];
         });
-        var cutY = iMinY + (iMaxY - iMinY) * 0.66;     // icon Y grows downward
-        var brainPoly = innerRaw;                       // full loop for inside test
-        var bandPts = innerRaw.filter(function (p) { return p[1] < cutY + 10; });
+        // the icon's inner path IS the complete brain (cortex bumps, temporal
+        // region and stem) — fill the whole polygon, no vertical cut
+        var cutY = iMaxY + 1;
+        var brainPoly = innerRaw;
+        var bandPts = innerRaw;
 
         // bbox of the actual brain portion (poly points above the cut)
         var bMinX = 1e9, bMaxX = -1e9, bMinY = 1e9, bMaxY = -1e9;
@@ -477,7 +479,8 @@
 
         function spawnCascade() {
             var origin;
-            if (hoverState.zone >= 0 && Math.random() < 0.6 && nodesByZone[hoverState.zone].length) {
+            if (hoverState.zone >= 0 && Math.random() < 0.9 && nodesByZone[hoverState.zone].length) {
+                // a hovered lobe owns the conversation
                 var zl = nodesByZone[hoverState.zone];
                 origin = zl[(Math.random() * zl.length) | 0];
             } else {
@@ -534,6 +537,8 @@
                 var age = simTime - cas.t0;
                 var alive = false;
                 var ci = zoneColors[cas.oz];
+                // while a lobe is hovered, cascades from elsewhere recede
+                var dim = (hoverState.zone >= 0 && cas.oz !== hoverState.zone) ? 0.35 : 1;
                 for (var e = 0; e < cas.edges.length; e++) {
                     var ed = cas.edges[e];
                     var start = ed.depth * LEVEL_GAP;
@@ -550,14 +555,14 @@
                             var g = ci.y + (cj.y - ci.y) * ts;
                             var b2 = ci.z + (cj.z - ci.z) * ts;
                             if (s === 0) { r = r * 0.4 + 0.6; g = g * 0.4 + 0.6; b2 = b2 * 0.4 + 0.6; }
-                            put(x, y, z, r, g, b2, s === 0 ? 4.6 : 2.8 - s * 0.7);
+                            put(x, y, z, r * dim, g * dim, b2 * dim, (s === 0 ? 4.6 : 2.8 - s * 0.7) * (0.6 + 0.4 * dim));
                         }
                     } else if (tt > 1 && tt <= 1 + FLASH_DUR / HOP_DUR) {
                         alive = true;
                         var f = 1 - (tt - 1) / (FLASH_DUR / HOP_DUR);
                         put(nodeX[ed.b], nodeY[ed.b], nodeZ[ed.b],
-                            cj.x * 0.6 + 0.4 * f, cj.y * 0.6 + 0.4 * f, cj.z * 0.6 + 0.4 * f,
-                            5.5 * f);
+                            (cj.x * 0.6 + 0.4 * f) * dim, (cj.y * 0.6 + 0.4 * f) * dim, (cj.z * 0.6 + 0.4 * f) * dim,
+                            5.5 * f * (0.6 + 0.4 * dim));
                     } else if (tt < 0) {
                         alive = true;
                     }
@@ -663,6 +668,11 @@
         }
         frameEl.addEventListener('pointermove', function (e) {
             if (diving) return;
+            // a zone anchor holding keyboard focus keeps its label pinned via
+            // :focus-visible — release it once the pointer takes over
+            if (zoneAnchors.indexOf(document.activeElement) !== -1) {
+                document.activeElement.blur();
+            }
             var z = pointerZone(e);
             frameEl.style.cursor = z >= 0 ? 'pointer' : '';
             setHover(z);

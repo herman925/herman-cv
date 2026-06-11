@@ -645,30 +645,43 @@
             tl.call(function () { window.spineNavigate(href, z.ink); }, null, 0.38);
         }
 
-        /* true pointer picking: project the node set through the LIVE camera
-           and rotation, take the nearest node to the cursor (within 28px).
-           Pick and glow come from the same particles — they cannot disagree. */
+        /* true pointer picking: project EVERY particle through the LIVE camera
+           and rotation, take the nearest within 30px. The full set leaves no
+           dead pockets (~7px average spacing), and pick + glow come from the
+           same particles — they cannot disagree. Throttled to ~30ms. */
         var frameEl = mount.parentElement || mount;
         var pickV = new THREE.Vector3();
-        var PICK_RADIUS_PX = 28;
+        var PICK_RADIUS2 = 40 * 40;
+        var lastPickT = 0, lastPickResult = -1;
         function pointerZone(e) {
+            var now = performance.now();
+            if (now - lastPickT < 30) return lastPickResult;
+            lastPickT = now;
             var rect = renderer.domElement.getBoundingClientRect();
-            if (!rect.width || !rect.height) return -1;
+            if (!rect.width || !rect.height) { lastPickResult = -1; return -1; }
             var px = e.clientX, py = e.clientY;
-            var bestD = PICK_RADIUS_PX * PICK_RADIUS_PX;
+            var bestD = PICK_RADIUS2;
             var best = -1;
-            for (var k = 0; k < NN; k++) {
-                pickV.set(nodeX[k], nodeY[k], nodeZ[k]);
-                group.localToWorld(pickV);
+            var halfW = rect.width / 2, halfH = rect.height / 2;
+            for (var k = 0; k < N; k++) {
+                pickV.set(positions[k * 3], positions[k * 3 + 1], positions[k * 3 + 2]);
+                pickV.applyMatrix4(group.matrixWorld);
                 pickV.project(camera);
-                var sx = rect.left + (pickV.x + 1) / 2 * rect.width;
-                var sy = rect.top + (1 - (pickV.y + 1) / 2) * rect.height;
-                var dx = sx - px, dy = sy - py;
+                var dx = (rect.left + (pickV.x + 1) * halfW) - px;
+                var dy = (rect.top + (1 - pickV.y) * halfH) - py;
                 var d = dx * dx + dy * dy;
-                if (d < bestD) { bestD = d; best = nodeZoneArr[k]; }
+                if (d < bestD) { bestD = d; best = pts[k].zone; }
             }
+            lastPickResult = best;
             return best;
         }
+        // debug handle (harmless in production; used by automated QA)
+        window.__brainDebug = {
+            pickAt: function (x, y) { return pointerZone({ clientX: x, clientY: y }); },
+            nodes: function () { return NN; },
+            frame: function () { return frameEl.className; }
+        };
+
         frameEl.addEventListener('pointermove', function (e) {
             if (diving) return;
             // a zone anchor holding keyboard focus keeps its label pinned via

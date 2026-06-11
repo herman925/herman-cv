@@ -10,16 +10,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,144,600;1,144,500&family=Outfit:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="js/tailwind-config.js?v=7"></script>
-  <link rel="stylesheet" href="global.css?v=7">
-  <link rel="stylesheet" href="css/spine.css?v=7">
+  <script src="js/tailwind-config.js?v=8"></script>
+  <link rel="stylesheet" href="global.css?v=8">
+  <link rel="stylesheet" href="css/spine.css?v=8">
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script defer src="js/motion.js?v=7"></script>
-  <script defer src="js/transitions.js?v=7"></script>
+  <script defer src="js/motion.js?v=8"></script>
+  <script defer src="js/transitions.js?v=8"></script>
   <style>
     /* ====================================================================
        Page-specific: Chapter 01 — CREAM & EMERALD ATLAS
@@ -163,8 +163,13 @@
             <svg viewBox="0 0 56 1200" preserveAspectRatio="none" aria-hidden="true" focusable="false">
               <path id="journey-path"
                 d="M28 0 C 50 36, 8 62, 28 100 C 52 156, 4 244, 28 300 C 54 358, 2 444, 28 500 C 50 562, 6 642, 28 700 C 54 760, 2 846, 28 900 C 50 962, 8 1044, 28 1100 C 38 1140, 20 1172, 28 1200"
-                fill="none" stroke="var(--accent)" stroke-width="1.5"
-                vector-effect="non-scaling-stroke" />
+                fill="none" stroke="var(--accent)" stroke-width="1.5" />
+              <!-- no vector-effect="non-scaling-stroke": combined with
+                   preserveAspectRatio="none", Chrome measures dashes in screen
+                   px while getTotalLength() returns viewBox units — the draw
+                   then stops short of the final waypoint on stretched
+                   (desktop) layouts -->
+
             </svg>
             <ol class="journey-stops">
               <li class="journey-stop">
@@ -573,7 +578,7 @@
     <a href="technology.html" data-ink="tealink" title="Technology"><span></span></a>
   </nav>
 
-  <script src="js/navbar.js?v=7"></script>
+  <script src="js/navbar.js?v=8"></script>
   <script>
     // Initialize Navbar
     initNavbar({

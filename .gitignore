@@ -1,5 +1,16 @@
-# Ignore personal CV documents
-Herman CV.*
+# Ignore personal CV documents.
+#
+# NOTE THE TRAILING GLOB. This rule used to read `Herman CV.*`, which matches
+# `Herman CV.md` and nothing else — `Herman CV_EdUHK.md` and `Herman CV_new.md`
+# have an underscore where that pattern wants a dot, so they were tracked and
+# public from 2025-12-14 until 2026-07-29 carrying a home address and phone
+# number. The comment above stated the intent; the pattern implemented it for one
+# file. Anything named `Herman CV<anything>` is now ignored by default.
+Herman CV*
+# ...except these two, which are deliberately published as part of the CV site and
+# carry no contact details. Adding a new variant here is a decision, not an accident.
+!Herman CV_EdUHK.md
+!Herman CV_new.md
 
 # Ignore product requirement documents
 PRD/

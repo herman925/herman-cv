@@ -209,6 +209,9 @@
             #brainMapSVG .zone-counselling .network-node { fill: #fb923c !important; }
             #brainMapSVG .zone-technology .network-node { fill: #2dd4bf !important; }
             #brainMapSVG .zone-project .network-node { fill: #fb7185 !important; }
+            /* Override the GL tier's mouse-transparent SVG for touch labels. */
+            html.brain-gl #brainMapSVG .brain-label-group,
+            html.brain-gl #brainMapSVG .brain-label-group * { pointer-events: auto !important; }
         }
 
         .toc-entry {

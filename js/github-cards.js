@@ -4,19 +4,6 @@
  */
 
 const githubCardData = {
-    'career-terminal': {
-        type: 'complex',
-        title: 'Live Career Terminal',
-        subtitle: 'Interactive portfolio · Skills, experience and project log',
-        tags: ['JavaScript', 'Animation', 'Responsive UI', 'Accessibility'],
-        challenge: { icon: 'terminal', title: 'The Story', text: 'A long skills list is easy to skim past. The career terminal presents my experience, tools, projects and working philosophy as a live command-line session.' },
-        solution: { icon: 'code-2', title: 'Architecture: Career Data → Typewriter → Responsive Window', text: 'A vanilla JavaScript sequence types commands and responses, corrects simulated typos and scrolls within a contained terminal. The same implementation powers the hero and Digital Ecosystem panels, with separate, accessible DOM targets.' },
-        features: [
-            { icon: 'list', color: 'text-cyan-400', text: '<strong>Career content:</strong> experience, development and creative tools, project work, qualifications and values.' },
-            { icon: 'monitor-smartphone', color: 'text-blue-400', text: '<strong>Responsive window:</strong> familiar three-control header, readable output, keyboard scrolling and contained overflow.' },
-            { icon: 'layers', color: 'text-green-400', text: '<strong>Reusable sequence:</strong> one implementation with independent targets for each embedded terminal.' }
-        ]
-    },
     // Reviewed against repository READMEs and the owner's CiteReflex deck (2026-11-01).
     'hualong-platform': {
         type: 'simple',

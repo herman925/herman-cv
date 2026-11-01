@@ -63,9 +63,7 @@ const projectEffortEstimates = {
     'autosuite': { scope: 'Administrative automation, exception handling and reusable output workflows.', work: [
         ['Workflow mapping', 3, 5], ['Automation scripts and outputs', 7, 12], ['Exception tests and handover', 4, 7]
     ] },
-    'career-terminal': { scope: 'Live career-log content, animated terminal interface, responsive embedding and accessibility.', work: [
-        ['Content and terminal interface', 2, 4], ['Typewriter and responsive embedding', 3, 5], ['Accessibility and verification', 2, 3]
-    ] }
+
 };
 
 function formatCostRange(low, high, currency = false) {

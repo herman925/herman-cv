@@ -13,7 +13,6 @@ const explorerData = {
             { id: 'citereflex', type: 'file', fileType: 'web' },
             { id: 'teacher-companion', type: 'file', fileType: 'web' },
             { id: 'claude-code-plugins', type: 'file', fileType: 'js' },
-            { id: 'career-terminal', type: 'file', fileType: 'web' }
         ] },
         { name: 'Education & Research', type: 'folder', icon: 'graduation-cap', description: 'Learning platforms, assessments and research operations', children: [
             { name: 'Learning Platforms', type: 'folder', icon: 'school', children: [
@@ -62,7 +61,6 @@ const explorerData = {
             { id: 'claude-code-plugins', type: 'file', fileType: 'js' },
             { id: 'video-tagger', type: 'file', fileType: 'cpp' },
             { id: 'quick-dish-wizard', type: 'file', fileType: 'react' },
-            { id: 'career-terminal', type: 'file', fileType: 'web' }
         ] },
         { name: 'Event & Everyday Tools', type: 'folder', icon: 'wrench', description: 'Event delivery, access portals and practical utilities', children: [
             { id: 'ks-qrcode', type: 'file', fileType: 'web' },

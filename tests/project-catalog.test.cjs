@@ -11,7 +11,7 @@ for (const file of ['github-cards.js', 'project-valuations.js', 'explorer.js']) 
 const { projects, files } = JSON.parse(vm.runInContext('JSON.stringify({ projects: githubCardData, files: collectProjects() })', context));
 
 test('Recent Work aliases do not duplicate or orphan projects', () => {
-    assert.equal(files.length, 38);
+    assert.equal(files.length, 37);
     assert.equal(new Set(files.map(file => file.id)).size, files.length);
     assert.deepEqual(files.map(file => file.id).sort(), Object.keys(projects).sort());
     assert(files.every(file => projects[file.id].valuation));
@@ -19,7 +19,7 @@ test('Recent Work aliases do not duplicate or orphan projects', () => {
 
 test('every new estimate has an auditable positive range and itemised total', () => {
     const estimates = Object.values(projects).map(project => project.valuation).filter(value => value.model);
-    assert.equal(estimates.length, 19);
+    assert.equal(estimates.length, 18);
     for (const value of estimates) {
         assert(value.low > 0 && value.high >= value.low);
         assert.equal(value.low, value.items.reduce((sum, item) => sum + item.low, 0));

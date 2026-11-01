@@ -13,7 +13,7 @@
   <script src="js/tailwind-config.js?v=11"></script>
   <link rel="stylesheet" href="global.css?v=11">
   <link rel="stylesheet" href="css/spine.css?v=15">
-  <link rel="stylesheet" href="css/chapter-tech-overrides.css?v=15">
+  <link rel="stylesheet" href="css/chapter-tech-overrides.css?v=16">
   <style>
     /* ======================================================================
        CH. 04 page layer — DARK PHOSPHOR amplifiers (page-scoped only)
@@ -175,7 +175,6 @@
       <span id="ecosystem" class="absolute top-0" aria-hidden="true"></span>
       <span class="scanline" aria-hidden="true"></span>
       <div class="spine-container">
-        <div class="ecosystem-intro">
         <div class="section-head">
           <hr class="section-rule">
           <p class="kicker"><span class="tick">▪</span>CH. 04 § Project Index</p>
@@ -187,16 +186,8 @@
           </p>
         </div>
 
-        <details id="ecosystem-console" class="ecosystem-console">
-          <summary><span class="terminal-lights" aria-hidden="true"><span></span><span></span><span></span></span><span><span class="terminal-session">herman@tech-hub:~ · </span>Live Career Log</span></summary>
-          <div id="ecosystem-terminal-body" data-lenis-prevent class="career-output" tabindex="0" role="region" aria-label="Digital Ecosystem career log output">
-            <div id="ecosystem-terminal-content" class="space-y-2 text-cyber-400"></div>
-            <div class="mt-2 flex items-center"><span class="text-green-400 mr-2">➜</span><span class="text-blue-400 mr-2">~</span><span id="ecosystem-typewriter-cursor"></span><span class="animate-pulse">_</span></div>
-          </div>
-        </details>
-        </div>
-
         <div id="explorer-shell">
+          <div class="explorer-window-bar" aria-hidden="true"><span class="window-lights"><span></span><span></span><span></span></span></div>
           <div class="explorer-toolbar">
             <div class="explorer-location">
               <button id="explorer-back" type="button" aria-label="Go back" class="invisible" disabled><i data-lucide="arrow-left" aria-hidden="true"></i></button>
@@ -966,18 +957,18 @@
 
   <!-- Project data loads before the explorer. -->
   <script src="js/navbar.js?v=15"></script>
-  <script src="js/github-cards.js?v=15"></script>
-  <script src="js/project-valuations.js?v=15"></script>
-  <script src="js/explorer.js?v=15"></script>
+  <script src="js/github-cards.js?v=16"></script>
+  <script src="js/project-valuations.js?v=16"></script>
+  <script src="js/explorer.js?v=16"></script>
   <script src="js/carousel.js?v=11"></script>
 
   <!-- Page inline script: navbar init, terminal typewriter (verbatim),
        broadcast counter, and page-specific GSAP (origin line-draw) -->
   <script>
-    function initTerminal(prefix = '') {
-        const content = document.getElementById(`${prefix}terminal-content`);
-        const cursor = document.getElementById(`${prefix}typewriter-cursor`);
-        const shell = document.getElementById(`${prefix}terminal-body`);
+    function initTerminal() {
+        const content = document.getElementById('terminal-content');
+        const cursor = document.getElementById('typewriter-cursor');
+        const shell = document.getElementById('terminal-body');
         if (!content || !cursor) return;
 
         const lines = [
@@ -1338,8 +1329,6 @@
         }
 
         initTerminal();
-        document.getElementById('ecosystem-console').open = window.matchMedia('(min-width: 1100px)').matches;
-        initTerminal('ecosystem-');
 
         // --- Broadcast index counter (functional, motion-independent) ------
         (function () {

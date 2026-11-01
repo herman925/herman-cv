@@ -75,6 +75,8 @@ const explorerData = {
 let currentPath = [];
 let searchQuery = '';
 let showAllProjects = false;
+let refreshTimer;
+let catalogTween;
 
 function collectProjects(folder = explorerData) {
     const projects = new Map();
@@ -114,15 +116,37 @@ function initExplorer() {
         searchQuery = '';
         document.getElementById('explorer-search').value = '';
         showAllProjects = true;
-        renderExplorer();
+        renderExplorer({ animate: true });
+    });
+    const preference = window.SPINE?.reduceQuery || window.matchMedia('(prefers-reduced-motion: reduce)');
+    preference.addEventListener('change', event => {
+        if (event.matches && window.gsap) {
+            const cards = document.querySelectorAll('#explorer-grid > button');
+            catalogTween?.kill();
+            if (window.Flip) Flip.killFlipsOf(cards, false);
+            gsap.killTweensOf(cards);
+            gsap.set([...cards, document.getElementById('explorer-grid')], { clearProps: 'transform,opacity,height,width,position,top,left' });
+        }
     });
     renderExplorer();
+    window.SPINE?.onMotion(function () {
+        ScrollTrigger.create({
+            trigger: '#explorer-grid', start: 'top 90%', once: true,
+            onEnter: function () {
+                const cards = document.querySelectorAll('#explorer-grid > button');
+                if (cards.length) gsap.fromTo(cards, { y: 24, opacity: 0, rotationX: -5, transformPerspective: 900 }, {
+                    y: 0, opacity: 1, rotationX: 0, duration: 0.65, stagger: { amount: 0.16 },
+                    ease: 'power3.out', clearProps: 'transform,opacity'
+                });
+            }
+        });
+    });
 }
 
 /**
  * Render the Explorer UI based on currentPath
  */
-function renderExplorer() {
+function renderExplorer({ animate = false } = {}) {
     const container = document.getElementById('explorer-grid');
     const breadcrumbs = document.getElementById('explorer-breadcrumbs');
     const backBtn = document.getElementById('explorer-back');
@@ -150,13 +174,49 @@ function renderExplorer() {
         });
     }
     container.classList.toggle('explorer-root', !searchQuery && !showAllProjects && currentPath.length === 0);
-    container.innerHTML = items.length ? items.map(item =>
-        item.type === 'folder' ? createFolderHTML(item) : createFileHTML(item)
-    ).join('') : '<p class="explorer-empty">No projects match. Try another title, tool or topic.</p>';
+    const previous = [...container.querySelectorAll(':scope > button')];
+    const previousByKey = new Map(previous.map(node => [node.dataset.catalogKey, node]));
+    const canAnimate = Boolean(window.SPINE?.motionOK && window.gsap);
+    const oldHeight = container.getBoundingClientRect().height;
+    const visible = previous.filter(node => { const r = node.getBoundingClientRect(); return r.bottom > -100 && r.top < innerHeight + 100; });
+    const state = canAnimate && window.Flip && visible.length ? Flip.getState(visible, { kill: false, props: 'opacity' }) : null;
+    catalogTween?.kill();
+    if (window.Flip) Flip.killFlipsOf(previous, false);
+    if (window.gsap) {
+        gsap.killTweensOf([...previous, container]);
+        gsap.set([...previous, container], { clearProps: 'transform,opacity,height,width,position,top,left' });
+    }
+    const next = items.map(item => {
+        const key = item.type === 'folder' ? `folder:${item.name}` : `project:${item.id}`;
+        if (previousByKey.has(key)) return previousByKey.get(key);
+        const template = document.createElement('template');
+        template.innerHTML = item.type === 'folder' ? createFolderHTML(item) : createFileHTML(item);
+        return template.content.firstElementChild;
+    });
+    if (next.length) container.replaceChildren(...next);
+    else container.innerHTML = '<p class="explorer-empty">No projects match. Try another title, tool or topic.</p>';
     const count = document.getElementById('explorer-count');
     if (count) count.textContent = `${items.length} ${searchQuery || showAllProjects ? 'projects' : 'items'} · ${collectProjects().length} unique projects`;
     document.getElementById('explorer-all').setAttribute('aria-pressed', String(showAllProjects));
     if (window.lucide) lucide.createIcons();
+    if (canAnimate && previous.length) {
+        const enter = nodes => {
+            const entering = [...nodes].filter(node => { const r = node.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight + 100; });
+            if (!entering.length) return;
+            return gsap.fromTo(entering, { y: animate ? 24 : 12, opacity: 0, scale: 0.96, rotationX: animate ? -5 : 0, transformPerspective: 900 }, {
+                y: 0, opacity: 1, scale: 1, rotationX: 0,
+                duration: animate ? 0.6 : 0.35, stagger: { amount: animate ? 0.14 : 0.05 },
+                ease: 'power3.out', clearProps: 'transform,opacity'
+            });
+        };
+        catalogTween = gsap.timeline();
+        if (state) catalogTween.add(Flip.from(state, { targets: next, scale: true, duration: 0.55, ease: 'power3.inOut', prune: true, onEnter: enter }), 0);
+        else if (animate && next.length) catalogTween.add(enter(next), 0);
+        const newHeight = container.getBoundingClientRect().height;
+        if (Math.abs(newHeight - oldHeight) > 2) catalogTween.fromTo(container, { height: oldHeight }, { height: newHeight, duration: 0.55, ease: 'power3.inOut', clearProps: 'height' }, 0);
+    }
+    clearTimeout(refreshTimer);
+    refreshTimer = setTimeout(() => window.ScrollTrigger?.refresh(), canAnimate ? 700 : 120);
     if (hadFocus && document.activeElement.id !== 'explorer-search') {
         container.querySelector('button')?.focus({ preventScroll: true });
     }
@@ -166,7 +226,7 @@ function renderExplorer() {
  * Create HTML for a Folder Item
  */
 function createFolderHTML(folder) {
-    return `<button type="button" onclick="navigateTo('${folder.name}')" class="explorer-card explorer-folder">
+    return `<button type="button" onclick="navigateTo('${folder.name}')" data-catalog-key="folder:${folder.name}" class="explorer-card explorer-folder">
         <i data-lucide="${folder.icon || 'folder'}" aria-hidden="true"></i>
         <span class="explorer-card-title">${folder.name}</span>
         <span class="explorer-card-description">${folder.description || 'Open this collection'}</span>
@@ -180,7 +240,7 @@ function createFolderHTML(folder) {
 function createFileHTML(file) {
     const data = githubCardData[file.id];
     const icon = fileIcons[file.fileType] || { icon: 'file' };
-    return `<button type="button" onclick="openModal('${file.id}')" class="explorer-card explorer-file">
+    return `<button type="button" onclick="openModal('${file.id}', this)" data-catalog-key="project:${file.id}" class="explorer-card explorer-file">
         <span class="explorer-file-top"><i data-lucide="${icon.icon}" aria-hidden="true"></i><span>${file.fileType.toUpperCase()}</span></span>
         <span class="explorer-card-title">${data.title}</span>
         <span class="explorer-card-description">${data.subtitle}</span>
@@ -213,13 +273,13 @@ function renderBreadcrumbs(container) {
  */
 function navigateTo(folderName) {
     currentPath.push(folderName);
-    renderExplorer();
+    renderExplorer({ animate: true });
 }
 
 function navigateUp() {
     if (searchQuery || showAllProjects) { navigateRoot(); return; }
     currentPath.pop();
-    renderExplorer();
+    renderExplorer({ animate: true });
 }
 
 function navigateRoot() {
@@ -227,12 +287,12 @@ function navigateRoot() {
     searchQuery = '';
     showAllProjects = false;
     document.getElementById('explorer-search').value = '';
-    renderExplorer();
+    renderExplorer({ animate: true });
 }
 
 function navigateToLevel(index) {
     currentPath = currentPath.slice(0, index + 1);
-    renderExplorer();
+    renderExplorer({ animate: true });
 }
 
 // Initialize on load

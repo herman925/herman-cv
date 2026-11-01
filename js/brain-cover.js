@@ -23,6 +23,9 @@
     'use strict';
 
     var html = document.documentElement;
+    var reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var booted = false, queued = false, syncBrainMotion, aimBrainConnectors;
+    var touchQuery = window.matchMedia('(hover: none), (pointer: coarse)');
 
     var ZONES = [
         { key: 'education', cls: 'zone-education', ink: 'moss', href: 'education-culture.html', color: [0.063, 0.725, 0.506] },   // #10B981
@@ -30,13 +33,47 @@
         { key: 'technology', cls: 'zone-technology', ink: 'tealink', href: 'technology.html', color: [0.176, 0.831, 0.749] },     // #2DD4BF
         { key: 'project', cls: 'zone-project', ink: 'oxblood', href: 'project-management.html', color: [0.882, 0.114, 0.282] },   // #E11D48
     ];
+    var touchEnds = [[-18, 318], [-18, 48], [388, 48], [388, 324]];
+    var connectorGeometry = ZONES.map(function (zone) {
+        var anchor = document.querySelector('#brainMapSVG a.' + zone.cls);
+        var line = anchor && anchor.querySelector('.connector-line');
+        var dot = anchor && anchor.querySelector('.connector-dot');
+        return line && dot ? { line: line, dot: dot, d: line.getAttribute('d'), x: dot.getAttribute('cx'), y: dot.getAttribute('cy') } : null;
+    });
+    function layoutInputMode() {
+        connectorGeometry.forEach(function (item, index) {
+            if (!item) return;
+            if (touchQuery.matches) {
+                var end = touchEnds[index];
+                var start = item.d.match(/M\s*(-?[\d.]+)[ ,]+(-?[\d.]+)/i);
+                item.dot.setAttribute('cx', end[0]);
+                item.dot.setAttribute('cy', end[1]);
+                if (start) item.line.setAttribute('d', 'M ' + start[1] + ' ' + start[2] + ' L ' + end[0] + ' ' + end[1]);
+                item.line.style.strokeDasharray = 'none';
+                item.line.style.strokeDashoffset = '0';
+            } else {
+                item.dot.setAttribute('cx', item.x);
+                item.dot.setAttribute('cy', item.y);
+                item.line.setAttribute('d', item.d);
+                item.line.style.strokeDasharray = '';
+                item.line.style.strokeDashoffset = '';
+            }
+        });
+        if (aimBrainConnectors && !reduceQuery.matches) aimBrainConnectors();
+    }
+    touchQuery.addEventListener('change', function () {
+        layoutInputMode();
+        if (syncBrainMotion) syncBrainMotion();
+    });
+    layoutInputMode();
+
     // lobe bands as fractions of the brain's width, left → right
     var BANDS = [0.27, 0.52, 0.76];
 
     var GROUP_SCALE = 0.74;
 
     function gatePasses() {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+        if (reduceQuery.matches) return false;
         if (navigator.connection && navigator.connection.saveData) return false;
         if ((navigator.deviceMemory || 8) < 4) return false;
         try {
@@ -80,6 +117,8 @@
     }
 
     async function boot() {
+        if (booted || reduceQuery.matches) return;
+        booted = true;
         var svg = document.getElementById('brainMapSVG');
         var mount = document.getElementById('brain-canvas-mount');
         if (!svg || !mount) { html.classList.add('brain-static'); return; }
@@ -92,6 +131,7 @@
             return;
         }
 
+        if (reduceQuery.matches) { booted = false; return; }
         var isMobile = window.matchMedia('(max-width: 767px)').matches;
         var COUNT = isMobile ? 1800 : 5200;
         var DPR = Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 1.5);
@@ -269,6 +309,7 @@
                 uPixelRatio: { value: DPR },
                 uHoverZone: { value: -1 },
                 uHoverT: { value: 0 },
+                uTouchPalette: { value: touchQuery.matches ? 1 : 0 },
                 uBurstZone: { value: -1 },
                 uBurstT: { value: 0 },
                 uBurstCenter: { value: new THREE.Vector2(0, 0) },
@@ -318,6 +359,7 @@
             ].join('\n'),
             fragmentShader: [
                 'uniform vec3 uZoneColors[4];',
+                'uniform float uTouchPalette;',
                 'varying float vShell;',
                 'varying float vZone;',
                 'varying float vHover;',
@@ -334,7 +376,7 @@
                 '  if (zi == 1) zc = uZoneColors[1];',
                 '  else if (zi == 2) zc = uZoneColors[2];',
                 '  else if (zi == 3) zc = uZoneColors[3];',
-                '  vec3 col = mix(gold, zc, 0.18 + vHover * 0.82);',
+                '  vec3 col = mix(gold, zc, max(0.18 + vHover * 0.82, uTouchPalette));',
                 '  col = mix(col, vec3(1.0, 0.98, 0.92), vFire * 0.9);',
                 '  float band = 0.68 + 0.32 * vGyri;',
                 '  float alpha = glow * band * (0.68 + vShell * 0.24 + vHover * 0.14 + vFire * 0.55);',
@@ -597,6 +639,13 @@
         var zoneAnchors = ZONES.map(function (z) { return svg.querySelector('a.' + z.cls); });
 
         function setHover(zoneIdx) {
+            if (reduceQuery.matches) {
+                if (gsapOK) gsap.killTweensOf(hoverState);
+                hoverState.zone = -1;
+                hoverState.t = mat.uniforms.uHoverT.value = 0;
+                zoneAnchors.forEach(function (a) { if (a) a.classList.remove('zone-hot'); });
+                return;
+            }
             if (hoverState.zone === zoneIdx) return;
             zoneAnchors.forEach(function (a, i) {
                 if (a) a.classList.toggle('zone-hot', i === zoneIdx);
@@ -619,6 +668,7 @@
 
         var diving = false;
         function diveInto(zoneIdx, href) {
+            if (reduceQuery.matches) { location.href = href; return; }
             if (diving) return;
             diving = true;
             var z = ZONES[zoneIdx];
@@ -683,7 +733,7 @@
         };
 
         frameEl.addEventListener('pointermove', function (e) {
-            if (diving) return;
+            if (diving || reduceQuery.matches) return;
             // a zone anchor holding keyboard focus keeps its label pinned via
             // :focus-visible — release it once the pointer takes over
             if (zoneAnchors.indexOf(document.activeElement) !== -1) {
@@ -695,6 +745,7 @@
         });
         frameEl.addEventListener('pointerleave', function () { setHover(-1); frameEl.style.cursor = ''; });
         frameEl.addEventListener('click', function (e) {
+            if (reduceQuery.matches) return;
             var z = pointerZone(e);
             if (z >= 0) {
                 e.preventDefault();
@@ -710,6 +761,8 @@
             a.addEventListener('blur', function () { setHover(-1); });
             a.setAttribute('data-no-wipe', '');
             a.addEventListener('click', function (e) {
+                if (reduceQuery.matches) return;
+                if (touchQuery.matches) e.stopPropagation();
                 e.preventDefault();
                 diveInto(idx, a.getAttribute('href'));
             });
@@ -759,7 +812,9 @@
             });
         }
 
+        aimBrainConnectors = aimConnectors;
         resize();
+        layoutInputMode();
         window.addEventListener('resize', resize);
         setTimeout(aimConnectors, 300);
 
@@ -774,14 +829,14 @@
             });
         }
 
-        var running = true;
+        var running = false, inView = true, frameId;
         var clock = new THREE.Clock();
         var slowFrames = 0;
         var degraded = false;
 
         function frame() {
             if (!running) return;
-            requestAnimationFrame(frame);
+            frameId = requestAnimationFrame(frame);
             var dt = Math.min(clock.getDelta(), 0.05);
             var t = clock.elapsedTime;
             mat.uniforms.uTime.value = t;
@@ -806,17 +861,23 @@
                 }
             }
         }
-        frame();
-
-        document.addEventListener('visibilitychange', function () {
-            running = !document.hidden;
-            if (running) { clock.getDelta(); frame(); }
-        });
+        syncBrainMotion = function () {
+            mount.style.display = reduceQuery.matches ? 'none' : '';
+            if (!reduceQuery.matches) resize();
+            mat.uniforms.uTouchPalette.value = touchQuery.matches ? 1 : 0;
+            html.classList.toggle('brain-gl', !reduceQuery.matches);
+            html.classList.toggle('brain-static', reduceQuery.matches);
+            if (reduceQuery.matches) setHover(-1);
+            layoutInputMode();
+            var next = !reduceQuery.matches && !document.hidden && inView;
+            if (next && !running) { running = true; clock.getDelta(); frame(); }
+            else if (!next && running) { running = false; cancelAnimationFrame(frameId); }
+        };
+        document.addEventListener('visibilitychange', syncBrainMotion);
         if ('IntersectionObserver' in window) {
             new IntersectionObserver(function (entries) {
-                var vis = entries[0].isIntersecting;
-                if (vis && !running && !document.hidden) { running = true; clock.getDelta(); frame(); }
-                if (!vis) running = false;
+                inView = entries[0].isIntersecting;
+                syncBrainMotion();
             }, { threshold: 0 }).observe(mount);
         }
 
@@ -831,20 +892,21 @@
             }
         });
 
-        html.classList.add('brain-gl');
+        syncBrainMotion();
     }
 
-    if (!gatePasses()) {
-        html.classList.add('brain-static');
-        return;
-    }
+    reduceQuery.addEventListener('change', function () {
+        if (syncBrainMotion) syncBrainMotion();
+        else if (!reduceQuery.matches) start();
+    });
 
     function start() {
-        if ('requestIdleCallback' in window) {
-            requestIdleCallback(function () { boot(); }, { timeout: 1500 });
-        } else {
-            setTimeout(boot, 200);
-        }
+        if (booted || queued || document.readyState !== 'complete') return;
+        if (!gatePasses()) { html.classList.add('brain-static'); return; }
+        queued = true;
+        function run() { queued = false; boot(); }
+        if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 1500 });
+        else setTimeout(run, 200);
     }
     if (document.readyState === 'complete') start();
     else window.addEventListener('load', start);

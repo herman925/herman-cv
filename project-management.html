@@ -12,15 +12,15 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="js/tailwind-config.js?v=10"></script>
   <link rel="stylesheet" href="global.css?v=10">
-  <link rel="stylesheet" href="css/spine.css?v=15">
+  <link rel="stylesheet" href="css/spine.css?v=18">
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script defer src="js/motion.js?v=10"></script>
-  <script defer src="js/transitions.js?v=12"></script>
-  <script defer src="js/cursor.js?v=10"></script>
+  <script defer src="js/motion.js?v=18"></script>
+  <script defer src="js/transitions.js?v=18"></script>
+  <script defer src="js/cursor.js?v=18"></script>
   <style>
     /* ---- Chapter 03 page-local layout (presentation only) ---- */
 
@@ -278,7 +278,7 @@
         </div>
       </div>
 
-      <!-- Desktop dial (pinned 200vh by inline script) -->
+      <!-- Desktop dial (fine-pointer storytelling) -->
       <div id="dial-stage" class="hidden md:block">
         <div class="spine-container min-h-[100svh] grid md:grid-cols-2 gap-16 items-center">
           <div class="relative w-full max-w-[480px] mx-auto" aria-hidden="true">
@@ -334,7 +334,7 @@
       </div>
 
       <!-- Mobile: unpinned quadrant cards, each drawing its arc on entry -->
-      <div class="md:hidden spine-container space-y-10">
+      <div id="workflow-steps" class="spine-container">
         <article class="quad-card border-t pt-6" style="border-color:var(--hairline)">
           <div class="flex items-start justify-between gap-4">
             <p class="kicker"><span class="tick">▪</span>Step 01 / 04</p>
@@ -924,12 +924,13 @@
     document.addEventListener('DOMContentLoaded', function () {
       // Markup defaults ARE the final states (circle fully drawn, steps stacked,
       // arcs drawn) — so without motion we simply do nothing.
-      if (!window.SPINE || !SPINE.motionOK || !window.gsap || !window.ScrollTrigger) return;
+      if (!window.SPINE || !window.gsap || !window.ScrollTrigger) return;
+      SPINE.onMotion(function () {
 
       var mm = gsap.matchMedia();
 
-      // Desktop: 200vh pinned dial — one quadrant per scroll quarter
-      mm.add('(min-width: 768px)', function () {
+      // Desktop: one quadrant per scroll quarter; touch/short screens stay stacked.
+      mm.add('(min-width: 1100px) and (min-height: 700px) and (pointer: fine)', function () {
         var stage = document.getElementById('dial-stage');
         var arc = document.getElementById('dial-arc');
         if (!stage || !arc) return;
@@ -948,7 +949,7 @@
           defaults: { ease: 'none' },
           scrollTrigger: {
             trigger: stage,
-            start: 'top top',
+            start: 'top 80px',
             end: '+=200%',
             pin: true,
             scrub: true,
@@ -978,15 +979,19 @@
         };
       });
 
-      // Mobile: each stacked quadrant card draws its arc on entry (once)
-      mm.add('(max-width: 767px)', function () {
+      // Compact/touch layouts: each quadrant draws its arc on entry (once)
+      mm.add('(max-width: 1099px), (max-height: 699px), (pointer: coarse)', function () {
+        var cards = gsap.utils.toArray('#workflow-steps .quad-card');
+        ScrollTrigger.batch(cards, { start: 'top 90%', once: true, onEnter: function (batch) {
+          gsap.from(batch, { y: 28, opacity: 0, rotationX: -4, transformPerspective: 900, duration: 0.65, stagger: 0.08, ease: 'power3.out' });
+        } });
         var paths = gsap.utils.toArray('.quad-arc');
         paths.forEach(function (path) {
           var len = path.getTotalLength();
           gsap.set(path, { attr: { 'stroke-dasharray': len, 'stroke-dashoffset': len } });
           gsap.to(path, {
             attr: { 'stroke-dashoffset': 0 },
-            duration: 0.9,
+            duration: 0.4,
             ease: SPINE.EASE_ENTER,
             scrollTrigger: { trigger: path.closest('.quad-card') || path, start: 'top 85%', once: true }
           });
@@ -1015,7 +1020,7 @@
             plots.forEach(function (r, i) {
               gsap.to(r, {
                 attr: { 'stroke-dashoffset': 0 },
-                duration: 1.1,
+                duration: 0.65,
                 ease: SPINE.EASE_ENTER,
                 delay: 0.25 + i * 0.18
               });
@@ -1037,7 +1042,7 @@
             gsap.to(lanes, {
               autoAlpha: 1,
               rotationY: 0,
-              duration: 0.9,
+              duration: 0.4,
               ease: SPINE.EASE_ENTER,
               stagger: 0.1
             });
@@ -1068,6 +1073,8 @@
           });
         });
         return function () { cleanups.forEach(function (fn) { fn(); }); };
+      });
+      return function () { mm.revert(); };
       });
     });
   </script>

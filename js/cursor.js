@@ -18,11 +18,16 @@
 (function () {
     'use strict';
 
-    if (!window.matchMedia('(pointer: fine)').matches) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var preference = window.matchMedia('(pointer: fine) and (prefers-reduced-motion: no-preference)');
+    var stopCursor;
+    document.documentElement._cursorPreference = preference;
+
+    function startCursor() {
 
     var chapter = document.documentElement.getAttribute('data-chapter');
     if (!chapter) return;
+    var controller = new AbortController();
+    var frameId;
 
     var mx = -100, my = -100;      // raw pointer
     var fx = -100, fy = -100;      // follower (lerped)
@@ -30,8 +35,8 @@
 
     window.addEventListener('pointermove', function (e) {
         mx = e.clientX; my = e.clientY; seen = true;
-    }, { passive: true });
-    document.addEventListener('pointerleave', function () { seen = false; });
+    }, { passive: true, signal: controller.signal });
+    document.addEventListener('pointerleave', function () { seen = false; }, { signal: controller.signal });
 
     /* ---- shared follower ring -------------------------------------------- */
     var ring = document.createElement('div');
@@ -220,17 +225,17 @@
         document.addEventListener('pointerover', function (e) {
             var t = e.target.closest && e.target.closest(INTERACTIVE);
             bracketTarget = t || null;
-        }, true);
+        }, { capture: true, signal: controller.signal });
     }
 
     /* ---- follower loop ----------------------------------------------------- */
     var hoveringInteractive = false;
     document.addEventListener('pointerover', function (e) {
         hoveringInteractive = !!(e.target.closest && e.target.closest(INTERACTIVE));
-    }, true);
+    }, { capture: true, signal: controller.signal });
 
     function loop(t) {
-        requestAnimationFrame(loop);
+        frameId = requestAnimationFrame(loop);
 
         if (chapter === 'technology' && bracketTarget && bracketTarget.isConnected) {
             // snap brackets around the target
@@ -257,7 +262,21 @@
 
     if (extra.resize) {
         extra.resize();
-        window.addEventListener('resize', extra.resize);
+        window.addEventListener('resize', extra.resize, { signal: controller.signal });
     }
-    requestAnimationFrame(loop);
+    frameId = requestAnimationFrame(loop);
+    return function () {
+        controller.abort();
+        cancelAnimationFrame(frameId);
+        ring.remove();
+        document.querySelectorAll('body > .cursor-layer').forEach(function (layer) { layer.remove(); });
+    };
+    }
+
+    function syncCursor() {
+        if (stopCursor) stopCursor();
+        stopCursor = preference.matches ? startCursor() : null;
+    }
+    preference.addEventListener('change', syncCursor);
+    syncCursor();
 })();

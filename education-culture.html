@@ -12,15 +12,15 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="js/tailwind-config.js?v=10"></script>
   <link rel="stylesheet" href="global.css?v=10">
-  <link rel="stylesheet" href="css/spine.css?v=15">
+  <link rel="stylesheet" href="css/spine.css?v=18">
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script defer src="js/motion.js?v=10"></script>
-  <script defer src="js/transitions.js?v=12"></script>
-  <script defer src="js/cursor.js?v=10"></script>
+  <script defer src="js/motion.js?v=18"></script>
+  <script defer src="js/transitions.js?v=18"></script>
+  <script defer src="js/cursor.js?v=18"></script>
   <style>
     /* ====================================================================
        Page-specific: Chapter 01 — CREAM & EMERALD ATLAS
@@ -100,12 +100,12 @@
 
     /* Initial states — GSAP takes over; reduced motion renders final states */
     @media (prefers-reduced-motion: no-preference) {
-      .js .journey-dot { transform: scale(0); }
-      .js .waypoint-stamp, .js .honour-stamp { opacity: 0; }
+      .motion-ready .journey-dot { transform: scale(0); }
+      .motion-ready .waypoint-stamp, .motion-ready .honour-stamp { opacity: 0; }
     }
     @media (prefers-reduced-motion: reduce) {
-      .js .journey-dot { transform: none !important; }
-      .js .waypoint-stamp, .js .honour-stamp { opacity: 1 !important; }
+      .motion-ready .journey-dot { transform: none !important; }
+      .motion-ready .waypoint-stamp, .motion-ready .honour-stamp { opacity: 1 !important; }
     }
   </style>
 </head>
@@ -624,7 +624,7 @@
       var pageTurnRows = document.querySelectorAll('.page-turn');
 
       // Reduced motion / no GSAP: render every final state and bail.
-      if (!window.SPINE || !SPINE.motionOK || typeof gsap === 'undefined') {
+      if (!window.SPINE || !window.gsap || !window.ScrollTrigger) {
         if (path) path.style.strokeDashoffset = '0';
         stops.forEach(function (stop) {
           var dot = stop.querySelector('.journey-dot');
@@ -635,6 +635,8 @@
         return;
       }
 
+      SPINE.onMotion(function () {
+      var tiltCleanups = [];
       gsap.registerPlugin(ScrollTrigger);
 
       // (a) Scrubbed route line — stitches all six waypoints down the section
@@ -668,7 +670,7 @@
             if (ping) {
               gsap.fromTo(ping,
                 { opacity: 0.9, scale: 0.4 },
-                { opacity: 0, scale: 2.4, duration: 1.1, ease: SPINE.EASE_MICRO }
+                { opacity: 0, scale: 2.4, duration: 0.65, ease: SPINE.EASE_MICRO }
               );
             }
             stamps.forEach(function (stamp, i) {
@@ -724,14 +726,19 @@
         document.querySelectorAll('.tilt-card').forEach(function (card) {
           var rx = gsap.quickTo(card, 'rotationX', { duration: 0.4, ease: SPINE.EASE_MICRO });
           var ry = gsap.quickTo(card, 'rotationY', { duration: 0.4, ease: SPINE.EASE_MICRO });
-          card.addEventListener('mousemove', function (e) {
+          function onMove(e) {
             var r = card.getBoundingClientRect();
             ry(((e.clientX - r.left) / r.width - 0.5) * 14);
             rx(((e.clientY - r.top) / r.height - 0.5) * -14);
-          });
-          card.addEventListener('mouseleave', function () { rx(0); ry(0); });
+          }
+          function onLeave() { rx(0); ry(0); }
+          card.addEventListener('mousemove', onMove);
+          card.addEventListener('mouseleave', onLeave);
+          tiltCleanups.push(function () { card.removeEventListener('mousemove', onMove); card.removeEventListener('mouseleave', onLeave); });
         });
       }
+      return function () { tiltCleanups.forEach(function (clean) { clean(); }); };
+      });
     });
   </script>
 </body>

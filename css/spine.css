@@ -626,21 +626,17 @@ html[data-chapter] :focus-visible {
 /* ---------------------------------------------------------------------------
    Reveal initial states (GSAP takes over; reduced-motion shows final state)
 --------------------------------------------------------------------------- */
-@media (prefers-reduced-motion: no-preference) {
-    .js [data-reveal-lines] { visibility: hidden; }   /* unhidden by SplitText init */
-    .js .plate-reveal { opacity: 0; transform: translateY(24px); }
-}
-
-/* ---------------------------------------------------------------------------
-   FOUC guard — released by motion.js or 800ms hard timeout (inline script)
---------------------------------------------------------------------------- */
-html.loading main { opacity: 0; }
-html main { transition: opacity .3s ease; }
-
+/* Content is visible by default. Only successful JS setup supplies reveal states. */
+html main { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
-    html.loading main { opacity: 1; }
-    .js [data-reveal-lines] { visibility: visible !important; }
-    .js .plate-reveal { opacity: 1 !important; transform: none !important; }
+    html[data-chapter] *, html[data-chapter] *::before, html[data-chapter] *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+        scroll-behavior: auto !important;
+    }
+    [data-reveal-lines] { visibility: visible !important; }
+    .plate-reveal { opacity: 1 !important; transform: none !important; }
 }
 
 /* Reading density: larger supporting text and less unused section height. */
@@ -665,3 +661,20 @@ html[data-chapter] #navbar #mobile-menu a { font-size: 16px; min-height: 44px; d
 
 /* The header menu provides the same facet links without covering phone content. */
 @media (max-width: 767px) { .chapter-dock { display: none; } }
+
+/* Touch, short screens and reduced motion use the same readable workflow cards. */
+#dial-stage { display: none; }
+#workflow-steps { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+@media (min-width: 700px) { #workflow-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1100px) and (min-height: 700px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .motion-ready #dial-stage { display: block; }
+    .motion-ready #workflow-steps { display: none; }
+}
+#memoir-stage:not(.memoir-live) .memoir-beat + .memoir-beat { margin-top: 32px; }
+
+/* Chapter ink carries the destination name during the scene handoff. */
+#wipe-veil { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; color: #0a1512; }
+#wipe-veil[data-ink="ink"], #wipe-veil[data-ink="oxblood"] { color: #faf7f2; }
+.wipe-numeral { position: absolute; font: 600 clamp(180px, 26vw, 420px)/1 'Fraunces', Georgia, serif; opacity: .12; }
+.wipe-mark { font: 500 14px 'Space Grotesk', monospace; letter-spacing: .2em; }
+.wipe-name { position: relative; max-width: 85vw; text-align: center; text-wrap: balance; font: 600 clamp(34px, 6vw, 80px)/1.1 'Fraunces', Georgia, serif; letter-spacing: -.025em; }

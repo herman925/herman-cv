@@ -12,7 +12,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="js/tailwind-config.js?v=10"></script>
   <link rel="stylesheet" href="global.css?v=10">
-  <link rel="stylesheet" href="css/spine.css?v=15">
+  <link rel="stylesheet" href="css/spine.css?v=18">
   <style>
     /* CH. 02 — page-scoped zen warmth. This chapter alone speaks in circles:
        the breathing ring's soft language extends to gently rounded cards. */
@@ -76,9 +76,9 @@
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script defer src="js/motion.js?v=10"></script>
-  <script defer src="js/transitions.js?v=12"></script>
-  <script defer src="js/cursor.js?v=10"></script>
+  <script defer src="js/motion.js?v=18"></script>
+  <script defer src="js/transitions.js?v=18"></script>
+  <script defer src="js/cursor.js?v=18"></script>
 </head>
 <body class="antialiased overflow-x-hidden">
   <div class="running-header">HERMAN CHAN — THE DIGITAL HUMANIST — CH. 02 — THE LISTENER</div>
@@ -576,7 +576,8 @@
       // Gate: reduced motion / missing GSAP → static final states.
       // (Beats stay stacked; both INHALE / EXHALE labels stay visible;
       //  marker swipe rests fully swiped; echo rings sit faint and still.)
-      if (!window.SPINE || !SPINE.motionOK || !window.gsap) return;
+      if (!window.SPINE || !window.gsap || !window.ScrollTrigger) return;
+      SPINE.onMotion(function () {
 
       // --- Breathing-ring labels: crossfade in sync with the 4s ring loop ---
       var inhale = document.getElementById('breath-inhale');
@@ -632,7 +633,7 @@
       });
 
       // --- Desktop: prologue ink-blots + memoir pin (the page's ONE pin) ---
-      mm.add('(min-width: 768px)', function () {
+      mm.add('(min-width: 1100px) and (min-height: 700px) and (pointer: fine)', function () {
         // BEAT 00 seed cards: radial ink-blot reveal, expanding from the
         // beat-marker corner, scrubbed (mobile: static, fully visible)
         gsap.utils.toArray('#memoir-prologue .zen-card').forEach(function (card) {
@@ -649,6 +650,7 @@
         var beats = gsap.utils.toArray('#memoir-stage .memoir-beat');
         if (!stage || beats.length !== 3) return;
 
+        stage.classList.add('memoir-live');
         gsap.set(stage, { height: '100svh' });
         gsap.set(beats, {
           position: 'absolute',
@@ -689,6 +691,9 @@
           gsap.set(rail, { transformOrigin: 'top center' });
           tl.fromTo(rail, { scaleY: 0 }, { scaleY: 1, duration: tl.duration() }, 0);
         }
+        return function () { stage.classList.remove('memoir-live'); };
+      });
+      return function () { mm.revert(); };
       });
     });
   </script>

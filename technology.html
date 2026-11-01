@@ -12,8 +12,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="js/tailwind-config.js?v=11"></script>
   <link rel="stylesheet" href="global.css?v=11">
-  <link rel="stylesheet" href="css/spine.css?v=15">
-  <link rel="stylesheet" href="css/chapter-tech-overrides.css?v=16">
+  <link rel="stylesheet" href="css/spine.css?v=18">
+  <link rel="stylesheet" href="css/chapter-tech-overrides.css?v=18">
   <style>
     /* ======================================================================
        CH. 04 page layer — DARK PHOSPHOR amplifiers (page-scoped only)
@@ -80,11 +80,12 @@
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Flip.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script defer src="js/motion.js?v=11"></script>
-  <script defer src="js/transitions.js?v=12"></script>
-  <script defer src="js/cursor.js?v=11"></script>
+  <script defer src="js/motion.js?v=18"></script>
+  <script defer src="js/transitions.js?v=18"></script>
+  <script defer src="js/cursor.js?v=18"></script>
 </head>
 <body class="antialiased overflow-x-hidden">
 
@@ -957,9 +958,9 @@
 
   <!-- Project data loads before the explorer. -->
   <script src="js/navbar.js?v=15"></script>
-  <script src="js/github-cards.js?v=16"></script>
+  <script src="js/github-cards.js?v=18"></script>
   <script src="js/project-valuations.js?v=16"></script>
-  <script src="js/explorer.js?v=16"></script>
+  <script src="js/explorer.js?v=18"></script>
   <script src="js/carousel.js?v=11"></script>
 
   <!-- Page inline script: navbar init, terminal typewriter (verbatim),
@@ -1114,6 +1115,26 @@
         let didThinkForLine = false; // track if we already paused for this line
         let didPreTypeDelay = false; // track if we added delay before human typing
 
+        const reduceQuery = window.SPINE?.reduceQuery || window.matchMedia('(prefers-reduced-motion: reduce)');
+        shell._motionPreference = reduceQuery;
+        let typeTimer;
+        const schedule = (callback, delay) => {
+            if (!reduceQuery.matches) typeTimer = setTimeout(callback, delay);
+        };
+        const renderStaticLog = () => {
+            content.replaceChildren();
+            lines.forEach(line => {
+                if (line.type === 'prompt' || /authenticat/i.test(line.text)) return;
+                const row = document.createElement('div');
+                row.className = line.type === 'break' ? 'h-3' : (typeColors[line.type] || 'text-cyber-400');
+                row.textContent = line.type === 'command' && line.typo ? line.typo : line.text;
+                content.appendChild(row);
+            });
+            cursor.textContent = '';
+            cursor.parentElement.style.display = 'none';
+            if (shell) shell.scrollTop = 0;
+        };
+
         const getTypingDelay = (isHumanInput, char, lineObj) => {
             if (isHumanInput) {
                 const base = 80 + Math.random() * 160; // 80-240ms
@@ -1126,6 +1147,7 @@
         };
 
         const typeNext = () => {
+            if (reduceQuery.matches) return;
             const lineObj = lines[lineIndex];
             const isCommand = lineObj.type === 'command';
             const isPrompt = lineObj.type === 'prompt';
@@ -1136,7 +1158,7 @@
             const thinkMs = typeof lineObj.thinkMs === 'function' ? lineObj.thinkMs() : lineObj.thinkMs;
             if (charIndex === 0 && !didThinkForLine && isHumanInput && typeof thinkMs === 'number' && thinkMs > 0) {
                 didThinkForLine = true;
-                setTimeout(typeNext, thinkMs);
+                schedule(typeNext, thinkMs);
                 return;
             }
 
@@ -1144,7 +1166,7 @@
             if (charIndex === 0 && !didPreTypeDelay && isHumanInput) {
                 didPreTypeDelay = true;
                 const preDelay = 300 + Math.random() * 400; // 300-700ms before typing starts
-                setTimeout(typeNext, preDelay);
+                schedule(typeNext, preDelay);
                 return;
             }
 
@@ -1171,9 +1193,9 @@
                 didPreTypeDelay = false;
                 if (lineIndex < lines.length) {
                     // Longer pause between blocks
-                    setTimeout(typeNext, 500 + Math.random() * 300);
+                    schedule(typeNext, 500 + Math.random() * 300);
                 } else {
-                    setTimeout(() => {
+                    schedule(() => {
                         content.innerHTML = '';
                         lineIndex = 0;
                         charIndex = 0;
@@ -1214,11 +1236,11 @@
                         typoPhase = 1;
                         charIndex = typoText.length;
                         // Pause longer - "noticing the mistake", sometimes longer
-                        setTimeout(typeNext, 400 + Math.random() * 500);
+                        schedule(typeNext, 400 + Math.random() * 500);
                         return;
                     }
                     const typedChar = typoText[charIndex - 1] || '';
-                    setTimeout(typeNext, getTypingDelay(true, typedChar, lineObj));
+                    schedule(typeNext, getTypingDelay(true, typedChar, lineObj));
                     return;
                 } else if (typoPhase === 1) {
                     // Phase 1: Deleting ONLY the typo part (backspace to diverge point)
@@ -1235,11 +1257,11 @@
                         typoPhase = 2;
                         charIndex = divergePoint;
                         // Brief pause before retyping the corrected portion
-                        setTimeout(typeNext, 150 + Math.random() * 100);
+                        schedule(typeNext, 150 + Math.random() * 100);
                         return;
                     }
                     // Backspace is faster than typing
-                    setTimeout(typeNext, 35 + Math.random() * 20);
+                    schedule(typeNext, 35 + Math.random() * 20);
                     return;
                 } else {
                     // Phase 2+: Typing the correct version (from diverge point onward)
@@ -1259,7 +1281,7 @@
 
             if (charIndex <= targetText.length) {
                 const char = targetText[charIndex - 1] || '';
-                setTimeout(typeNext, getTypingDelay(isHumanInput, char, lineObj));
+                schedule(typeNext, getTypingDelay(isHumanInput, char, lineObj));
             } else {
                 // Line complete - commit to content
                 const div = document.createElement('div');
@@ -1291,9 +1313,9 @@
                     const nextIsCommand = lines[lineIndex].type === 'command';
                     // Much longer pause before commands (user thinking what to type)
                     const delay = nextIsCommand ? 1200 + Math.random() * 800 : 100 + Math.random() * 50;
-                    setTimeout(typeNext, delay);
+                    schedule(typeNext, delay);
                 } else {
-                    setTimeout(() => {
+                    schedule(() => {
                         content.innerHTML = '';
                         lineIndex = 0;
                         charIndex = 0;
@@ -1306,7 +1328,22 @@
             }
         };
 
-        typeNext();
+        const syncTerminalMotion = () => {
+            clearTimeout(typeTimer);
+            if (reduceQuery.matches) {
+                renderStaticLog();
+                return;
+            }
+            content.replaceChildren();
+            cursor.parentElement.style.display = '';
+            cursor.textContent = '';
+            lineIndex = charIndex = typoPhase = 0;
+            didThinkForLine = didPreTypeDelay = false;
+            if (shell) shell.scrollTop = 0;
+            typeNext();
+        };
+        reduceQuery.addEventListener('change', syncTerminalMotion);
+        syncTerminalMotion();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -1362,12 +1399,13 @@
         })();
 
         // --- Page-specific GSAP: origin line-draw + node pings + field rule
-        if (!window.SPINE || !SPINE.motionOK || !window.gsap || !window.ScrollTrigger) {
+        if (!window.SPINE || !window.gsap || !window.ScrollTrigger) {
             // Reduced motion / no GSAP: defaults already render final states
             // (line fully drawn, nodes visible, rule full height).
             return;
         }
 
+        SPINE.onMotion(function () {
         gsap.registerPlugin(ScrollTrigger);
 
         // Scrubbed teal SVG line-draw down the origin section (scrub-only, no pin)
@@ -1405,7 +1443,7 @@
                 rotationX: 8,
                 y: 36,
                 opacity: 0,
-                duration: 0.9,
+                duration: 0.4,
                 ease: SPINE.EASE_ENTER,
                 stagger: 0.08,
                 transformOrigin: 'center bottom',
@@ -1427,12 +1465,13 @@
                         .set(line, { opacity: 0.7 })
                         .to(line, {
                             y: Math.max(0, section.offsetHeight - 2),
-                            duration: 1.2,
+                            duration: 0.7,
                             ease: 'power2.inOut'
                         })
                         .to(line, { opacity: 0, duration: 0.3 }, '-=0.25');
                 }
             });
+        });
         });
     });
 

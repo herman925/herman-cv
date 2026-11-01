@@ -131,14 +131,6 @@
 }
 #terminal-body .text-white { color: #E6F4F2 !important; }
 
-/* CRT valuation toggle relies on .crt-active from theme-tech.css — keep working
-   even though theme-tech.css is no longer loaded */
-@keyframes crt-flicker-spine {
-    0% { opacity: 1; } 8% { opacity: .82; } 10% { opacity: .96; }
-    20% { opacity: .9; } 100% { opacity: 1; }
-}
-.crt-active { animation: crt-flicker-spine .42s steps(2, end) 1; }
-
 /* ==========================================================================
    APPENDED — SPINE rebuild page-specific layer (technology.html)
    ========================================================================== */
@@ -416,3 +408,18 @@
 #valuation-panel summary { min-height: 44px; }
 
 .explorer-window-bar { display: flex; align-items: center; padding: 12px 20px 0; }
+
+/* Cost details enter beside the story on desktop and above it on touch layouts. */
+#valuation-panel { transition: none; }
+@media (min-width: 1280px) {
+    .valuation-open #main-panel { grid-column: 1; grid-row: 1; }
+    .valuation-open #valuation-panel { grid-column: 2; grid-row: 1; }
+}
+#project-modal { align-items: flex-start; }
+#modal-wrapper > .glass-card { overflow-anchor: none; scrollbar-gutter: stable; }
+
+#explorer-grid { align-content: start; perspective: 1100px; }
+.explorer-card > svg, .explorer-file-top svg { transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .explorer-card:hover > svg, .explorer-card:hover .explorer-file-top svg { transform: translateY(-3px) rotate(-4deg) scale(1.08); }
+}

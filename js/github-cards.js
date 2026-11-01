@@ -1172,7 +1172,7 @@ const keywordLore = {
 function renderValuation(data) {
     if (!data.valuation) return '';
     const valuationItemsHtml = (data.valuation?.items || []).map(item => `
-        <div class="group">
+        <div class="valuation-item group">
             <div class="flex flex-wrap justify-between items-baseline gap-x-4 gap-y-1 mb-2">
                 <span class="text-sm font-bold text-slate-300 uppercase tracking-wide">${item.name}</span>
                 <span class="text-lg font-mono font-bold text-green-400 valuation-amount">${item.price}</span>
@@ -1184,7 +1184,7 @@ function renderValuation(data) {
     `).join('');
 
     return `
-            <div id="valuation-panel" tabindex="-1" role="region" aria-labelledby="valuation-title" class="hidden opacity-0 translate-x-10 flex-col w-full lg:w-[450px] min-w-0 bg-slate-950 border border-slate-800 rounded-xl p-4 sm:p-8 shadow-2xl transition-all duration-500 ease-out relative overflow-hidden">
+            <div id="valuation-panel" tabindex="-1" role="region" aria-labelledby="valuation-title" class="hidden flex-col w-full lg:w-[450px] min-w-0 bg-slate-950 border border-slate-800 rounded-xl p-4 sm:p-8 shadow-2xl transition-all duration-500 ease-out relative overflow-hidden">
                 <!-- Decorative Background -->
                 <div class="absolute top-0 right-0 w-40 h-40 bg-green-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -1239,6 +1239,7 @@ function renderComplexCard(data) {
 
     return `
         <div id="project-panels" class="flex flex-col lg:flex-row gap-10">
+            ${renderValuation(data)}
             <!-- LEFT PANEL: Main Content -->
             <div id="main-panel" class="flex-1 space-y-6 min-w-0">
 
@@ -1267,8 +1268,7 @@ function renderComplexCard(data) {
 
             </div>
 
-            <!-- Historical AI cost estimates are present only for valued projects. -->
-            ${renderValuation(data)}
+
         </div>
     `;
 }
@@ -1345,60 +1345,90 @@ document.addEventListener('click', (event) => {
 });
 
 /**
- * Animation Logic for the Valuation Panel (CRT Glitch Effect)
+ * Coordinated valuation reveal; content and focus stay anchored.
  */
+let valuationTween;
+
+function stopValuationMotion() {
+    if (!valuationTween) return;
+    valuationTween.kill();
+    valuationTween = null;
+    if (window.gsap) {
+        gsap.set([document.getElementById('modal-wrapper'), document.getElementById('valuation-panel')].filter(Boolean), { clearProps: 'transform,opacity,clipPath' });
+        const items = document.querySelectorAll('#valuation-panel .valuation-item');
+        gsap.killTweensOf(items);
+        gsap.set(items, { clearProps: 'transform,opacity' });
+    }
+}
+
 function toggleValuation() {
     const wrapper = document.getElementById('modal-wrapper');
-    const valuationPanel = document.getElementById('valuation-panel');
-    const btnText = document.getElementById('valuation-btn-text');
-    const btnIcon = document.getElementById('valuation-btn-icon');
+    const panel = document.getElementById('valuation-panel');
+    const text = document.getElementById('valuation-btn-text');
+    const icon = document.getElementById('valuation-btn-icon');
+    if (!wrapper || !panel || !text || !icon) return;
 
-    if (!wrapper || !valuationPanel || !btnText || !btnIcon) return;
+    const before = wrapper.getBoundingClientRect();
+    stopValuationMotion();
+    const open = panel.classList.contains('hidden');
+    wrapper.classList.toggle('valuation-open', open);
+    panel.classList.toggle('hidden', !open);
+    panel.classList.toggle('flex', open);
+    text.textContent = open ? 'Hide Valuation' : 'Project Valuation';
+    text.closest('button').setAttribute('aria-expanded', String(open));
+    icon.classList.toggle('rotate-180', open);
 
-    const isExpanding = valuationPanel.classList.contains('hidden');
-
-    wrapper.classList.add('crt-active');
-    wrapper.classList.toggle('valuation-open', isExpanding);
-    btnText.closest('button').setAttribute('aria-expanded', String(isExpanding));
-
-    setTimeout(() => {
-        if (isExpanding) {
-            wrapper.classList.remove('lg:max-w-4xl');
-            wrapper.classList.add('lg:max-w-6xl');
-            valuationPanel.classList.remove('hidden', 'opacity-0', 'translate-x-10');
-            valuationPanel.classList.add('flex', 'opacity-100', 'translate-x-0');
-            btnText.innerText = 'Hide Valuation';
-            btnIcon.classList.add('rotate-180');
-            if (window.innerWidth < 1280) {
-                valuationPanel.focus({ preventScroll: true });
-                valuationPanel.scrollIntoView({ block: 'start', behavior: 'instant' });
-            }
-        } else {
-            wrapper.classList.remove('lg:max-w-6xl');
-            wrapper.classList.add('lg:max-w-4xl');
-            valuationPanel.classList.add('hidden', 'opacity-0', 'translate-x-10');
-            valuationPanel.classList.remove('flex', 'opacity-100', 'translate-x-0');
-            btnText.innerText = 'Project Valuation';
-            btnIcon.classList.remove('rotate-180');
+    if (window.SPINE?.motionOK && window.gsap) {
+        const after = wrapper.getBoundingClientRect();
+        valuationTween = gsap.timeline({ defaults: { duration: 0.5, ease: 'power2.out' } });
+        valuationTween.fromTo(wrapper, { x: before.left - after.left }, { x: 0, clearProps: 'transform' }, 0);
+        if (open) {
+            valuationTween.fromTo(panel, { opacity: 0, y: 20, clipPath: 'inset(0 0 100% 0)' }, {
+                opacity: 1, y: 0, clipPath: 'inset(0 0 0% 0)', clearProps: 'opacity,transform,clipPath'
+            }, 0);
+            valuationTween.from(panel.querySelectorAll('.valuation-item'), {
+                y: 18, opacity: 0, duration: 0.45, stagger: 0.075, clearProps: 'transform,opacity'
+            }, 0.16);
         }
-    }, 150);
-
-    setTimeout(() => {
-        wrapper.classList.remove('crt-active');
-    }, 400);
+    }
 }
+
+const projectMotionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+projectMotionPreference.addEventListener('change', event => {
+    if (event.matches) { stopValuationMotion(); settleDialogMotion(); }
+});
 
 /**
  * Opens the modal with the specified card data.
  * @param {string} id - The ID of the card to open.
  */
 let projectModalTrigger;
+let dialogTween;
+let dialogClosing = false;
 
-function openModal(id) {
+function settleDialogMotion() {
+    const tween = dialogTween;
+    dialogTween = null;
+    if (tween) { tween.progress(1); tween.kill(); }
+    if (window.gsap) gsap.set(document.querySelectorAll('#modal-wrapper, #project-modal > .backdrop-blur-sm, #project-modal-heading, .project-modal-tags, #main-panel'), { clearProps: 'transform,opacity' });
+}
+
+function dialogOrigin(wrapper) {
+    if (window.Flip && projectModalTrigger?.matches('.explorer-card') && projectModalTrigger.isConnected) {
+        const rect = projectModalTrigger.getBoundingClientRect();
+        if (rect.width && rect.bottom > 0 && rect.top < innerHeight) return Flip.fit(wrapper, projectModalTrigger, { scale: true, getVars: true });
+    }
+    return { y: 24, scaleX: 0.95, scaleY: 0.95 };
+}
+
+function openModal(id, trigger = document.activeElement) {
     const data = githubCardData[id];
     if (!data) return;
+    settleDialogMotion();
+    stopValuationMotion();
+    dialogClosing = false;
 
-    projectModalTrigger = document.activeElement;
+    projectModalTrigger = trigger;
     const modal = document.getElementById('project-modal');
     const content = document.getElementById('modal-content');
 
@@ -1407,7 +1437,7 @@ function openModal(id) {
     if (data.type === 'complex') {
         bodyHtml = renderComplexCard(data);
     } else {
-        bodyHtml = `<div id="project-panels"><div id="main-panel">${data.htmlContent}</div>${renderValuation(data)}</div>`;
+        bodyHtml = `<div id="project-panels">${renderValuation(data)}<div id="main-panel">${data.htmlContent}</div></div>`;
     }
 
     // Award Banner Logic
@@ -1434,7 +1464,7 @@ function openModal(id) {
 
     content.innerHTML = `
         ${awardBanner}
-        <div class="flex items-start justify-between mb-4">
+        <div id="project-modal-heading" class="flex items-start justify-between mb-4">
             <div>
                 <h2 id="project-modal-title" class="text-2xl font-bold text-white mb-1">${data.title}</h2>
                 <p class="text-cyber-400 font-mono text-sm">${data.subtitle}</p>
@@ -1443,7 +1473,7 @@ function openModal(id) {
             </div>
         </div>
 
-        <div class="flex flex-wrap gap-2 mb-6">
+        <div class="project-modal-tags flex flex-wrap gap-2 mb-6">
             ${data.tags.map(tag => `<button type="button" class="keyword-chip px-2 py-1 rounded bg-slate-800 text-xs text-slate-200 border border-slate-700 hover:border-cyber-500/60 hover:text-cyber-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyber-400/60 transition-colors" data-keyword="${tag}">${tag}</button>`).join('')}
         </div>
 
@@ -1456,6 +1486,20 @@ function openModal(id) {
     syncBodyScrollLock(); // Prevent scrolling when any modal is open
     modal.querySelector('[aria-label="Close project modal"]').focus({ preventScroll: true });
 
+    if (window.SPINE?.motionOK && window.gsap) {
+        const wrapper = document.getElementById('modal-wrapper');
+        const origin = dialogOrigin(wrapper);
+        dialogTween = gsap.timeline({ onComplete: () => { dialogTween = null; } });
+        dialogTween.fromTo(wrapper, { ...origin, opacity: 0.2 }, {
+            x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0, skewX: 0, opacity: 1,
+            duration: 0.7, ease: 'expo.out', clearProps: 'transform,opacity'
+        }, 0);
+        dialogTween.fromTo(modal.querySelector(':scope > .backdrop-blur-sm'), { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0);
+        dialogTween.from(modal.querySelectorAll('#project-modal-heading, .project-modal-tags, #main-panel'), {
+            y: 16, opacity: 0, duration: 0.45, stagger: 0.055, ease: 'power3.out', clearProps: 'transform,opacity'
+        }, 0.14);
+    }
+
     // Re-initialize icons
     if (window.lucide) lucide.createIcons();
 }
@@ -1465,27 +1509,40 @@ function openModal(id) {
  */
 function closeModal() {
     const modal = document.getElementById('project-modal');
-    if (!modal || modal.classList.contains('hidden')) return;
+    if (!modal || modal.classList.contains('hidden') || dialogClosing) return;
+    stopValuationMotion();
+    dialogTween?.kill();
+    dialogTween = null;
     const wrapper = document.getElementById('modal-wrapper');
     const valuationPanel = document.getElementById('valuation-panel');
     const btnText = document.getElementById('valuation-btn-text');
     const btnIcon = document.getElementById('valuation-btn-icon');
+    const finish = () => {
+        dialogClosing = false;
+        dialogTween = null;
+        // Reset to collapsed state before closing
+        if (wrapper && valuationPanel) {
+            wrapper.classList.remove('lg:max-w-6xl');
+            wrapper.classList.add('lg:max-w-4xl');
+            valuationPanel.classList.add('hidden', 'opacity-0', 'translate-x-10');
+            valuationPanel.classList.remove('flex', 'opacity-100', 'translate-x-0');
 
-    // Reset to collapsed state before closing
-    if (wrapper && valuationPanel) {
-        wrapper.classList.remove('lg:max-w-6xl');
-        wrapper.classList.add('lg:max-w-4xl');
-        valuationPanel.classList.add('hidden', 'opacity-0', 'translate-x-10');
-        valuationPanel.classList.remove('flex', 'opacity-100', 'translate-x-0');
+            if (btnText) btnText.innerText = 'Project Valuation';
+            if (btnIcon) btnIcon.classList.remove('rotate-180');
+        }
 
-        if (btnText) btnText.innerText = 'Project Valuation';
-        if (btnIcon) btnIcon.classList.remove('rotate-180');
-    }
-
-    wrapper?.classList.remove('valuation-open');
-    modal.classList.add('hidden');
-    syncBodyScrollLock(); // Restore scrolling if no other modal is open
-    if (projectModalTrigger?.isConnected) projectModalTrigger.focus({ preventScroll: true });
+        wrapper?.classList.remove('valuation-open');
+        modal.classList.add('hidden');
+        syncBodyScrollLock(); // Restore scrolling if no other modal is open
+        if (projectModalTrigger?.isConnected) projectModalTrigger.focus({ preventScroll: true });
+        if (window.gsap) gsap.set([wrapper, modal.querySelector(':scope > .backdrop-blur-sm')], { clearProps: 'transform,opacity' });
+    };
+    if (window.SPINE?.motionOK && window.gsap) {
+        dialogClosing = true;
+        dialogTween = gsap.timeline({ onComplete: finish });
+        dialogTween.to(wrapper, { ...dialogOrigin(wrapper), opacity: 0, duration: 0.4, ease: 'power3.inOut' }, 0);
+        dialogTween.to(modal.querySelector(':scope > .backdrop-blur-sm'), { opacity: 0, duration: 0.3 }, 0.05);
+    } else finish();
 }
 
 // Event Listeners

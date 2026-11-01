@@ -14,9 +14,25 @@
         'project-management.html': 'oxblood',
         'education-culture.html': 'moss'
     };
+    var CHAPTERS = {
+        ink: ['00', 'The Digital Humanist'],
+        moss: ['01', 'Education & Culture'],
+        sienna: ['02', 'Counselling'],
+        oxblood: ['03', 'Project Management'],
+        tealink: ['04', 'Technology']
+    };
+
+    function paintVeil(veil, ink) {
+        var chapter = CHAPTERS[ink] || CHAPTERS.ink;
+        veil.setAttribute('data-ink', CHAPTERS[ink] ? ink : 'ink');
+        veil.querySelector('.wipe-numeral').textContent = chapter[0];
+        veil.querySelector('.wipe-mark').textContent = 'CHAPTER ' + chapter[0];
+        veil.querySelector('.wipe-name').textContent = chapter[1];
+    }
+
     var FLAG = 'spine-wipe';
     var FRESH_MS = 2500;
-    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     var isFile = location.protocol === 'file:';
 
     function getVeil() {
@@ -25,6 +41,7 @@
             veil = document.createElement('div');
             veil.id = 'wipe-veil';
             veil.setAttribute('aria-hidden', 'true');
+            veil.innerHTML = '<span class="wipe-numeral"></span><span class="wipe-mark"></span><span class="wipe-name"></span>';
             document.body.appendChild(veil);
         }
         return veil;
@@ -39,6 +56,10 @@
         }
     }
 
+    reduceQuery.addEventListener('change', function () {
+        if (reduceQuery.matches) killVeil();
+    });
+
     // --- Arrival: reveal if a fresh flag exists -----------------------------
     function onArrive() {
         var raw = null;
@@ -51,18 +72,16 @@
         if (!data || (Date.now() - data.t) > FRESH_MS) return; // stale → no veil
 
         var veil = getVeil();
-        veil.setAttribute('data-ink', data.ink || 'ink');
+        paintVeil(veil, data.ink || 'ink');
         veil.style.transform = 'translateY(0%)';
 
         var reveal = function () {
-            if (reduced) {
-                veil.style.transition = 'opacity .3s ease';
-                veil.style.opacity = '0';
-                setTimeout(killVeil, 350);
+            if (reduceQuery.matches) {
+                killVeil();
             } else {
-                veil.style.transition = 'transform .5s cubic-bezier(0.87, 0, 0.13, 1)';
+                veil.style.transition = 'transform .4s cubic-bezier(0.87, 0, 0.13, 1)';
                 veil.style.transform = 'translateY(-100%)';
-                setTimeout(killVeil, 600);
+                setTimeout(killVeil, 460);
             }
         };
         if (document.readyState === 'interactive' || document.readyState === 'complete') {
@@ -82,10 +101,10 @@
 
     // --- Programmatic wipe (used by the brain cover's zoom-then-navigate) ---
     window.spineNavigate = function (href, ink) {
-        if (isFile || reduced) { location.href = href; return; }
-        var dur = window.matchMedia('(min-width: 768px)').matches ? 700 : 500;
+        if (isFile || reduceQuery.matches) { location.href = href; return; }
+        var dur = window.matchMedia('(min-width: 768px)').matches ? 450 : 380;
         var veil = getVeil();
-        veil.setAttribute('data-ink', ink || 'ink');
+        paintVeil(veil, ink || 'ink');
         veil.style.transition = 'none';
         veil.style.transform = 'translateY(100%)';
         requestAnimationFrame(function () {
@@ -119,7 +138,7 @@
         if (file === currentFile) return;      // same-page anchor
 
         e.preventDefault();
-        var dur = reduced ? 0 : (window.matchMedia('(min-width: 768px)').matches ? 700 : 500);
+        var dur = reduceQuery.matches ? 0 : (window.matchMedia('(min-width: 768px)').matches ? 450 : 380);
         var go = function () {
             try {
                 sessionStorage.setItem(FLAG, JSON.stringify({ ink: ink, t: Date.now() }));
@@ -130,7 +149,7 @@
         if (dur === 0) { go(); return; }
 
         var veil = getVeil();
-        veil.setAttribute('data-ink', ink);
+        paintVeil(veil, ink);
         veil.style.transition = 'none';
         veil.style.transform = 'translateY(100%)';
         requestAnimationFrame(function () {

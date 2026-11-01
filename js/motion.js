@@ -14,8 +14,9 @@
 
     var USE_LENIS = true;
 
-    var motionOK = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var hasGSAP = typeof window.gsap !== 'undefined';
+    var reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var hasGSAP = Boolean(window.gsap && window.ScrollTrigger);
+    var splitReveals = [];
 
     // Easing dialect — one grammar, everywhere
     var EASE_ENTER = 'power4.out';
@@ -24,12 +25,19 @@
     var EASE_AMBIENT = 'sine.inOut';
 
     window.SPINE = {
-        motionOK: motionOK,
+        get motionOK() { return hasGSAP && !reduceQuery.matches; },
         EASE_ENTER: EASE_ENTER,
         EASE_STRUCT: EASE_STRUCT,
         EASE_MICRO: EASE_MICRO,
         EASE_AMBIENT: EASE_AMBIENT,
-        lenis: null
+        lenis: null,
+        reduceQuery: reduceQuery,
+        onMotion: function (setup) {
+            if (!hasGSAP) return null;
+            var media = gsap.matchMedia();
+            media.add('(prefers-reduced-motion: no-preference)', setup);
+            return media;
+        }
     };
 
     document.documentElement.classList.add('js');
@@ -119,32 +127,24 @@
         }
     });
 
-    function releaseFOUC() {
-        document.documentElement.classList.remove('loading');
-    }
-    // Hard timeout so nothing can stay hidden
-    setTimeout(releaseFOUC, 800);
-
-    if (!hasGSAP || !motionOK) {
-        // Reduced motion or GSAP missing: final states only (CSS handles visibility)
+    function finishCounters() {
         document.querySelectorAll('[data-count]').forEach(function (el) {
-            el.textContent = el.getAttribute('data-count') + (el.getAttribute('data-suffix') || '');
+            var value = Number(el.getAttribute('data-count'));
+            el.textContent = value.toLocaleString('en-US') + (el.getAttribute('data-suffix') || '');
         });
-        releaseFOUC();
-        return;
     }
 
-    gsap.registerPlugin(ScrollTrigger);
-    if (window.SplitText) gsap.registerPlugin(SplitText);
-
-    // --- Lenis smooth scroll: desktop + fine pointer only, feature-flagged ---
-    if (USE_LENIS && window.Lenis &&
-        window.matchMedia('(min-width: 768px) and (pointer: fine)').matches) {
-        var lenis = new Lenis({ autoRaf: false });
-        lenis.on('scroll', ScrollTrigger.update);
-        gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
-        gsap.ticker.lagSmoothing(0);
-        window.SPINE.lenis = lenis;
+    function syncPreference() {
+        document.documentElement.classList.toggle('motion-ready', window.SPINE.motionOK);
+        document.documentElement.classList.remove('loading');
+        if (!window.SPINE.motionOK) finishCounters();
+    }
+    reduceQuery.addEventListener('change', syncPreference);
+    syncPreference();
+    if (hasGSAP) {
+        gsap.registerPlugin(ScrollTrigger);
+        if (window.SplitText) gsap.registerPlugin(SplitText);
+        if (window.Flip) gsap.registerPlugin(Flip);
     }
 
     function initReveals(scope) {
@@ -155,7 +155,7 @@
             if (el.__spineRevealed) return;
             el.__spineRevealed = true;
             if (window.SplitText) {
-                SplitText.create(el, {
+                splitReveals.push(SplitText.create(el, {
                     type: 'lines',
                     mask: 'lines',
                     autoSplit: true,
@@ -163,23 +163,35 @@
                         gsap.set(el, { visibility: 'visible' });
                         return gsap.from(self.lines, {
                             yPercent: 110,
-                            duration: 1.1,
+                            duration: el.tagName === 'H1' ? 0.9 : 0.65,
                             ease: EASE_ENTER,
-                            stagger: 0.08,
-                            scrollTrigger: { trigger: el, start: 'top 80%', once: true },
+                            stagger: 0.065,
+                            scrollTrigger: { trigger: el, start: 'top 92%', once: true },
                             // the line masks clip Fraunces descenders (g, y, p) —
                             // restore the original unsplit markup once revealed
-                            onComplete: function () { self.revert(); }
+                            onComplete: function () {
+                                // Let autoSplit finish measuring before unmasking the lines.
+                                queueMicrotask(function () { if (self.isSplit) self.revert(); });
+                            }
                         });
                     }
-                });
+                }));
             } else {
                 gsap.set(el, { visibility: 'visible' });
                 gsap.from(el, {
-                    y: 24, opacity: 0, duration: 0.9, ease: EASE_ENTER,
-                    scrollTrigger: { trigger: el, start: 'top 80%', once: true }
+                    y: 12, opacity: 0, duration: 0.4, ease: EASE_ENTER,
+                    scrollTrigger: { trigger: el, start: 'top 92%', once: true }
                 });
             }
+        });
+
+        // Section framing assembles around the headline without moving its layout.
+        root.querySelectorAll('.section-head').forEach(function (head) {
+            var rule = head.querySelector('.section-rule');
+            var notes = head.querySelectorAll('.kicker, .standfirst');
+            var scene = gsap.timeline({ scrollTrigger: { trigger: head, start: 'top 90%', once: true } });
+            if (rule) scene.from(rule, { scaleX: 0, transformOrigin: 'left center', duration: 0.75, ease: EASE_STRUCT }, 0);
+            if (notes.length) scene.from(notes, { y: 14, opacity: 0, duration: 0.6, stagger: 0.1, ease: EASE_ENTER }, 0.12);
         });
 
         // 2. Batched plate fade-ups
@@ -189,12 +201,13 @@
         );
         plates.forEach(function (el) { el.__spineRevealed = true; });
         if (plates.length) {
+            gsap.set(plates, { y: 12, opacity: 0 });
             ScrollTrigger.batch(plates, {
-                start: 'top 85%',
+                start: 'top 90%',
                 once: true,
                 onEnter: function (batch) {
                     gsap.to(batch, {
-                        y: 0, opacity: 1, duration: 0.9, ease: EASE_ENTER, stagger: 0.06
+                        y: 0, opacity: 1, duration: 0.6, ease: EASE_ENTER, stagger: 0.065
                     });
                 }
             });
@@ -223,10 +236,10 @@
             el.textContent = '0' + suffix;
             gsap.to(obj, {
                 val: target,
-                duration: 1.2,
+                duration: 0.7,
                 ease: EASE_MICRO,
                 snap: { val: 1 },
-                scrollTrigger: { trigger: el, start: 'top 70%', once: true },
+                scrollTrigger: { trigger: el, start: 'top 85%', once: true },
                 onUpdate: function () {
                     el.textContent = obj.val.toLocaleString('en-US') + suffix;
                 }
@@ -271,39 +284,36 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        initReveals(document);
-        initNavbarCondense();
-        releaseFOUC();
-
-        // Refresh discipline: Fraunces metrics shift pin/trigger measurements
-        if (document.fonts && document.fonts.ready) {
-            document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
-        }
-
-        // Protected injected content (technology.html explorer) — animate post-injection,
-        // zero edits to explorer.js / github-cards.js
-        var grid = document.getElementById('explorer-grid');
-        if (grid && window.MutationObserver) {
-            var pending = null;
-            var mo = new MutationObserver(function () {
-                clearTimeout(pending);
-                pending = setTimeout(function () {
-                    // explorer.js re-renders raw <i data-lucide> tags on every
-                    // folder navigation — re-init icons or they vanish
-                    if (window.lucide && typeof lucide.createIcons === 'function') {
-                        try { lucide.createIcons(); } catch (e) { /* ignore */ }
-                    }
-                    fixGithubIcons();
-                    grid.querySelectorAll(':scope > *').forEach(function (child) {
-                        if (!child.__spineRevealed) {
-                            child.__spineRevealed = true;
-                            gsap.from(child, { y: 16, opacity: 0, duration: 0.5, ease: EASE_ENTER });
-                        }
-                    });
-                    ScrollTrigger.refresh();
-                }, 60);
+        syncPreference();
+        window.SPINE.onMotion(function () {
+            splitReveals = [];
+            var scrollMedia = gsap.matchMedia();
+            scrollMedia.add('(min-width: 1100px) and (pointer: fine)', function () {
+                if (!USE_LENIS || !window.Lenis) return;
+                var lenis = new Lenis({ autoRaf: false });
+                function tick(time) { lenis.raf(time * 1000); }
+                lenis.on('scroll', ScrollTrigger.update);
+                gsap.ticker.add(tick);
+                window.SPINE.lenis = lenis;
+                return function () {
+                    gsap.ticker.remove(tick);
+                    lenis.destroy();
+                    window.SPINE.lenis = null;
+                };
             });
-            mo.observe(grid, { childList: true });
-        }
+            initReveals(document);
+            initNavbarCondense();
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
+            }
+            return function () {
+                scrollMedia.revert();
+                splitReveals.forEach(function (split) { split.revert(); });
+                document.querySelectorAll('[data-reveal-lines], .plate-reveal, [data-parallax], [data-count], [data-accent-bar], .breathing').forEach(function (el) {
+                    delete el.__spineRevealed;
+                });
+                if (reduceQuery.matches) finishCounters();
+            };
+        });
     });
 })();

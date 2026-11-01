@@ -4,7 +4,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-const context = vm.createContext({ document: { addEventListener() {} } });
+const context = vm.createContext({
+    document: { addEventListener() {} },
+    window: { matchMedia: () => ({ matches: false, addEventListener() {} }) }
+});
 for (const file of ['github-cards.js', 'project-valuations.js', 'explorer.js']) {
     vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'js', file), 'utf8'), context);
 }

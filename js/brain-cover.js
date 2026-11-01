@@ -802,8 +802,9 @@
                 var dx = parseFloat(dot.getAttribute('cx'));
                 var dy = parseFloat(dot.getAttribute('cy'));
                 var elbowX = dx + (sx - dx) * 0.45;
+                // Simultaneous touch labels need direct, separate routes on each side.
                 line.setAttribute('d', 'M ' + sx.toFixed(1) + ' ' + sy.toFixed(1) +
-                    ' L ' + elbowX.toFixed(1) + ' ' + sy.toFixed(1) +
+                    (touchQuery.matches ? '' : ' L ' + elbowX.toFixed(1) + ' ' + sy.toFixed(1)) +
                     ' L ' + dx + ' ' + dy);
                 // the rewritten path's length no longer matches the original
                 // dash-draw setup — fade via opacity instead

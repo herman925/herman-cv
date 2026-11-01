@@ -25,7 +25,7 @@
     <script type="importmap">
       { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js" } }
     </script>
-    <script type="module" src="js/brain-cover.js?v=18"></script>
+    <script type="module" src="js/brain-cover.js?v=19"></script>
 
     <!-- Page-specific styles: gold engraving restyle of the brain SVG, cover hero,
          TOC, mobile chapter cards, chapter-spread inks, letter details -->
@@ -183,7 +183,7 @@
            Fine-pointer desktop resting/hover styles below remain unchanged. */
         @media (hover: none), (pointer: coarse) {
             .brain-map-wrapper.cover-brain { display: flex !important; min-height: 0; align-items: flex-start; }
-            .cover-brain .brain-frame { max-width: min(860px, 100%); }
+            .cover-brain .brain-frame { max-width: min(420px, 100%); }
             #brainMapSVG { max-width: none; display: block; }
             .cover-brain #brain-canvas-mount { inset: 0; }
             #brainMapSVG .brain-section { opacity: 1 !important; filter: none !important; }
@@ -212,6 +212,9 @@
             /* Override the GL tier's mouse-transparent SVG for touch labels. */
             html.brain-gl #brainMapSVG .brain-label-group,
             html.brain-gl #brainMapSVG .brain-label-group * { pointer-events: auto !important; }
+        }
+        @media (max-width: 767px) and (hover: none), (max-width: 767px) and (pointer: coarse) {
+            .cover-brain .brain-frame { max-width: min(320px, 100%); }
         }
 
         .toc-entry {

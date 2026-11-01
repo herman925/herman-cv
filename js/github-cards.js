@@ -4,6 +4,19 @@
  */
 
 const githubCardData = {
+    'career-terminal': {
+        type: 'complex',
+        title: 'Live Career Terminal',
+        subtitle: 'Interactive portfolio · Skills, experience and project log',
+        tags: ['JavaScript', 'Animation', 'Responsive UI', 'Accessibility'],
+        challenge: { icon: 'terminal', title: 'The Story', text: 'A long skills list is easy to skim past. The career terminal presents my experience, tools, projects and working philosophy as a live command-line session.' },
+        solution: { icon: 'code-2', title: 'Architecture: Career Data → Typewriter → Responsive Window', text: 'A vanilla JavaScript sequence types commands and responses, corrects simulated typos and scrolls within a contained terminal. The same implementation powers the hero and Digital Ecosystem panels, with separate, accessible DOM targets.' },
+        features: [
+            { icon: 'list', color: 'text-cyan-400', text: '<strong>Career content:</strong> experience, development and creative tools, project work, qualifications and values.' },
+            { icon: 'monitor-smartphone', color: 'text-blue-400', text: '<strong>Responsive window:</strong> familiar three-control header, readable output, keyboard scrolling and contained overflow.' },
+            { icon: 'layers', color: 'text-green-400', text: '<strong>Reusable sequence:</strong> one implementation with independent targets for each embedded terminal.' }
+        ]
+    },
     // Reviewed against repository READMEs and the owner's CiteReflex deck (2026-11-01).
     'hualong-platform': {
         type: 'simple',
@@ -672,14 +685,14 @@ const githubCardData = {
         tags: ['Full-Stack', 'System Design', 'PHP', 'MySQL', 'Video Streaming'],
         htmlContent: `
             <p class="mb-4">The official <strong>EdUHK Online Classes Platform</strong> (EOCP), serving as a centralized digital backbone for the university's online teaching initiatives. As the <strong>First Developer & Designer</strong>, I built the foundation that hosts a vast repository of educational resources and facilitates the <strong>Community of Practice (CoP)</strong>.</p>
-            
+
             <h4 class="text-cyber-400 font-bold mb-2">Key Features:</h4>
             <ul class="list-disc list-inside text-slate-400 space-y-1 mb-4">
                 <li><strong>Resource Repository:</strong> Hosting hundreds of video tutorials and teaching materials across multiple disciplines.</li>
                 <li><strong>Community Hub:</strong> Facilitating "Online Teaching Support Series" and CoP events for faculty collaboration.</li>
                 <li><strong>Scalable Architecture:</strong> Supporting thousands of academic stakeholders with seamless video streaming and content management.</li>
             </ul>
-            
+
             <div class="mt-6">
                 <a href="https://eocp2.eduhk.hk/" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-cyber-600 hover:bg-cyber-500 text-white rounded-lg text-sm font-medium transition-colors">
                     <i data-lucide="external-link" class="w-4 h-4"></i> Visit Platform
@@ -695,7 +708,7 @@ const githubCardData = {
         tags: ['Swift', 'Gamification', 'EdTech', 'Special Education', 'Research-Backed'],
         htmlContent: `
             <p class="mb-4">An award-winning electronic training application designed to enhance working memory for children with Special Educational Needs (SEN). Developed in collaboration with <strong>Dr. Kean Poon Kei-yan</strong> (EdUHK/UNSW), this app transforms cognitive training into an engaging adventure.</p>
-            
+
             <h4 class="text-cyber-400 font-bold mb-2">Awards & Impact:</h4>
             <ul class="list-disc list-inside text-slate-400 space-y-1 mb-4">
                 <li><strong>Silver Medal:</strong> 5th International Invention Innovation Competition in Canada (iCAN 2020).</li>
@@ -873,7 +886,7 @@ const githubCardData = {
         solution: {
             icon: 'cpu',
             title: 'The Solution: Tri-Panel React Orchestrator',
-            text: 'Built a <strong>React + TypeScript SPA</strong> with a three-column layout: filter console, searchable ingredient inventory, and AI recipe output. A shared processing box feeds OpenRouter prompts, backed by a smart 30-minute cache, PDF export, and developer tooling (prompt preview, raw response inspector).' 
+            text: 'Built a <strong>React + TypeScript SPA</strong> with a three-column layout: filter console, searchable ingredient inventory, and AI recipe output. A shared processing box feeds OpenRouter prompts, backed by a smart 30-minute cache, PDF export, and developer tooling (prompt preview, raw response inspector).'
         },
         features: [
             { icon: 'sliders', color: 'text-cyan-400', text: '<strong>Constraint Engine:</strong> 5 filter categories (tools, time, cuisine, effort, diet) shape the prompt before every run.' },
@@ -1169,19 +1182,13 @@ const keywordLore = {
  * @param {Object} data - The card data object.
  * @returns {string} - The generated HTML string.
  */
-function renderComplexCard(data) {
-    const featuresHtml = data.features.map(f => `
-        <li class="flex items-start gap-3">
-            <i data-lucide="${f.icon}" class="w-5 h-5 ${f.color} mt-0.5"></i>
-            <span>${f.text}</span>
-        </li>
-    `).join('');
-
+function renderValuation(data) {
+    if (!data.valuation) return '';
     const valuationItemsHtml = (data.valuation?.items || []).map(item => `
         <div class="group">
             <div class="flex flex-wrap justify-between items-baseline gap-x-4 gap-y-1 mb-2">
                 <span class="text-sm font-bold text-slate-300 uppercase tracking-wide">${item.name}</span>
-                <span class="text-lg font-mono font-bold text-green-400 whitespace-nowrap">${item.price}</span>
+                <span class="text-lg font-mono font-bold text-green-400 valuation-amount">${item.price}</span>
             </div>
             <p class="text-xs text-slate-400 leading-relaxed border-l-2 border-slate-800 pl-3 group-hover:border-green-500/50 transition-colors">
                 ${item.desc}
@@ -1190,10 +1197,64 @@ function renderComplexCard(data) {
     `).join('');
 
     return `
+            <div id="valuation-panel" tabindex="-1" role="region" aria-labelledby="valuation-title" class="hidden opacity-0 translate-x-10 flex-col w-full lg:w-[450px] min-w-0 bg-slate-950 border border-slate-800 rounded-xl p-4 sm:p-8 shadow-2xl transition-all duration-500 ease-out relative overflow-hidden">
+                <!-- Decorative Background -->
+                <div class="absolute top-0 right-0 w-40 h-40 bg-green-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+                <!-- Header -->
+                <div class="flex items-center justify-between mb-8 border-b border-slate-800 pb-5">
+                    <div>
+                        <h3 id="valuation-title" class="text-base sm:text-xl font-bold text-white font-mono">VALUATION_LOG</h3>
+                        <div class="flex items-center gap-2 mt-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
+                            <span class="text-xs text-slate-500 uppercase tracking-wider">${data.valuation.note}</span>
+                        </div>
+                    </div>
+                    <i data-lucide="calculator" class="w-8 h-8 text-slate-600"></i>
+                </div>
+
+                <!-- Scrollable Content -->
+                <div class="flex-1 overflow-y-auto space-y-6 pr-2">
+                    ${valuationItemsHtml}
+                </div>
+
+                <!-- Total Footer -->
+                <div class="mt-8 pt-6 border-t-2 border-dashed border-slate-800">
+                    <div class="flex flex-wrap justify-between items-center gap-3 mb-2">
+                        <span class="text-sm text-slate-500 uppercase tracking-widest">Total Est. Value</span>
+                        <span class="text-2xl font-bold text-green-400 font-mono valuation-amount">${data.valuation.total}</span>
+                    </div>
+                    ${data.valuation.rationale ? `
+                    <details class="my-4">
+                        <summary class="text-xs text-cyan-400 font-bold uppercase tracking-wide cursor-pointer py-2">Valuation Rationale</summary>
+                        <p class="text-xs text-slate-300 leading-relaxed mt-2">${data.valuation.rationale}</p>
+                    </details>
+                    ` : ''}
+                    ${data.valuation.model ? `
+                    <details class="valuation-method">
+                        <summary>Estimate method &amp; source</summary>
+                        <p>${data.valuation.model.basis}</p>
+                        <a href="${data.valuation.model.sourceUrl}" target="_blank" rel="noopener noreferrer">${data.valuation.model.sourceTitle} ↗</a>
+                    </details>` : '<p class="text-xs text-slate-600 italic">Historical AI estimate · original basis retained.</p>'}
+                </div>
+            </div>
+    `;
+}
+
+function renderComplexCard(data) {
+    const featuresHtml = data.features.map(f => `
+        <li class="flex items-start gap-3">
+            <i data-lucide="${f.icon}" class="w-5 h-5 ${f.color} mt-0.5"></i>
+            <span>${f.text}</span>
+        </li>
+    `).join('');
+
+
+    return `
         <div id="project-panels" class="flex flex-col lg:flex-row gap-10">
             <!-- LEFT PANEL: Main Content -->
             <div id="main-panel" class="flex-1 space-y-6 min-w-0">
-                
+
                 <!-- The Story Card -->
                 <div class="bg-slate-800/50 rounded-lg p-6 border-l-4 border-red-500">
                     <h4 class="text-red-400 font-bold text-base uppercase tracking-wider mb-3 flex items-center gap-2">
@@ -1220,46 +1281,7 @@ function renderComplexCard(data) {
             </div>
 
             <!-- Historical AI cost estimates are present only for valued projects. -->
-            ${data.valuation ? `
-            <div id="valuation-panel" tabindex="-1" role="region" aria-labelledby="valuation-title" class="hidden opacity-0 translate-x-10 flex-col w-full lg:w-[450px] min-w-0 bg-slate-950 border border-slate-800 rounded-xl p-4 sm:p-8 shadow-2xl transition-all duration-500 ease-out relative overflow-hidden">
-                <!-- Decorative Background -->
-                <div class="absolute top-0 right-0 w-40 h-40 bg-green-500/5 rounded-full blur-3xl pointer-events-none"></div>
-                
-                <!-- Header -->
-                <div class="flex items-center justify-between mb-8 border-b border-slate-800 pb-5">
-                    <div>
-                        <h3 id="valuation-title" class="text-base sm:text-xl font-bold text-white font-mono">VALUATION_LOG</h3>
-                        <div class="flex items-center gap-2 mt-1.5">
-                            <span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
-                            <span class="text-xs text-slate-500 uppercase tracking-wider">${data.valuation.note}</span>
-                        </div>
-                    </div>
-                    <i data-lucide="calculator" class="w-8 h-8 text-slate-600"></i>
-                </div>
-
-                <!-- Scrollable Content -->
-                <div class="flex-1 overflow-y-auto space-y-6 pr-2">
-                    ${valuationItemsHtml}
-                </div>
-
-                <!-- Total Footer -->
-                <div class="mt-8 pt-6 border-t-2 border-dashed border-slate-800">
-                    <div class="flex flex-wrap justify-between items-center gap-3 mb-2">
-                        <span class="text-sm text-slate-500 uppercase tracking-widest">Total Est. Value</span>
-                        <span class="text-2xl font-bold text-green-400 font-mono whitespace-nowrap">${data.valuation.total}</span>
-                    </div>
-                    ${data.valuation.rationale ? `
-                    <details class="my-4">
-                        <summary class="text-xs text-cyan-400 font-bold uppercase tracking-wide cursor-pointer py-2">Valuation Rationale</summary>
-                        <p class="text-xs text-slate-300 leading-relaxed mt-2">${data.valuation.rationale}</p>
-                    </details>
-                    ` : ''}
-                    <div class="text-xs text-slate-600 text-right italic">
-                        *Based on enterprise dev standards
-                    </div>
-                </div>
-            </div>
-            ` : ''}
+            ${renderValuation(data)}
         </div>
     `;
 }
@@ -1300,18 +1322,22 @@ function syncBodyScrollLock() {
 /**
  * Opens the keyword/lore modal with contextual text
  */
+let keywordModalTrigger;
+
 function openKeywordModal(term) {
     const modal = document.getElementById('keyword-modal');
     const titleEl = document.getElementById('keyword-modal-title');
     const bodyEl = document.getElementById('keyword-modal-body');
     if (!modal || !titleEl || !bodyEl) return;
 
+    keywordModalTrigger = document.activeElement;
     const entry = keywordLore[term] || { title: term, body: ['Entry coming soon.'] };
     titleEl.textContent = entry.title;
     bodyEl.innerHTML = entry.body.map(p => `<p>${p}</p>`).join('');
 
     modal.classList.remove('hidden');
     syncBodyScrollLock();
+    modal.querySelector('[aria-label="Close keyword modal"]').focus({ preventScroll: true });
 }
 
 function closeKeywordModal() {
@@ -1319,6 +1345,7 @@ function closeKeywordModal() {
     if (!modal) return;
     modal.classList.add('hidden');
     syncBodyScrollLock();
+    if (keywordModalTrigger?.isConnected) keywordModalTrigger.focus({ preventScroll: true });
 }
 
 // Global click handler for keyword chips (works for dynamic content)
@@ -1344,6 +1371,8 @@ function toggleValuation() {
     const isExpanding = valuationPanel.classList.contains('hidden');
 
     wrapper.classList.add('crt-active');
+    wrapper.classList.toggle('valuation-open', isExpanding);
+    btnText.closest('button').setAttribute('aria-expanded', String(isExpanding));
 
     setTimeout(() => {
         if (isExpanding) {
@@ -1353,7 +1382,7 @@ function toggleValuation() {
             valuationPanel.classList.add('flex', 'opacity-100', 'translate-x-0');
             btnText.innerText = 'Hide Valuation';
             btnIcon.classList.add('rotate-180');
-            if (window.innerWidth < 1024) {
+            if (window.innerWidth < 1280) {
                 valuationPanel.focus({ preventScroll: true });
                 valuationPanel.scrollIntoView({ block: 'start', behavior: 'instant' });
             }
@@ -1385,13 +1414,13 @@ function openModal(id) {
     projectModalTrigger = document.activeElement;
     const modal = document.getElementById('project-modal');
     const content = document.getElementById('modal-content');
-    
+
     // Generate HTML based on type
     let bodyHtml = '';
     if (data.type === 'complex') {
         bodyHtml = renderComplexCard(data);
     } else {
-        bodyHtml = data.htmlContent;
+        bodyHtml = `<div id="project-panels"><div id="main-panel">${data.htmlContent}</div>${renderValuation(data)}</div>`;
     }
 
     // Award Banner Logic
@@ -1409,7 +1438,7 @@ function openModal(id) {
     ` : '';
 
     const valuationButton = data.valuation ? `
-        <button type="button" onclick="toggleValuation()" class="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 hover:border-cyber-500/60 text-green-300 font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyber-400/60">
+        <button type="button" onclick="toggleValuation()" aria-expanded="false" aria-controls="valuation-panel" class="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 hover:border-cyber-500/60 text-green-300 font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyber-400/60">
             <i data-lucide="panel-right-open" class="w-4 h-4"></i>
             <span id="valuation-btn-text">Project Valuation</span>
             <i id="valuation-btn-icon" data-lucide="chevron-right" class="w-4 h-4 text-green-300 transition-transform"></i>
@@ -1426,20 +1455,20 @@ function openModal(id) {
                 ${renderProjectLinks(data)}
             </div>
         </div>
-        
+
         <div class="flex flex-wrap gap-2 mb-6">
             ${data.tags.map(tag => `<button type="button" class="keyword-chip px-2 py-1 rounded bg-slate-800 text-xs text-slate-200 border border-slate-700 hover:border-cyber-500/60 hover:text-cyber-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyber-400/60 transition-colors" data-keyword="${tag}">${tag}</button>`).join('')}
         </div>
-        
+
         <div class="text-slate-300 text-sm leading-relaxed">
             ${bodyHtml}
         </div>
     `;
-    
+
     modal.classList.remove('hidden');
     syncBodyScrollLock(); // Prevent scrolling when any modal is open
     modal.querySelector('[aria-label="Close project modal"]').focus({ preventScroll: true });
-    
+
     // Re-initialize icons
     if (window.lucide) lucide.createIcons();
 }
@@ -1454,18 +1483,19 @@ function closeModal() {
     const valuationPanel = document.getElementById('valuation-panel');
     const btnText = document.getElementById('valuation-btn-text');
     const btnIcon = document.getElementById('valuation-btn-icon');
-    
+
     // Reset to collapsed state before closing
     if (wrapper && valuationPanel) {
         wrapper.classList.remove('lg:max-w-6xl');
         wrapper.classList.add('lg:max-w-4xl');
         valuationPanel.classList.add('hidden', 'opacity-0', 'translate-x-10');
         valuationPanel.classList.remove('flex', 'opacity-100', 'translate-x-0');
-        
+
         if (btnText) btnText.innerText = 'Project Valuation';
         if (btnIcon) btnIcon.classList.remove('rotate-180');
     }
-    
+
+    wrapper?.classList.remove('valuation-open');
     modal.classList.add('hidden');
     syncBodyScrollLock(); // Restore scrolling if no other modal is open
     if (projectModalTrigger?.isConnected) projectModalTrigger.focus({ preventScroll: true });
@@ -1475,9 +1505,9 @@ function closeModal() {
 document.addEventListener('keydown', function(event) {
     const projectModal = document.getElementById('project-modal');
     const keywordModal = document.getElementById('keyword-modal');
-    if (event.key === 'Tab' && projectModal && !projectModal.classList.contains('hidden') &&
-        (!keywordModal || keywordModal.classList.contains('hidden'))) {
-        const controls = [...projectModal.querySelectorAll('a[href], button:not([disabled]), summary')]
+    const activeDialog = keywordModal && !keywordModal.classList.contains('hidden') ? keywordModal : projectModal;
+    if (event.key === 'Tab' && activeDialog && !activeDialog.classList.contains('hidden')) {
+        const controls = [...activeDialog.querySelectorAll('a[href], button:not([disabled]), summary')]
             .filter(control => control.getClientRects().length);
         const first = controls[0];
         const last = controls[controls.length - 1];

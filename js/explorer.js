@@ -4,125 +4,88 @@
  */
 
 const explorerData = {
-    name: 'root',
-    type: 'folder',
-    children: [
-        {
-            name: 'Core Platforms',
-            type: 'folder',
-            icon: 'server',
-            description: 'Production systems & legacy monoliths',
-            children: [
-                {
-                    name: 'Enterprise Systems',
-                    type: 'folder',
-                    icon: 'building-2',
-                    children: [
-                        { id: 'masterlist-osp', type: 'file', fileType: 'vba' },
-                        { id: 'eocp', type: 'file', fileType: 'web' },
-                        { id: 'sec-osp', type: 'file', fileType: 'vba' },
-                        { id: 'project-masterlist', type: 'file', fileType: 'excel' }
-                    ]
-                },
-                {
-                    name: 'EdTech & Mobile',
-                    type: 'folder',
-                    icon: 'smartphone',
-                    children: [
-                        { id: 'imaze', type: 'file', fileType: 'mobile' },
-                        { id: 'hualong-platform', type: 'file', fileType: 'mobile' },
-                        { id: 'teacher-companion', type: 'file', fileType: 'web' }
-                    ]
-                },
-                {
-                    name: 'Research Ops & Automation',
-                    type: 'folder',
-                    icon: 'settings',
-                    children: [
-                        { id: 'publication-records', type: 'file', fileType: 'excel' },
-                        { id: 'autosuite', type: 'file', fileType: 'script' },
-                        { id: 'citereflex', type: 'file', fileType: 'web' }
-                    ]
-                }
-            ]
-        },
-        {
-            name: 'Featured GitHub Repos',
-            type: 'folder',
-            icon: 'folder-git-2',
-            description: 'Open source projects & case studies',
-            children: [
-                {
-                    name: 'Enterprise & Research',
-                    type: 'folder',
-                    icon: 'flask-conical',
-                    children: [
-                        {
-                            name: 'The 4Set Evolution',
-                            type: 'folder',
-                            icon: 'layers',
-                            description: 'From Excel to Hybrid Server',
-                            children: [
-                                { id: 'gen0-excel', type: 'file', fileType: 'excel' },
-                                { id: 'gen1-pwa', type: 'file', fileType: 'web' },
-                                { id: 'gen2-desktop', type: 'file', fileType: 'python' },
-                                { id: 'gen3-server', type: 'file', fileType: 'server' }
-                            ]
-                        },
-                        { id: 'teacher-survey-ece-2025', type: 'file', fileType: 'python' },
-                        { id: 'attention-to-number', type: 'file', fileType: 'web' },
-                        { id: 'emr-jotform-wrapper', type: 'file', fileType: 'react' }
-                    ]
-                },
-                {
-                    name: 'AI & Innovation',
-                    type: 'folder',
-                    icon: 'brain-circuit',
-                    children: [
-                        { id: 'ai-tier-list', type: 'file', fileType: 'web' },
-                        { id: 'emr-art', type: 'file', fileType: 'react' },
-                        { id: 'minutes-master', type: 'file', fileType: 'web' },
-                        { id: 'quick-dish-wizard', type: 'file', fileType: 'react' },
-                        { id: 'video-tagger', type: 'file', fileType: 'cpp' }
-                    ]
-                },
-                {
-                    name: 'Utilities & Tools',
-                    type: 'folder',
-                    icon: 'wrench',
-                    children: [
-                        { id: 'ks-qrcode', type: 'file', fileType: 'web' },
-                        { id: 'ks-free-play-conference', type: 'file', fileType: 'web' },
-                        { id: 'ks-retreat', type: 'file', fileType: 'web' },
-                        { id: 'shoppingcart925', type: 'file', fileType: 'js' },
-                        { id: 'sheet-sync-combine', type: 'file', fileType: 'react' },
-                        { id: 'claude-code-plugins', type: 'file', fileType: 'js' }
-                    ]
-                }
-            ]
-        },
-        {
-            name: 'MyAndante HK Limited',
-            type: 'folder',
-            icon: 'music',
-            description: 'EqualPlay · Sole Developer',
-            children: [
-                { id: 'equalplay', type: 'file', fileType: 'web' },
-                { id: 'equalplay-conversion', type: 'file', fileType: 'python' },
-                { id: 'equalplay-practice', type: 'file', fileType: 'web' },
-                { id: 'equalplay-teacher', type: 'file', fileType: 'web' },
-                { id: 'equalplay-games', type: 'file', fileType: 'web' },
-                { id: 'equalplay-engagement', type: 'file', fileType: 'web' },
-                { id: 'equalplay-creative', type: 'file', fileType: 'web' },
-                { id: 'equalplay-services', type: 'file', fileType: 'server' },
-                { id: 'equalplay-posture', type: 'file', fileType: 'mobile' }
-            ]
-        }
+    name: 'root', type: 'folder', children: [
+        { name: 'Recent Work', type: 'folder', icon: 'clock-3', description: 'Current platforms, ventures and developer tools', children: [
+            { id: 'hualong-platform', type: 'file', fileType: 'mobile' },
+            { id: 'equalplay', type: 'file', fileType: 'web' },
+            { id: 'equalplay-conversion', type: 'file', fileType: 'python' },
+            { id: 'equalplay-teacher', type: 'file', fileType: 'web' },
+            { id: 'citereflex', type: 'file', fileType: 'web' },
+            { id: 'teacher-companion', type: 'file', fileType: 'web' },
+            { id: 'claude-code-plugins', type: 'file', fileType: 'js' },
+            { id: 'career-terminal', type: 'file', fileType: 'web' }
+        ] },
+        { name: 'Education & Research', type: 'folder', icon: 'graduation-cap', description: 'Learning platforms, assessments and research operations', children: [
+            { name: 'Learning Platforms', type: 'folder', icon: 'school', children: [
+                { id: 'hualong-platform', type: 'file', fileType: 'mobile' },
+                { id: 'teacher-companion', type: 'file', fileType: 'web' },
+                { id: 'eocp', type: 'file', fileType: 'web' },
+                { id: 'imaze', type: 'file', fileType: 'mobile' }
+            ] },
+            { name: 'Research & Assessment', type: 'folder', icon: 'flask-conical', children: [
+                { name: 'The 4Set Evolution', type: 'folder', icon: 'layers', description: 'From Excel to hybrid server', children: [
+                    { id: 'gen0-excel', type: 'file', fileType: 'excel' },
+                    { id: 'gen1-pwa', type: 'file', fileType: 'web' },
+                    { id: 'gen2-desktop', type: 'file', fileType: 'python' },
+                    { id: 'gen3-server', type: 'file', fileType: 'server' }
+                ] },
+                { id: 'teacher-survey-ece-2025', type: 'file', fileType: 'python' },
+                { id: 'attention-to-number', type: 'file', fileType: 'web' },
+                { id: 'publication-records', type: 'file', fileType: 'excel' },
+                { id: 'citereflex', type: 'file', fileType: 'web' }
+            ] },
+            { name: 'Research Content Tools', type: 'folder', icon: 'files', children: [
+                { id: 'emr-art', type: 'file', fileType: 'react' },
+                { id: 'emr-jotform-wrapper', type: 'file', fileType: 'react' }
+            ] }
+        ] },
+        { name: 'Enterprise & Automation', type: 'folder', icon: 'building-2', description: 'Operational systems and repeatable administrative work', children: [
+            { id: 'masterlist-osp', type: 'file', fileType: 'vba' },
+            { id: 'sec-osp', type: 'file', fileType: 'vba' },
+            { id: 'project-masterlist', type: 'file', fileType: 'excel' },
+            { id: 'autosuite', type: 'file', fileType: 'script' }
+        ] },
+        { name: 'MyAndante HK Limited', type: 'folder', icon: 'music', description: 'EqualPlay application work · Sole Developer', children: [
+            { id: 'equalplay', type: 'file', fileType: 'web' },
+            { id: 'equalplay-conversion', type: 'file', fileType: 'python' },
+            { id: 'equalplay-practice', type: 'file', fileType: 'web' },
+            { id: 'equalplay-teacher', type: 'file', fileType: 'web' },
+            { id: 'equalplay-games', type: 'file', fileType: 'web' },
+            { id: 'equalplay-engagement', type: 'file', fileType: 'web' },
+            { id: 'equalplay-creative', type: 'file', fileType: 'web' },
+            { id: 'equalplay-services', type: 'file', fileType: 'server' },
+            { id: 'equalplay-posture', type: 'file', fileType: 'mobile' }
+        ] },
+        { name: 'AI & Developer Tools', type: 'folder', icon: 'code-2', description: 'Creation workflows, coding tools and interactive software', children: [
+            { id: 'ai-tier-list', type: 'file', fileType: 'web' },
+            { id: 'minutes-master', type: 'file', fileType: 'web' },
+            { id: 'claude-code-plugins', type: 'file', fileType: 'js' },
+            { id: 'video-tagger', type: 'file', fileType: 'cpp' },
+            { id: 'quick-dish-wizard', type: 'file', fileType: 'react' },
+            { id: 'career-terminal', type: 'file', fileType: 'web' }
+        ] },
+        { name: 'Event & Everyday Tools', type: 'folder', icon: 'wrench', description: 'Event delivery, access portals and practical utilities', children: [
+            { id: 'ks-qrcode', type: 'file', fileType: 'web' },
+            { id: 'ks-free-play-conference', type: 'file', fileType: 'web' },
+            { id: 'ks-retreat', type: 'file', fileType: 'web' },
+            { id: 'shoppingcart925', type: 'file', fileType: 'js' },
+            { id: 'sheet-sync-combine', type: 'file', fileType: 'react' }
+        ] }
     ]
 };
 
-// State
-let currentPath = []; // Array of folder objects
+let currentPath = [];
+let searchQuery = '';
+let showAllProjects = false;
+
+function collectProjects(folder = explorerData) {
+    const projects = new Map();
+    folder.children.forEach(item => {
+        if (item.type === 'folder') collectProjects(item).forEach(file => projects.set(file.id, file));
+        else projects.set(item.id, item);
+    });
+    return [...projects.values()];
+}
 
 // Icons Mapping
 const fileIcons = {
@@ -142,6 +105,19 @@ const fileIcons = {
  * Initialize the Explorer
  */
 function initExplorer() {
+    document.getElementById('explorer-search').addEventListener('input', event => {
+        searchQuery = event.target.value.trim().toLowerCase();
+        currentPath = [];
+        showAllProjects = false;
+        renderExplorer();
+    });
+    document.getElementById('explorer-all').addEventListener('click', () => {
+        currentPath = [];
+        searchQuery = '';
+        document.getElementById('explorer-search').value = '';
+        showAllProjects = true;
+        renderExplorer();
+    });
     renderExplorer();
 }
 
@@ -162,26 +138,28 @@ function renderExplorer() {
         currentFolder = currentFolder.children.find(c => c.name === folderName);
     });
 
-    // 2. Render Breadcrumbs
     renderBreadcrumbs(breadcrumbs);
+    const canGoBack = currentPath.length > 0 || showAllProjects || Boolean(searchQuery);
+    backBtn.classList.toggle('invisible', !canGoBack);
+    backBtn.disabled = !canGoBack;
+    backBtn.onclick = navigateUp;
 
-    // 3. Render Back Button State
-    if (currentPath.length > 0) {
-        backBtn.classList.remove('opacity-0', 'pointer-events-none');
-        backBtn.onclick = navigateUp;
-    } else {
-        backBtn.classList.add('opacity-0', 'pointer-events-none');
+    let items = currentFolder.children;
+    if (searchQuery || showAllProjects) {
+        items = collectProjects().filter(file => {
+            const data = githubCardData[file.id];
+            return `${data.title} ${data.subtitle} ${data.tags.join(' ')}`.toLowerCase().includes(searchQuery);
+        });
     }
-
-    // Render synchronously so keyboard focus follows the new folder.
-    container.innerHTML = currentFolder.children.map(item =>
+    container.classList.toggle('explorer-root', !searchQuery && !showAllProjects && currentPath.length === 0);
+    container.innerHTML = items.length ? items.map(item =>
         item.type === 'folder' ? createFolderHTML(item) : createFileHTML(item)
-    ).join('');
+    ).join('') : '<p class="explorer-empty">No projects match. Try another title, tool or topic.</p>';
     const count = document.getElementById('explorer-count');
-    if (count) count.textContent = `${currentFolder.children.length} items`;
+    if (count) count.textContent = `${items.length} ${searchQuery || showAllProjects ? 'projects' : 'items'} · ${collectProjects().length} unique projects`;
+    document.getElementById('explorer-all').setAttribute('aria-pressed', String(showAllProjects));
     if (window.lucide) lucide.createIcons();
-    backBtn.disabled = currentPath.length === 0;
-    if (hadFocus) {
+    if (hadFocus && document.activeElement.id !== 'explorer-search') {
         container.querySelector('button')?.focus({ preventScroll: true });
     }
 }
@@ -190,87 +168,27 @@ function renderExplorer() {
  * Create HTML for a Folder Item
  */
 function createFolderHTML(folder) {
-    return `
-        <button type="button" onclick="navigateTo('${folder.name}')" class="group w-full p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:bg-slate-700/50 hover:border-cyber-500/50 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 text-center h-36 relative overflow-hidden">
-            <span class="absolute inset-0 bg-gradient-to-br from-cyber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></span>
-            <i data-lucide="${folder.icon || 'folder'}" class="w-12 h-12 text-cyber-400 group-hover:scale-110 transition-transform duration-300"></i>
-            <span>
-                <span class="block font-bold text-slate-200 group-hover:text-white text-base">${folder.name}</span>
-                ${folder.description ? `<span class="block text-xs text-slate-500 mt-1">${folder.description}</span>` : ''}
-            </span>
-        </button>
-    `;
+    return `<button type="button" onclick="navigateTo('${folder.name}')" class="explorer-card explorer-folder">
+        <i data-lucide="${folder.icon || 'folder'}" aria-hidden="true"></i>
+        <span class="explorer-card-title">${folder.name}</span>
+        <span class="explorer-card-description">${folder.description || 'Open this collection'}</span>
+        <span class="explorer-card-meta">${collectProjects(folder).length} projects <span aria-hidden="true">→</span></span>
+    </button>`;
 }
 
 /**
  * Create HTML for a File Item
  */
 function createFileHTML(file) {
-    // Look up card data for title
-    const cardData = githubCardData[file.id];
-    const title = cardData ? cardData.title : file.id;
-    const iconConfig = fileIcons[file.fileType] || { icon: 'file', color: 'text-slate-400' };
-    
-    // Check for distinction/award
-    const hasDistinction = cardData && cardData.award;
-    const awardTier = cardData && cardData.awardTier ? cardData.awardTier : 'gold';
-    const awardStyles = {
-        gold: {
-            borderClass: 'border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.1)]',
-            bgClass: 'bg-slate-900/50',
-            bannerColor: 'bg-yellow-500',
-            dotColor: 'bg-white'
-        },
-        platinum: {
-            // God rays effect: Radial gradient from top + strong glow
-            borderClass: 'border-cyan-200/60 shadow-[0_0_40px_rgba(34,211,238,0.4),inset_0_0_20px_rgba(34,211,238,0.1)]',
-            bgClass: 'bg-slate-900/80 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-400/20 via-slate-900/50 to-slate-900',
-            bannerColor: 'bg-gradient-to-r from-cyan-50 via-white to-cyan-50 animate-pulse shadow-[0_0_15px_rgba(255,255,255,0.6)]',
-            dotColor: 'bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,1)]'
-        },
-        silver: {
-            borderClass: 'border-slate-400/30 shadow-[0_0_10px_rgba(148,163,184,0.15)]',
-            bgClass: 'bg-slate-900/50',
-            bannerColor: 'bg-gradient-to-br from-slate-300 to-slate-400',
-            dotColor: 'bg-slate-100'
-        },
-        bronze: {
-            borderClass: 'border-orange-900/40 shadow-[0_0_8px_rgba(120,53,15,0.2)]',
-            bgClass: 'bg-slate-900/50',
-            bannerColor: 'bg-gradient-to-br from-orange-800 to-amber-900',
-            dotColor: 'bg-orange-600'
-        },
-        iron: {
-            borderClass: 'border-slate-600/40 shadow-[0_0_5px_rgba(71,85,105,0.2)]',
-            bgClass: 'bg-slate-950/70',
-            bannerColor: 'bg-gradient-to-br from-slate-600 to-slate-700',
-            dotColor: 'bg-slate-500'
-        }
-    };
-    const tierStyle = hasDistinction ? (awardStyles[awardTier] || awardStyles.gold) : null;
-    const distinctionBanner = hasDistinction ? `
-        <span class="absolute -top-1 -right-1 w-12 h-12 overflow-hidden rounded-tr-xl z-20">
-            <span class="absolute top-0 right-0 ${tierStyle.bannerColor} w-16 h-4 rotate-45 translate-x-4 translate-y-2 shadow-lg flex items-center justify-center">
-                <span class="w-2 h-2 ${tierStyle.dotColor} rounded-full animate-pulse"></span>
-            </span>
-        </span>
-    ` : '';
-    const borderClass = hasDistinction ? tierStyle.borderClass : 'border-slate-800';
-    const bgClass = hasDistinction && tierStyle.bgClass ? tierStyle.bgClass : 'bg-slate-900/50';
-
-    return `
-        <button type="button" onclick="openModal('${file.id}')" class="group w-full p-4 rounded-xl ${bgClass} border ${borderClass} hover:bg-slate-800 hover:border-purple-500/50 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 text-center h-36 relative overflow-hidden">
-            ${distinctionBanner}
-            <span class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                <i data-lucide="external-link" class="w-4 h-4 text-slate-500"></i>
-            </span>
-            <i data-lucide="${iconConfig.icon}" class="w-10 h-10 ${iconConfig.color} group-hover:scale-110 transition-transform duration-300 relative z-10"></i>
-            <span class="w-full relative z-10">
-                <span class="block font-bold text-slate-300 group-hover:text-white text-sm line-clamp-2 leading-tight px-1">${title}</span>
-                <span class="block text-xs font-mono text-slate-500 mt-1 group-hover:text-slate-400">.${file.fileType}</span>
-            </span>
-        </button>
-    `;
+    const data = githubCardData[file.id];
+    const icon = fileIcons[file.fileType] || { icon: 'file' };
+    return `<button type="button" onclick="openModal('${file.id}')" class="explorer-card explorer-file">
+        <span class="explorer-file-top"><i data-lucide="${icon.icon}" aria-hidden="true"></i><span>${file.fileType.toUpperCase()}</span></span>
+        <span class="explorer-card-title">${data.title}</span>
+        <span class="explorer-card-description">${data.subtitle}</span>
+        ${data.award ? `<span class="explorer-award">${data.award}</span>` : ''}
+        <span class="explorer-card-meta">${data.valuation.total}<span class="explorer-estimate-label">${data.valuation.model ? 'AI replacement-cost range' : 'Historical AI estimate'}</span></span>
+    </button>`;
 }
 
 /**
@@ -288,6 +206,7 @@ function renderBreadcrumbs(container) {
         }
     });
     
+    if (searchQuery || showAllProjects) html += `<span aria-hidden="true">/</span><span aria-current="location">${searchQuery ? 'Search results' : 'All projects'}</span>`;
     container.innerHTML = html;
 }
 
@@ -300,12 +219,16 @@ function navigateTo(folderName) {
 }
 
 function navigateUp() {
+    if (searchQuery || showAllProjects) { navigateRoot(); return; }
     currentPath.pop();
     renderExplorer();
 }
 
 function navigateRoot() {
     currentPath = [];
+    searchQuery = '';
+    showAllProjects = false;
+    document.getElementById('explorer-search').value = '';
     renderExplorer();
 }
 

@@ -51,7 +51,7 @@ function initNavbar({ activePage, sections, themeColor, isDark = false }) {
             </a>
 
             <!-- Desktop Menu -->
-            <div class="hidden md:flex items-center gap-8">
+            <div class="hidden xl:flex items-center gap-6">
                 ${navLinks.map(link => renderLink(link)).join('')}
                 
                 <!-- Local Sections Dropdown -->
@@ -60,7 +60,7 @@ function initNavbar({ activePage, sections, themeColor, isDark = false }) {
                     <button class="flex items-center gap-1 text-sm font-medium ${colors.textMuted} ${colors.textHover} transition-colors px-3 py-2 rounded-md hover:bg-${themeColor}-500/10">
                         Sections <i data-lucide="chevron-down" class="w-4 h-4"></i>
                     </button>
-                    <div class="absolute right-0 mt-2 w-48 ${colors.dropdownBg} backdrop-blur-md border ${colors.border} rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform origin-top-right z-50">
+                    <div class="absolute right-0 mt-2 w-48 ${colors.dropdownBg} backdrop-blur-md border ${colors.border} rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all transform origin-top-right z-50">
                         ${sections.map((section, index) => `
                             <a href="#${section.id}" class="block px-4 py-2 text-sm ${isDark ? 'text-slate-300' : 'text-slate-600'} ${colors.dropdownHover} ${colors.dropdownTextHover} ${index === 0 ? 'first:rounded-t-lg' : ''} ${index === sections.length - 1 ? 'last:rounded-b-lg' : ''}">${section.label}</a>
                         `).join('')}
@@ -70,13 +70,13 @@ function initNavbar({ activePage, sections, themeColor, isDark = false }) {
             </div>
 
             <!-- Mobile Menu Button -->
-            <button id="mobile-menu-btn" class="inline-flex items-center justify-center min-w-[44px] min-h-[44px] md:hidden ${colors.textMuted} ${colors.textHover} transition-colors focus:outline-none" title="Toggle mobile menu" aria-label="Toggle mobile menu" aria-controls="mobile-menu" aria-expanded="false">
+            <button id="mobile-menu-btn" class="inline-flex items-center justify-center min-w-[44px] min-h-[44px] xl:hidden ${colors.textMuted} ${colors.textHover} transition-colors focus:outline-none" title="Toggle mobile menu" aria-label="Toggle mobile menu" aria-controls="mobile-menu" aria-expanded="false">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
         </div>
 
         <!-- Mobile Menu Panel -->
-        <div id="mobile-menu" class="hidden md:hidden ${colors.dropdownBg} backdrop-blur-md border-t ${colors.mobileBorder} absolute w-full left-0 top-20 shadow-xl">
+        <div id="mobile-menu" class="hidden xl:hidden ${colors.dropdownBg} backdrop-blur-md border-t ${colors.mobileBorder} absolute w-full left-0 top-20 shadow-xl">
             <div class="flex flex-col px-6 py-6 space-y-4">
                 ${navLinks.map(link => renderLink(link, true)).join('')}
                 

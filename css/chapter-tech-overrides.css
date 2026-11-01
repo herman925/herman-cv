@@ -100,39 +100,6 @@
     border-radius: 0 !important;
 }
 
-/* --- PLATES & FIGURES: museum-catalog counters on the explorer grid ------ */
-#explorer-grid { counter-reset: plate; }
-#explorer-grid > [onclick] {
-    position: relative;
-    border: 1px solid var(--hairline);
-    background: var(--paper-soft);
-    transition: border-color .25s ease, transform .25s ease;
-}
-#explorer-grid > [onclick]:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-}
-#explorer-grid > [onclick]::before {
-    counter-increment: plate;
-    content: "FIG. " counter(plate, decimal-leading-zero);
-    position: absolute;
-    top: 6px;
-    right: 8px;
-    font-family: 'Space Grotesk', monospace;
-    font-size: 9px;
-    letter-spacing: .14em;
-    color: var(--ink-soft);
-    opacity: .7;
-    pointer-events: none;
-}
-
-/* Award banners keep their tier colors but flatten to print labels */
-#explorer-grid [class*="from-yellow"], #explorer-grid [class*="from-amber"],
-#explorer-grid [class*="from-purple"], #explorer-grid [class*="from-gray"],
-#explorer-grid [class*="from-orange"] {
-    background-image: none !important;
-}
-
 /* --- Broadcast carousel shell ------------------------------------------- */
 #broadcast-carousel [class*="bg-slate-8"],
 #broadcast-carousel [class*="bg-slate-9"] {
@@ -195,7 +162,7 @@
     padding: 10px 14px;
     border-bottom: 1px solid var(--hairline);
     font-family: 'Space Grotesk', monospace;
-    font-size: 10px;
+    font-size: 14px;
     letter-spacing: .14em;
     text-transform: uppercase;
     color: var(--ink-soft);
@@ -207,7 +174,7 @@
     justify-content: space-between;
     align-items: center;
     font-family: 'Space Grotesk', monospace;
-    font-size: 10px;
+    font-size: 14px;
     letter-spacing: .12em;
     color: var(--ink-soft);
 }
@@ -315,7 +282,7 @@
     border: 1px solid var(--hairline);
     padding: 3px 10px;
     font-family: 'Space Grotesk', monospace;
-    font-size: 10px;
+    font-size: 14px;
     letter-spacing: .12em;
     text-transform: uppercase;
     color: var(--accent-deep);
@@ -363,3 +330,96 @@
     border-color: var(--hairline);
 }
 #terminal-body { overflow-wrap: anywhere; }
+
+/* Wider Digital Ecosystem with a contained terminal and readable project cards. */
+.ecosystem-intro { display: grid; gap: 24px; align-items: start; margin-bottom: 24px; }
+.ecosystem-intro .section-head { margin-bottom: 0; }
+.ecosystem-console { min-width: 0; border: 1px solid var(--hairline); border-radius: 10px; overflow: hidden; background: var(--paper-soft); }
+.ecosystem-console > summary { display: flex; align-items: center; gap: 16px; padding: 14px 18px; cursor: pointer; font: 14px 'Space Grotesk', monospace; color: var(--ink-soft); }
+.terminal-lights { display: inline-flex; gap: 7px; flex-shrink: 0; }
+.terminal-lights > span { width: 11px; height: 11px; border-radius: 50%; background: #ef4444; }
+.terminal-lights > span:nth-child(2) { background: #eab308; }
+.terminal-lights > span:nth-child(3) { background: #22c55e; }
+.career-output { height: 232px; overflow: auto; padding: 20px; border-top: 1px solid var(--hairline); font: 16px/1.6 'Space Grotesk', monospace; overflow-wrap: anywhere; }
+#terminal-body { font-size: 16px; line-height: 1.6; }
+#career-terminal { max-width: 560px; }
+#explorer-shell { width: 100%; border: 1px solid var(--hairline); border-radius: 10px; overflow: hidden; background: var(--paper); }
+.explorer-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 20px; border-bottom: 1px solid var(--hairline); }
+.explorer-location, .explorer-actions, #explorer-breadcrumbs { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.explorer-location { flex: 1; }
+#explorer-breadcrumbs { flex-wrap: wrap; font: 15px 'Space Grotesk', monospace; }
+#explorer-back, #explorer-all { min-height: 44px; padding: 10px 14px; border: 1px solid var(--hairline); border-radius: 6px; font: 15px 'Space Grotesk', monospace; }
+#explorer-back svg, .explorer-search-label svg { width: 20px; height: 20px; flex-shrink: 0; }
+#explorer-all[aria-pressed="true"] { border-color: var(--accent); color: var(--accent-deep); }
+.explorer-search-label { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--hairline); border-radius: 6px; }
+#explorer-search { width: 240px; min-width: 0; background: transparent; font: 16px 'Outfit', sans-serif; color: var(--ink); }
+#explorer-search::placeholder { color: var(--ink-soft); }
+#explorer-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 20px; }
+#explorer-grid > button.explorer-card { display: flex; flex-direction: column; align-items: flex-start; text-align: left; min-height: 192px; height: auto; gap: 12px; padding: 22px; border: 1px solid var(--hairline); border-radius: 8px; background: var(--paper-soft); transition: border-color .2s, background .2s; }
+#explorer-grid > button.explorer-card:hover { border-color: var(--accent); background: var(--accent-soft); }
+.explorer-card > svg, .explorer-file-top svg { width: 32px; height: 32px; color: var(--accent-deep); }
+.explorer-card-title { font: 600 20px/1.3 'Outfit', sans-serif; color: var(--ink); }
+.explorer-card-description { font: 17px/1.5 'Outfit', sans-serif; color: var(--ink-soft); }
+.explorer-card-meta { display: block; width: 100%; margin-top: auto; padding-top: 10px; font: 15px/1.5 'Space Grotesk', monospace; color: var(--accent-deep); }
+.explorer-card-meta > span:not(.explorer-estimate-label) { float: right; }
+.explorer-estimate-label { display: block; font-size: 14px; color: var(--ink-soft); }
+.explorer-file-top { display: flex; justify-content: space-between; align-items: center; width: 100%; font: 13px 'Space Grotesk', monospace; color: var(--ink-soft); }
+.explorer-award { font: 14px/1.5 'Space Grotesk', monospace; color: #d4b274; }
+.explorer-empty { grid-column: 1 / -1; padding: 24px 0; }
+#archive .explorer-status-bar { flex-wrap: wrap; gap: 12px; padding: 12px 20px; font-size: 14px; letter-spacing: .04em; }
+@media (min-width: 600px) { #explorer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { #explorer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1280px) { #explorer-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .ecosystem-intro { grid-template-columns: minmax(0, 1fr) 480px; gap: 40px; } }
+@media (max-width: 767px) {
+    .explorer-actions { width: 100%; flex-wrap: wrap; }
+    .explorer-search-label { flex: 1; }
+    #explorer-search { width: 100%; }
+    .explorer-toolbar { padding: 14px; }
+    #explorer-grid { padding: 14px; gap: 14px; }
+    #explorer-grid > button.explorer-card { padding: 18px; }
+}
+
+/* Larger project details and honest, inspectable cost ranges. */
+#modal-wrapper { width: min(1280px, calc(100vw - 32px)); max-width: 1280px; padding: 0; }
+#modal-wrapper.valuation-open { width: min(1560px, calc(100vw - 32px)); max-width: 1560px; }
+#modal-wrapper > .glass-card { max-height: calc(100dvh - 48px); }
+#modal-content { padding: clamp(20px, 3vw, 40px); }
+#project-panels { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+#main-panel { min-width: 0; }
+#project-modal :is(p, li) { font-size: 18px; line-height: 1.65; }
+#project-modal h2 { font-size: clamp(26px, 2vw, 34px); }
+#project-modal h4 { font-size: 20px; }
+#project-modal .keyword-chip { font-size: 15px; min-height: 44px; }
+#valuation-panel { width: auto; min-width: 0; padding: 24px; }
+#valuation-panel :is(p, .text-xs, .text-sm) { font-size: 16px; line-height: 1.6; }
+#valuation-panel .valuation-amount { white-space: normal; overflow-wrap: normal; }
+.valuation-method { margin-top: 18px; border-top: 1px solid var(--hairline); padding-top: 14px; }
+.valuation-method summary { cursor: pointer; min-height: 44px; font-size: 16px; }
+.valuation-method a { display: inline-block; margin-top: 10px; color: var(--accent-deep); text-decoration: underline; font-size: 15px; }
+@media (min-width: 1280px) { .valuation-open #project-panels { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); } }
+@media (max-width: 599px) {
+    #project-modal { padding: 12px 8px; }
+    #modal-wrapper, #modal-wrapper.valuation-open { width: calc(100vw - 16px); }
+    #modal-content { padding: 20px 14px; }
+    #valuation-panel { padding: 16px; }
+    #project-modal :is(p, li) { font-size: 17px; }
+    #project-modal #main-panel > .p-6 { padding: 16px; }
+}
+
+@media (min-width: 1280px) { #explorer-grid.explorer-root { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+#project-modal [aria-label="Close project modal"] { position: sticky; top: 8px; right: 8px; float: right; margin: 8px; border: 1px solid var(--hairline); border-radius: 6px; }
+#keyword-modal [aria-label="Close keyword modal"] { min-width: 44px; min-height: 44px; }
+
+.ecosystem-console > summary::after { content: '+'; margin-left: auto; font-size: 20px; color: var(--accent-deep); }
+.ecosystem-console[open] > summary::after { content: '−'; }
+@media (max-width: 767px) {
+    .explorer-toolbar { display: grid; grid-template-columns: auto minmax(0, 1fr); }
+    .explorer-location { grid-column: 1; grid-row: 1; }
+    .explorer-actions { display: contents; }
+    #explorer-all { grid-column: 2; grid-row: 1; justify-self: end; }
+    .explorer-search-label { grid-column: 1 / -1; width: 100%; }
+    .terminal-session { display: none; }
+}
+
+#valuation-panel summary { min-height: 44px; }

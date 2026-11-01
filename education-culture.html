@@ -12,7 +12,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="js/tailwind-config.js?v=10"></script>
   <link rel="stylesheet" href="global.css?v=10">
-  <link rel="stylesheet" href="css/spine.css?v=10">
+  <link rel="stylesheet" href="css/spine.css?v=15">
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
@@ -40,6 +40,14 @@
     /* Journey Line route + waypoints (Chapter 01 signature — full route, six waypoints) */
     #journey-route { position: relative; }
     #journey-route svg { position: absolute; left: 0; top: 0; width: 56px; height: 100%; overflow: visible; }
+    .journey-mobile-line { display: none; }
+    @media (max-width: 767px) {
+      #journey-route { min-height: 0; }
+      #journey-route #journey-path { visibility: hidden; }
+      #journey-route .journey-mobile-line { display: block; }
+      #journey-route .journey-stops { position: relative; grid-template-rows: none; gap: 28px; }
+      #journey-route .journey-stop { padding-block: 8px; }
+    }
     .journey-stops { position: absolute; inset: 0; z-index: 1; display: grid; grid-template-rows: repeat(6, 1fr); margin: 0; padding: 0; list-style: none; }
     .journey-stop { position: relative; display: flex; align-items: center; padding-left: 68px; }
     @media (min-width: 768px) { .journey-stop { padding-left: 88px; } }
@@ -69,14 +77,14 @@
     .waypoint-stamp {
       display: inline-block;
       padding: 6px 10px;
-      font-size: 10.5px;
+      font-size: 14px;
       font-weight: 500;
       letter-spacing: .12em;
     }
     .honour-stamp { display: block; padding: 18px 20px; }
     .honour-stamp .stamp-label {
       display: block;
-      font-size: 10px;
+      font-size: 14px;
       letter-spacing: .2em;
       color: var(--accent);
       padding-bottom: 8px;
@@ -84,7 +92,7 @@
       border-bottom: 1px dashed rgba(16, 185, 129, .4);
     }
     .honour-stamp .stamp-text {
-      font-size: 11.5px;
+      font-size: 14px;
       letter-spacing: .08em;
       line-height: 1.6;
       margin: 0;
@@ -162,6 +170,7 @@
           <!-- The route line — the spine of this chapter -->
           <div id="journey-route" class="min-h-[1260px] md:min-h-[1440px]">
             <svg viewBox="0 0 56 1200" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+              <path class="journey-mobile-line" d="M28 0 V1200" fill="none" stroke="var(--accent)" stroke-width="1.5" />
               <path id="journey-path"
                 d="M28 0 C 50 36, 8 62, 28 100 C 52 156, 4 244, 28 300 C 54 358, 2 444, 28 500 C 50 562, 6 642, 28 700 C 54 760, 2 846, 28 900 C 50 962, 8 1044, 28 1100 C 38 1140, 20 1172, 28 1200"
                 fill="none" stroke="var(--accent)" stroke-width="1.5" />
@@ -583,7 +592,7 @@
     <a href="technology.html" data-ink="tealink" title="Technology"><span></span></a>
   </nav>
 
-  <script src="js/navbar.js?v=12"></script>
+  <script src="js/navbar.js?v=15"></script>
   <script>
     // Initialize Navbar
     initNavbar({

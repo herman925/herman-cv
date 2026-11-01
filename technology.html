@@ -12,8 +12,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="js/tailwind-config.js?v=11"></script>
   <link rel="stylesheet" href="global.css?v=11">
-  <link rel="stylesheet" href="css/spine.css?v=11">
-  <link rel="stylesheet" href="css/chapter-tech-overrides.css?v=14">
+  <link rel="stylesheet" href="css/spine.css?v=15">
+  <link rel="stylesheet" href="css/chapter-tech-overrides.css?v=15">
   <style>
     /* ======================================================================
        CH. 04 page layer — DARK PHOSPHOR amplifiers (page-scoped only)
@@ -140,7 +140,7 @@
                 </div>
                 <div class="text-xs text-slate-400 font-mono opacity-70 text-right">herman@tech-hub:~ (Live Career Log)</div>
               </div>
-              <div class="p-6 font-mono text-[13px] sm:text-sm h-[320px] overflow-y-auto scrollbar-hide" id="terminal-body" tabindex="0" role="region" aria-label="Career log output">
+              <div class="p-6 font-mono text-[13px] sm:text-sm h-[320px] overflow-y-auto scrollbar-hide" id="terminal-body" data-lenis-prevent tabindex="0" role="region" aria-label="Career log output">
                 <div id="terminal-content" class="space-y-2 text-cyber-400"></div>
                 <div class="mt-2 flex items-center">
                   <span class="text-green-400 mr-2">➜</span>
@@ -171,63 +171,46 @@
     <!-- ================================================================
          02 · DIGITAL ECOSYSTEM — project file browser
          ================================================================ -->
-    <section id="archive" class="spine-section min-h-[800px]" aria-labelledby="archive-title">
+    <section id="archive" class="spine-section" aria-labelledby="archive-title">
       <span id="ecosystem" class="absolute top-0" aria-hidden="true"></span>
       <span class="scanline" aria-hidden="true"></span>
       <div class="spine-container">
+        <div class="ecosystem-intro">
         <div class="section-head">
           <hr class="section-rule">
-          <p class="kicker"><span class="tick">▪</span>CH. 04 § Plates &amp; Figures — The Archive</p>
+          <p class="kicker"><span class="tick">▪</span>CH. 04 § Project Index</p>
           <h2 id="archive-title" class="display-m" data-reveal-lines>Digital <span class="accent-deep serif-italic">Ecosystem</span></h2>
           <p class="standfirst">Explore the codebase. Navigate through production systems, research tools, and prototypes.</p>
           <p class="caption mt-4 flex items-center gap-2">
             <i data-lucide="mouse-pointer-click" class="w-4 h-4"></i>
-            <span>Open folders, then select a project for its story, engineering details and AI cost breakdown</span>
+            <span>Open any project for its story, architecture and cost estimate.</span>
           </p>
         </div>
 
-        <!-- File Explorer Interface — page-owned chrome, protected internals.
-             Perspective container: shell rises rotateX(8deg)→0 on entry. -->
-        <div class="max-w-5xl mx-auto" style="perspective: 1200px">
-        <div id="explorer-shell" class="frame-hairline bg-[var(--paper)]">
-          <!-- Window Header -->
-          <div class="explorer-chrome-bar">
-            <div class="flex items-center gap-3 min-w-0">
-              <button id="explorer-back" aria-label="Go back" class="p-3 frame-hairline text-[var(--ink)] hover:border-[var(--accent)] transition-all opacity-0 pointer-events-none">
-                <i data-lucide="arrow-left" class="w-5 h-5"></i>
-              </button>
-              <!-- Breadcrumbs -->
-              <nav aria-label="Project folders" id="explorer-breadcrumbs" class="flex items-center gap-2 text-sm font-mono ml-1 min-w-0 overflow-x-auto scrollbar-hide normal-case tracking-normal">
-                <!-- Injected via JS -->
-              </nav>
-            </div>
-            <!-- Search Bar (Visual Only) -->
-            <div class="hidden md:flex items-center gap-2 frame-hairline px-3 py-1.5">
-              <i data-lucide="search" class="w-3 h-3"></i>
-              <span class="text-[10px] font-mono">Search ecosystem...</span>
-            </div>
+        <details id="ecosystem-console" class="ecosystem-console">
+          <summary><span class="terminal-lights" aria-hidden="true"><span></span><span></span><span></span></span><span><span class="terminal-session">herman@tech-hub:~ · </span>Live Career Log</span></summary>
+          <div id="ecosystem-terminal-body" data-lenis-prevent class="career-output" tabindex="0" role="region" aria-label="Digital Ecosystem career log output">
+            <div id="ecosystem-terminal-content" class="space-y-2 text-cyber-400"></div>
+            <div class="mt-2 flex items-center"><span class="text-green-400 mr-2">➜</span><span class="text-blue-400 mr-2">~</span><span id="ecosystem-typewriter-cursor"></span><span class="animate-pulse">_</span></div>
           </div>
-
-          <!-- Main Content Area -->
-          <div class="p-5 md:p-8 min-h-[400px]">
-            <div id="explorer-grid" class="grid grid-cols-1 min-[400px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 transition-all duration-300">
-              <!-- Content Injected via JS -->
-            </div>
-          </div>
-
-          <!-- Status Bar -->
-          <div class="explorer-status-bar">
-            <div class="flex gap-4">
-              <span><span class="w-2 h-2 rounded-full bg-[var(--accent)] inline-block mr-1"></span>System Online</span>
-              <span id="explorer-count" role="status"></span>
-            </div>
-            <div>
-              UTF-8
-            </div>
-          </div>
+        </details>
         </div>
+
+        <div id="explorer-shell">
+          <div class="explorer-toolbar">
+            <div class="explorer-location">
+              <button id="explorer-back" type="button" aria-label="Go back" class="invisible" disabled><i data-lucide="arrow-left" aria-hidden="true"></i></button>
+              <nav id="explorer-breadcrumbs" aria-label="Project folders"></nav>
+            </div>
+            <div class="explorer-actions">
+              <button id="explorer-all" type="button" aria-pressed="false">All projects</button>
+              <label class="explorer-search-label"><span class="sr-only">Search projects</span><i data-lucide="search" aria-hidden="true"></i><input id="explorer-search" type="search" placeholder="Search title, tool or topic…" aria-controls="explorer-grid"></label>
+            </div>
+          </div>
+          <div id="explorer-grid"></div>
+          <div class="explorer-status-bar"><span>● Project index</span><span id="explorer-count" role="status"></span></div>
         </div>
-        <p class="caption mt-3 max-w-5xl mx-auto">FIG. SERIES — THE ARCHIVE OF PRODUCTION SYSTEMS, CATALOGUED AS PLATES.</p>
+        <p class="caption mt-3">Open a project for its story, architecture and cost estimate.</p>
       </div>
     </section>
 
@@ -929,7 +912,7 @@
   </footer>
 
   <!-- MODAL OVERLAY (protected — same hidden-state mechanism as original) -->
-  <div id="project-modal" role="dialog" aria-modal="true" aria-labelledby="project-modal-title" class="fixed inset-0 z-[100] hidden flex items-start md:items-center justify-center px-4 py-6 md:py-10 overflow-y-auto">
+  <div id="project-modal" data-lenis-prevent role="dialog" aria-modal="true" aria-labelledby="project-modal-title" class="fixed inset-0 z-[100] hidden flex items-start md:items-center justify-center px-4 py-6 md:py-10 overflow-y-auto">
     <!-- Backdrop -->
     <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
 
@@ -949,7 +932,7 @@
   </div>
 
   <!-- KEYWORD MODAL (Lore Dictionary — protected) -->
-  <div id="keyword-modal" role="dialog" aria-modal="true" aria-labelledby="keyword-modal-title" class="fixed inset-0 z-[95] hidden items-start md:items-center justify-center px-4 py-6 md:py-10 overflow-y-auto">
+  <div id="keyword-modal" data-lenis-prevent role="dialog" aria-modal="true" aria-labelledby="keyword-modal-title" class="fixed inset-0 z-[120] hidden flex items-start md:items-center justify-center px-4 py-6 md:py-10 overflow-y-auto">
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeKeywordModal()"></div>
     <div class="relative w-full max-w-xl p-4 sm:p-5">
       <div class="glass-card bg-slate-900 border border-cyber-500/40 rounded-2xl shadow-[0_0_40px_rgba(37,166,221,0.25)] max-h-[85vh] overflow-y-auto">
@@ -982,18 +965,19 @@
   </nav>
 
   <!-- Project data loads before the explorer. -->
-  <script src="js/navbar.js?v=12"></script>
-  <script src="js/github-cards.js?v=14"></script>
-  <script src="js/explorer.js?v=14"></script>
+  <script src="js/navbar.js?v=15"></script>
+  <script src="js/github-cards.js?v=15"></script>
+  <script src="js/project-valuations.js?v=15"></script>
+  <script src="js/explorer.js?v=15"></script>
   <script src="js/carousel.js?v=11"></script>
 
   <!-- Page inline script: navbar init, terminal typewriter (verbatim),
        broadcast counter, and page-specific GSAP (origin line-draw) -->
   <script>
-    function initTerminal() {
-        const content = document.getElementById('terminal-content');
-        const cursor = document.getElementById('typewriter-cursor');
-        const shell = document.getElementById('terminal-body');
+    function initTerminal(prefix = '') {
+        const content = document.getElementById(`${prefix}terminal-content`);
+        const cursor = document.getElementById(`${prefix}typewriter-cursor`);
+        const shell = document.getElementById(`${prefix}terminal-body`);
         if (!content || !cursor) return;
 
         const lines = [
@@ -1354,6 +1338,8 @@
         }
 
         initTerminal();
+        document.getElementById('ecosystem-console').open = window.matchMedia('(min-width: 1100px)').matches;
+        initTerminal('ecosystem-');
 
         // --- Broadcast index counter (functional, motion-independent) ------
         (function () {

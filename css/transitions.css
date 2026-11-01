@@ -1,4 +1,18 @@
 /* Loaded before other assets so the chapter ink covers the first destination paint. */
+@font-face {
+    font-family: 'Chapter Fraunces';
+    font-style: normal;
+    font-weight: 600;
+    font-display: block;
+    src: url('../resources/fonts/chapter-fraunces-600.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Chapter Grotesk';
+    font-style: normal;
+    font-weight: 500;
+    font-display: block;
+    src: url('../resources/fonts/chapter-space-grotesk-500.woff2') format('woff2');
+}
 #wipe-veil {
     position: fixed;
     inset: 0;
@@ -19,7 +33,9 @@
 #wipe-veil[data-ink="oxblood"] { background: #E11D48; color: #faf7f2; }
 #wipe-veil[data-ink="moss"] { background: #10B981; }
 #wipe-veil[data-ink="ink"] { background: #16161A; color: #faf7f2; }
-.wipe-numeral { position: absolute; font: 600 clamp(180px, 26vw, 420px)/1 'Fraunces', Georgia, serif; opacity: .12; }
-.wipe-mark { font: 500 14px 'Space Grotesk', monospace; letter-spacing: .2em; }
-.wipe-name { position: relative; max-width: 85vw; text-align: center; text-wrap: balance; font: 600 clamp(34px, 6vw, 80px)/1.1 'Fraunces', Georgia, serif; letter-spacing: -.025em; }
+.wipe-numeral { position: absolute; font: 600 clamp(180px, 26vw, 420px)/1 'Chapter Fraunces', Georgia, serif; opacity: .12; }
+.wipe-mark { font: 500 14px 'Chapter Grotesk', monospace; letter-spacing: .2em; }
+.wipe-name { position: relative; max-width: 85vw; text-align: center; text-wrap: balance; font: 600 clamp(34px, 6vw, 80px)/1.1 'Chapter Fraunces', Georgia, serif; letter-spacing: -.025em; }
+#wipe-veil[data-fonts="system"] :is(.wipe-name, .wipe-numeral) { font-family: Georgia, serif; }
+#wipe-veil[data-fonts="system"] .wipe-mark { font-family: monospace; }
 @media (prefers-reduced-motion: reduce) { #wipe-veil { display: none; } }

@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 
-function boot({ flag, reduced = false, blockedStorage = false } = {}) {
+function boot({ flag, reduced = false, blockedStorage = false, fontsReady } = {}) {
     let now = 1000000, nextId = 0;
     const timers = new Map(), nodes = new Map(), listeners = {}, navigations = [];
     const storage = new Map(flag ? [['spine-wipe', JSON.stringify(flag)]] : []);
@@ -16,6 +16,9 @@ function boot({ flag, reduced = false, blockedStorage = false } = {}) {
     const document = { body: null, readyState: 'loading', documentElement: node(), createElement: node,
         getElementById(id) { return nodes.get(id); },
         addEventListener(type, callback) { (listeners[type] ||= []).push(callback); }
+    };
+    if (fontsReady !== undefined) document.fonts = {
+        ready: Promise.resolve(), load: () => Promise.resolve([]), check: () => fontsReady
     };
     const location = { pathname: '/technology.html', search: '', protocol: 'https:', origin: 'https://example.test',
         get href() { return 'https://example.test/technology.html'; }, set href(value) { navigations.push(value); }
@@ -95,6 +98,20 @@ test('one departure hands off the destination and prevents duplicate navigation'
     await app.advance(750);
     assert.deepEqual(app.navigations, ['index.html']);
     assert.equal(JSON.parse(app.storage.get('spine-wipe')).path, '/index.html');
+});
+
+test('chapter typography stays identical across the handoff, including a cold font load', async () => {
+    for (const fontsReady of [true, false]) {
+        const source = boot({ fontsReady });
+        source.window.spineNavigate('technology.html');
+        await source.advance(750);
+        const flag = JSON.parse(source.storage.get('spine-wipe'));
+        const mode = fontsReady ? 'chapter' : 'system';
+        assert.equal(source.veil().attrs['data-fonts'], mode);
+        assert.equal(flag.fonts, mode);
+        const destination = boot({ flag, fontsReady: !fontsReady });
+        assert.equal(destination.veil().attrs['data-fonts'], mode);
+    }
 });
 
 test('reduced motion and blocked storage preserve immediate navigation', () => {

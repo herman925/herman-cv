@@ -24,8 +24,21 @@
 
     var html = document.documentElement;
     var reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    var booted = false, queued = false, syncBrainMotion, aimBrainConnectors;
+    var booted = false, queued = false, syncBrainMotion, aimBrainConnectors, resizeBrain;
     var touchQuery = window.matchMedia('(hover: none), (pointer: coarse)');
+    const brainFrame = document.querySelector('.brain-frame');
+    const brainSVG = document.getElementById('brainMapSVG');
+    function fitLabels() {
+        const width = brainFrame?.getBoundingClientRect().width;
+        if (!width || !brainSVG) return;
+        brainSVG.style.setProperty('--brain-label-size', Math.max(24, 14 * 450 / width) + 'px');
+        brainSVG.querySelectorAll('.brain-touch-hit').forEach(target => {
+            target.setAttribute('height', Math.max(72, Math.ceil(44 * 450 / width)));
+        });
+        if (resizeBrain && !reduceQuery.matches) resizeBrain();
+    }
+    if (brainFrame) new ResizeObserver(fitLabels).observe(brainFrame);
+    fitLabels();
 
     var ZONES = [
         { key: 'education', cls: 'zone-education', ink: 'moss', href: 'education-culture.html', color: [0.063, 0.725, 0.506] },   // #10B981
@@ -814,6 +827,7 @@
         }
 
         aimBrainConnectors = aimConnectors;
+        resizeBrain = resize;
         resize();
         layoutInputMode();
         window.addEventListener('resize', resize);

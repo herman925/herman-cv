@@ -18,7 +18,23 @@
     let pendingHref;
     let departureTimer, revealTimer, fallbackTimer, hideTimer;
 
-    function getVeil(chapter) {
+    // Warm the small local faces before the first click; page fonts load separately.
+    function warmFonts() {
+        if (!document.fonts) return;
+        Promise.all([
+            document.fonts.load('600 80px "Chapter Fraunces"'),
+            document.fonts.load('500 14px "Chapter Grotesk"')
+        ]).catch(function () { /* A single system face remains available offline. */ });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', warmFonts, { once: true });
+    else warmFonts();
+
+    function chapterFonts() {
+        return document.fonts && document.fonts.check('600 80px "Chapter Fraunces"') &&
+            document.fonts.check('500 14px "Chapter Grotesk"') ? 'chapter' : 'system';
+    }
+
+    function getVeil(chapter, fonts = chapterFonts()) {
         let veil = document.getElementById('wipe-veil');
         if (!veil) {
             veil = document.createElement('div');
@@ -29,6 +45,7 @@
             (document.body || document.documentElement).appendChild(veil);
         }
         veil.setAttribute('data-ink', chapter[0]);
+        veil.setAttribute('data-fonts', fonts === 'chapter' ? 'chapter' : 'system');
         veil.querySelector('.wipe-numeral').textContent = chapter[1];
         veil.querySelector('.wipe-mark').textContent = 'CHAPTER ' + chapter[1];
         veil.querySelector('.wipe-name').textContent = chapter[2];
@@ -66,7 +83,7 @@
             reduceQuery.matches) return;
 
         busy = true;
-        const veil = getVeil(chapter);
+        const veil = getVeil(chapter, data.fonts);
         veil.style.transform = 'translateY(0%)';
         veil.setAttribute('data-state', 'holding');
         let revealing = false;
@@ -121,13 +138,14 @@
             location.href = href;
             return;
         }
-        const data = { path: url.pathname + url.search, coveredAt: Date.now() + COVER_MS };
+        // Freeze the same typography across both documents, even on a cold/failed font load.
+        const data = { path: url.pathname + url.search, coveredAt: Date.now() + COVER_MS, fonts: chapterFonts() };
         try { sessionStorage.setItem(FLAG, JSON.stringify(data)); }
         catch (error) { location.href = href; return; }
 
         busy = true;
         pendingHref = href;
-        const veil = getVeil(chapter);
+        const veil = getVeil(chapter, data.fonts);
         veil.setAttribute('data-state', 'covering');
         veil.style.transition = 'none';
         veil.style.transform = 'translateY(100%)';

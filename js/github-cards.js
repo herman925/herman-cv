@@ -8,10 +8,9 @@ const githubCardData = {
     'hualong-platform': {
         type: 'simple',
         title: '化龍 · Hualong Kindergarten',
-        subtitle: 'Greater Bay Area · Platform design in progress',
-        tags: ['Product Design', 'WeChat Mini Programs', 'Education', 'GBA'],
-        links: [{ label: 'Platform Design', url: 'https://github.com/herman925/china-kg-platform', icon: 'external-link' }],
-        htmlContent: `<p class="mb-4">Designing a shared resource platform for 化龍 kindergarten: teacher and parent WeChat Mini Programs with a PC admin console, covering resources, teaching inquiry, and home–school collaboration.</p><p class="mb-4">The repository brings together bilingual requirements, a design-system scaffold, shared terminology, permission rules, and automated quality gates.</p><p><strong>Stage:</strong> Product design and specification work in progress.</p>`
+        subtitle: 'Greater Bay Area · Product development and cross-platform integration',
+        tags: ['Product Design', 'WeChat Mini Program', 'PostgreSQL', 'Education', 'GBA'],
+        htmlContent: `<p class="mb-4">A kindergarten platform connecting teachers, families, and school leaders. Teacher and parent experiences share one WeChat Mini Program, while a separate PC console supports school administration through a shared backend.</p><h3 class="font-semibold mb-2">From product design to implementation</h3><ul class="list-disc list-inside space-y-2 mb-4"><li><strong>Teacher experience:</strong> teaching resources and cases, coordination, professional learning, family engagement, and child assessments.</li><li><strong>Parent experience:</strong> family activities, kindergarten moments, child records, assessment reports, and digital growth books.</li><li><strong>PC administration:</strong> nine connected business views covering dashboards, reviews, resources, tasks, assessments, family engagement, organisation, publishing, and growth-book settings.</li><li><strong>Shared backend:</strong> common API contracts, role-based access, and a PostgreSQL data model linking the three interfaces.</li></ul><p><strong>Stage:</strong> Implemented clients and shared-backend integration, with ongoing development and acceptance work.</p>`
     },
     'teacher-companion': {
         type: 'simple',
@@ -808,9 +807,9 @@ function renderComplexCard(data) {
 
     const valuationItemsHtml = data.valuation.items.map(item => `
         <div class="group">
-            <div class="flex justify-between items-baseline mb-2">
+            <div class="flex flex-wrap justify-between items-baseline gap-x-4 gap-y-1 mb-2">
                 <span class="text-sm font-bold text-slate-300 uppercase tracking-wide">${item.name}</span>
-                <span class="text-lg font-mono font-bold text-green-400">${item.price}</span>
+                <span class="text-lg font-mono font-bold text-green-400 whitespace-nowrap">${item.price}</span>
             </div>
             <p class="text-xs text-slate-400 leading-relaxed border-l-2 border-slate-800 pl-3 group-hover:border-green-500/50 transition-colors">
                 ${item.desc}
@@ -819,7 +818,7 @@ function renderComplexCard(data) {
     `).join('');
 
     return `
-        <div id="modal-wrapper" class="flex flex-col lg:flex-row gap-10">
+        <div id="project-panels" class="flex flex-col lg:flex-row gap-10">
             <!-- LEFT PANEL: Main Content -->
             <div id="main-panel" class="flex-1 space-y-6 min-w-0">
                 
@@ -849,14 +848,14 @@ function renderComplexCard(data) {
             </div>
 
             <!-- RIGHT PANEL: Valuation (Hidden by default) -->
-            <div id="valuation-panel" class="hidden opacity-0 translate-x-10 flex-col w-full lg:w-[450px] bg-slate-950 border border-slate-800 rounded-xl p-8 shadow-2xl transition-all duration-500 ease-out relative overflow-hidden">
+            <div id="valuation-panel" tabindex="-1" role="region" aria-labelledby="valuation-title" class="hidden opacity-0 translate-x-10 flex-col w-full lg:w-[450px] min-w-0 bg-slate-950 border border-slate-800 rounded-xl p-4 sm:p-8 shadow-2xl transition-all duration-500 ease-out relative overflow-hidden">
                 <!-- Decorative Background -->
                 <div class="absolute top-0 right-0 w-40 h-40 bg-green-500/5 rounded-full blur-3xl pointer-events-none"></div>
                 
                 <!-- Header -->
                 <div class="flex items-center justify-between mb-8 border-b border-slate-800 pb-5">
                     <div>
-                        <h3 class="text-xl font-bold text-white font-mono">VALUATION_LOG</h3>
+                        <h3 id="valuation-title" class="text-base sm:text-xl font-bold text-white font-mono">VALUATION_LOG</h3>
                         <div class="flex items-center gap-2 mt-1.5">
                             <span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
                             <span class="text-xs text-slate-500 uppercase tracking-wider">${data.valuation.note}</span>
@@ -872,25 +871,16 @@ function renderComplexCard(data) {
 
                 <!-- Total Footer -->
                 <div class="mt-8 pt-6 border-t-2 border-dashed border-slate-800">
-                    <div class="flex justify-between items-center mb-2">
-                        <div class="flex items-center gap-2">
-                            <span class="text-sm text-slate-500 uppercase tracking-widest">Total Est. Value</span>
-                            ${data.valuation.rationale ? `
-                            <div class="group/tooltip relative">
-                                <i data-lucide="info" class="w-4 h-4 text-cyan-400/60 hover:text-cyan-400 cursor-help transition-colors"></i>
-                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 bg-slate-950 border border-cyan-500/30 rounded-lg p-4 shadow-2xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 pointer-events-none z-50">
-                                    <div class="text-xs text-cyan-400 font-bold uppercase tracking-wide mb-2 flex items-center gap-1.5">
-                                        <i data-lucide="shield-check" class="w-3 h-3"></i>
-                                        Valuation Rationale
-                                    </div>
-                                    <p class="text-xs text-slate-300 leading-relaxed">${data.valuation.rationale}</p>
-                                    <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-cyan-500/30"></div>
-                                </div>
-                            </div>
-                            ` : ''}
-                        </div>
-                        <span class="text-2xl font-bold text-green-400 font-mono">${data.valuation.total}</span>
+                    <div class="flex flex-wrap justify-between items-center gap-3 mb-2">
+                        <span class="text-sm text-slate-500 uppercase tracking-widest">Total Est. Value</span>
+                        <span class="text-2xl font-bold text-green-400 font-mono whitespace-nowrap">${data.valuation.total}</span>
                     </div>
+                    ${data.valuation.rationale ? `
+                    <details class="my-4">
+                        <summary class="text-xs text-cyan-400 font-bold uppercase tracking-wide cursor-pointer py-2">Valuation Rationale</summary>
+                        <p class="text-xs text-slate-300 leading-relaxed mt-2">${data.valuation.rationale}</p>
+                    </details>
+                    ` : ''}
                     <div class="text-xs text-slate-600 text-right italic">
                         *Based on enterprise dev standards
                     </div>
@@ -989,6 +979,10 @@ function toggleValuation() {
             valuationPanel.classList.add('flex', 'opacity-100', 'translate-x-0');
             btnText.innerText = 'Hide Valuation';
             btnIcon.classList.add('rotate-180');
+            if (window.innerWidth < 1024) {
+                valuationPanel.focus({ preventScroll: true });
+                valuationPanel.scrollIntoView({ block: 'start', behavior: 'instant' });
+            }
         } else {
             wrapper.classList.remove('lg:max-w-6xl');
             wrapper.classList.add('lg:max-w-4xl');
@@ -1109,7 +1103,7 @@ document.addEventListener('keydown', function(event) {
     const keywordModal = document.getElementById('keyword-modal');
     if (event.key === 'Tab' && projectModal && !projectModal.classList.contains('hidden') &&
         (!keywordModal || keywordModal.classList.contains('hidden'))) {
-        const controls = [...projectModal.querySelectorAll('a[href], button:not([disabled])')]
+        const controls = [...projectModal.querySelectorAll('a[href], button:not([disabled]), summary')]
             .filter(control => control.getClientRects().length);
         const first = controls[0];
         const last = controls[controls.length - 1];

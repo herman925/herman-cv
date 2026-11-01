@@ -13,21 +13,11 @@
   <script src="js/tailwind-config.js?v=11"></script>
   <link rel="stylesheet" href="global.css?v=11">
   <link rel="stylesheet" href="css/spine.css?v=11">
-  <link rel="stylesheet" href="css/chapter-tech-overrides.css?v=12">
+  <link rel="stylesheet" href="css/chapter-tech-overrides.css?v=13">
   <style>
     /* ======================================================================
        CH. 04 page layer — DARK PHOSPHOR amplifiers (page-scoped only)
        ====================================================================== */
-
-    /* Terminal: faint phosphor glow pulse (4s). Static glow under reduced motion. */
-    .field-notes-frame { box-shadow: 0 0 22px rgba(45, 212, 191, .14); }
-    @media (prefers-reduced-motion: no-preference) {
-      .field-notes-frame { animation: phosphor-pulse 4s ease-in-out infinite; }
-    }
-    @keyframes phosphor-pulse {
-      0%, 100% { box-shadow: 0 0 16px rgba(45, 212, 191, .10); }
-      50%      { box-shadow: 0 0 34px rgba(45, 212, 191, .24); }
-    }
 
     /* Scanline: 1px teal gradient line, swept down each section once by GSAP.
        opacity 0 at rest — under reduced motion it simply never appears. */
@@ -121,10 +111,11 @@
           <p class="kicker hidden lg:block">Reproduced at 1:1</p>
         </div>
 
+        <h1 id="chapter-title" class="display-l glitch-title" data-reveal-lines>The Toolmaker</h1>
+        <div class="accent-bar w-24 mt-6 mb-10" data-accent-bar></div>
+
         <div class="grid lg:grid-cols-12 gap-12 items-start">
           <div class="lg:col-span-7">
-            <h1 id="chapter-title" class="display-l glitch-title" data-reveal-lines>The Toolmaker</h1>
-            <div class="accent-bar w-24 mt-6 mb-10" data-accent-bar></div>
             <h2 class="display-m" data-reveal-lines>Engineering for the <em class="serif-italic accent-deep">Human Mind</em></h2>
             <p class="standfirst mt-6">"A technologist whose skill was born from <em>humility</em>, and whose goal is to lead with <em>empathy</em>."</p>
             <p class="prose-measure ink-soft mt-8">
@@ -135,42 +126,42 @@
               <a href="#archive" class="link-editorial py-2">Projects →</a>
               <a href="#broadcast" class="link-editorial py-2">Watch Videos →</a>
             </div>
-            <div class="frame-hairline p-6 bg-[var(--paper-soft)] plate-reveal mt-10">
-              <p class="kicker mb-3"><span class="tick">▪</span>Index of this chapter</p>
-              <ol class="font-mono text-xs tracking-[0.12em] uppercase text-[var(--ink-soft)] space-y-2">
-                <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#archive">§ Project Terminal</a></li>
-                <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#innovations">§ The Workshop — Innovations Ledger</a></li>
-                <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#broadcast">§ Broadcasts</a></li>
-                <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#stories">§ Narratives &amp; Journey</a></li>
-                <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#timeline">§ Career Timeline</a></li>
-                <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#contact">§ Initiate Connection</a></li>
-              </ol>
-            </div>
+
           </div>
 
-          <!-- FIELD NOTES terminal — moved up from its own section, markup intact -->
-          <div class="lg:col-span-5">
-            <div class="terminal-hud plate-reveal">
-              <div class="field-notes-frame">
-                <div class="field-notes-bar">
-                  <span>FIELD NOTES — CAREER LOG — REPRODUCED AT 1:1</span>
-                  <span class="hidden sm:inline">herman@tech-hub:~ (Live Career Log)</span>
+          <!-- Original terminal window, restored from d56d164. -->
+          <div class="lg:col-span-5 relative w-full flex items-start justify-center">
+            <div id="career-terminal" role="region" aria-label="Live career log" class="w-full max-w-md bg-slate-900/90 border border-slate-700 rounded-lg shadow-2xl overflow-hidden backdrop-blur-md">
+              <div class="bg-slate-800/80 px-4 py-2 flex items-center justify-between gap-3 border-b border-slate-700">
+                <div class="flex items-center gap-2 shrink-0" aria-hidden="true">
+                  <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                  <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <div class="w-3 h-3 rounded-full bg-green-500"></div>
                 </div>
-                <!-- Terminal Body — protected ids, typewriter script untouched -->
-                <div class="p-6 font-mono text-[13px] sm:text-sm h-[380px] overflow-y-auto scrollbar-hide" id="terminal-body">
-                  <div id="terminal-content" class="space-y-2 text-cyber-400"></div>
-                  <div class="mt-2 flex items-center">
-                    <span class="text-green-400 mr-2">➜</span>
-                    <span class="text-blue-400 mr-2">~</span>
-                    <span id="typewriter-cursor" class="text-cyber-400"></span><span class="animate-pulse text-cyber-400">_</span>
-                  </div>
+                <div class="text-xs text-slate-400 font-mono opacity-70 text-right">herman@tech-hub:~ (Live Career Log)</div>
+              </div>
+              <div class="p-6 font-mono text-[13px] sm:text-sm h-[320px] overflow-y-auto scrollbar-hide" id="terminal-body" tabindex="0" role="region" aria-label="Career log output">
+                <div id="terminal-content" class="space-y-2 text-cyber-400"></div>
+                <div class="mt-2 flex items-center">
+                  <span class="text-green-400 mr-2">➜</span>
+                  <span class="text-blue-400 mr-2">~</span>
+                  <span id="typewriter-cursor" class="text-cyber-400"></span><span class="animate-pulse text-cyber-400">_</span>
                 </div>
               </div>
             </div>
-            <p class="terminal-status"><span class="status-dot" aria-hidden="true">●</span><span>LIVE — CAREER LOG DAEMON · UPTIME ∞</span></p>
-            <!-- Serif marginal annotation (P1: every mono block gets one) -->
-            <p class="serif-italic text-lg leading-relaxed ink-soft mt-4">“This is where I taught myself to code.”</p>
           </div>
+        </div>
+
+        <div class="frame-hairline p-6 bg-[var(--paper-soft)] plate-reveal mt-10">
+          <p class="kicker mb-3"><span class="tick">▪</span>Index of this chapter</p>
+          <ol class="font-mono text-xs tracking-[0.12em] uppercase text-[var(--ink-soft)] space-y-2">
+            <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#archive">§ Digital Ecosystem</a></li>
+            <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#innovations">§ The Workshop — Innovations Ledger</a></li>
+            <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#broadcast">§ Broadcasts</a></li>
+            <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#stories">§ Narratives &amp; Journey</a></li>
+            <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#timeline">§ Career Timeline</a></li>
+            <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#contact">§ Initiate Connection</a></li>
+          </ol>
         </div>
 
         <p class="kicker mt-16">Scroll ↓</p>
@@ -178,15 +169,15 @@
     </section>
 
     <!-- ================================================================
-         02 · PROJECT TERMINAL — restored file explorer
+         02 · DIGITAL ECOSYSTEM — project file browser
          ================================================================ -->
     <section id="archive" class="spine-section min-h-[800px]" aria-labelledby="archive-title">
       <span class="scanline" aria-hidden="true"></span>
       <div class="spine-container">
         <div class="section-head">
           <hr class="section-rule">
-          <p class="kicker"><span class="tick">▪</span>CH. 04 § Project Terminal — The Archive</p>
-          <h2 id="archive-title" class="display-m" data-reveal-lines>Project <span class="accent-deep serif-italic">Terminal</span></h2>
+          <p class="kicker"><span class="tick">▪</span>CH. 04 § Digital Ecosystem — The Archive</p>
+          <h2 id="archive-title" class="display-m" data-reveal-lines>Digital <span class="accent-deep serif-italic">Ecosystem</span></h2>
           <p class="standfirst">Browse production systems, research tools, and work in progress. Open a folder, then a project to read its story and visit the source.</p>
           <p class="caption mt-4 flex items-center gap-2">
             <i data-lucide="mouse-pointer-click" class="w-4 h-4"></i>
@@ -211,7 +202,6 @@
 
           </div>
 
-          <p class="project-command"><span aria-hidden="true">➜</span> herman@work:~ <span>ls projects/</span></p>
           <!-- Main Content Area -->
           <div class="p-5 md:p-8 min-h-[400px]">
             <div id="explorer-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 transition-all duration-300">
@@ -684,7 +674,7 @@
               <h3 class="font-display font-semibold text-2xl mt-2 mb-4">Beyond the Workplace</h3>
               <p class="ink-soft body-small leading-relaxed mb-5">
                 Equal Play opened a path from workplace systems to community projects. That work now extends into the Greater Bay Area through the
-                化龍 (Hualong) kindergarten platform design. Alongside it, I am forming the CiteReflex team and preparing for the EASE Fund.
+                化龍 (Hualong) kindergarten platform, connecting teacher and parent experiences with school administration. Alongside it, I am forming the CiteReflex team and preparing for the EASE Fund.
               </p>
               <div class="flex flex-wrap md:justify-end gap-2">
                 <span class="chip-mono chip-accent">Equal Play • Awardee</span>
@@ -708,10 +698,10 @@
                 <a class="link-editorial body-small mt-4 inline-flex py-2" href="https://github.com/herman925/piano-score-generator" target="_blank" rel="noopener noreferrer">Explore the music prototype ↗</a>
               </div>
               <div class="frame-hairline bg-[var(--paper-soft)] p-6 mt-4">
-                <p class="kicker mb-2">Design in progress</p>
-                <h4 class="font-display font-semibold mb-2">化龍 · Designing for the GBA</h4>
-                <p class="body-small ink-soft leading-relaxed mb-4">A kindergarten resource platform designed around teacher and parent WeChat Mini Programs and a PC admin console. The work brings resources, teaching inquiry, and home–school collaboration into a shared product plan.</p>
-                <a class="link-editorial body-small inline-flex py-2" href="https://github.com/herman925/china-kg-platform" target="_blank" rel="noopener noreferrer">Read the platform design ↗</a>
+                <p class="kicker mb-2">Product development · Cross-platform integration</p>
+                <h4 class="font-display font-semibold mb-2">化龍 · Building for the GBA</h4>
+                <p class="body-small ink-soft leading-relaxed mb-4">A kindergarten platform bringing teacher and parent experiences into one WeChat Mini Program, alongside a PC admin console and a shared backend. It connects teaching resources and cases, child assessments, family activities, and digital growth books.</p>
+                <p class="body-small ink-soft leading-relaxed">The work spans product design, implementation, and integration across the three interfaces. The PC console’s nine business views are connected to shared APIs for school operations, review workflows, and reporting.</p>
               </div>
               <div class="frame-hairline bg-[var(--paper-soft)] p-6 mt-4">
                 <p class="kicker mb-2">Team formation · Fund preparation</p>
@@ -972,7 +962,7 @@
 
   <!-- Project data loads before the explorer. -->
   <script src="js/navbar.js?v=12"></script>
-  <script src="js/github-cards.js?v=12"></script>
+  <script src="js/github-cards.js?v=13"></script>
   <script src="js/explorer.js?v=12"></script>
   <script src="js/carousel.js?v=11"></script>
 
@@ -1071,7 +1061,7 @@
             { text: '→ 2025 Awardee: Equal Play', type: 'achievement' },
             { text: '→ EqualPlay: assistive glove concept + piano-score prototype', type: 'achievement' },
             { text: '→ Music prototype: emotion, key, tempo and score playback', type: 'achievement' },
-            { text: '→ 化龍: kindergarten platform design in the Greater Bay Area', type: 'achievement' },
+            { text: '→ 化龍: shared teacher/parent Mini Program + PC admin + backend', type: 'achievement' },
             { text: '→ CiteReflex: team formation + EASE Fund preparation', type: 'achievement' },
             { text: '', type: 'break' },
 

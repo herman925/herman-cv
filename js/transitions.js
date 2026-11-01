@@ -109,9 +109,8 @@
         if (a.hasAttribute('data-no-wipe')) return; // element handles its own transition
 
         var href = a.getAttribute('href');
-        if (!href || href.charAt(0) === '#' || /^[a-z]+:/i.test(href) && href.indexOf(location.origin) !== 0) {
-            if (!/^[a-z]+:/i.test(href || '')) { /* relative — continue below */ } else { return; }
-        }
+        if (!href || href.charAt(0) === '#') return;
+        if (/^[a-z]+:/i.test(href) && href.indexOf(location.origin) !== 0) return;
 
         var file = (href.split('#')[0].split('?')[0].split('/').pop() || 'index.html');
         var ink = INK_BY_PATH[file];

@@ -4,6 +4,63 @@
  */
 
 const githubCardData = {
+    // Reviewed against repository READMEs and the owner's CiteReflex deck (2026-11-01).
+    'hualong-platform': {
+        type: 'simple',
+        title: '化龍 · Hualong Kindergarten',
+        subtitle: 'Greater Bay Area · Platform design in progress',
+        tags: ['Product Design', 'WeChat Mini Programs', 'Education', 'GBA'],
+        links: [{ label: 'Platform Design', url: 'https://github.com/herman925/china-kg-platform', icon: 'external-link' }],
+        htmlContent: `<p class="mb-4">Designing a shared resource platform for 化龍 kindergarten: teacher and parent WeChat Mini Programs with a PC admin console, covering resources, teaching inquiry, and home–school collaboration.</p><p class="mb-4">The repository brings together bilingual requirements, a design-system scaffold, shared terminology, permission rules, and automated quality gates.</p><p><strong>Stage:</strong> Product design and specification work in progress.</p>`
+    },
+    'teacher-companion': {
+        type: 'simple',
+        title: 'Little Explorers · 小小探索家',
+        subtitle: 'Preschool theme-inquiry course assistant · Demo',
+        tags: ['AI', 'Education', 'JavaScript', 'Workflow Design'],
+        links: [{ label: 'Repository', url: 'https://github.com/herman925/teacher-companion-agent', icon: 'external-link' }],
+        htmlContent: `<p class="mb-4">A conversational companion for kindergarten teachers developing inquiry courses around local culture. It guides teachers from an initial idea through classroom evidence and reflection to a course story.</p><p class="mb-4">A staged workflow keeps the guidance tied to teacher-supplied evidence, while the conversation asks one question at a time. The demo offers offline example flows and model-adapter support.</p><p><strong>Stage:</strong> Demo and workflow development.</p>`
+    },
+    'equalplay': {
+        type: 'simple',
+        title: 'EqualPlay · Piano Score Prototype',
+        subtitle: 'Inclusive music learning · Web prototype',
+        tags: ['Music', 'Education', 'HTML', 'JavaScript'],
+        links: [{ label: 'Repository', url: 'https://github.com/herman925/piano-score-generator', icon: 'external-link' }],
+        htmlContent: `<p class="mb-4">A playful music interface where children choose a feeling, major or minor key, and tempo, then view a piano score and use playback controls.</p><p class="mb-4">Built with HTML, CSS, and JavaScript. It forms the public software prototype alongside Equal Play's assistive glove concept.</p><p><strong>Stage:</strong> Web prototype alongside an assistive glove concept in development.</p>`
+    },
+    'attention-to-number': {
+        type: 'simple',
+        title: 'Attention to Number',
+        subtitle: 'Cognitive research · Stimulus generator',
+        tags: ['Research', 'Psychology', 'JavaScript', 'Canvas'],
+        links: [{ label: 'Repository', url: 'https://github.com/herman925/attention-to-number-test', icon: 'external-link' }],
+        htmlContent: `<p class="mb-4">A browser tool for preparing numerical-attention research materials. Researchers can vary shapes or fruit, quantity, pattern, and spatial arrangement, then export the stimuli as PNG images.</p><p><strong>Scope:</strong> Stimulus generation. Participant testing, response timing, and behavioural-data collection belong in an external experimental platform.</p>`
+    },
+    'minutes-master': {
+        type: 'simple',
+        title: 'MinutesMaster AI',
+        subtitle: 'Meeting transcripts → Structured minutes',
+        tags: ['AI', 'Workflow Design', 'API Integration'],
+        links: [{ label: 'Repository', url: 'https://github.com/herman925/minutes-master', icon: 'external-link' }],
+        htmlContent: `<p class="mb-4">A meeting-minutes workspace that turns transcripts into structured records of decisions, action items, and next steps. Dictionaries, sample minutes, and organisational instructions supply context for the draft.</p><p>The repository documents a setup wizard, meeting history, and multiple AI providers, including compatible custom endpoints.</p>`
+    },
+    'claude-code-plugins': {
+        type: 'simple',
+        title: '925 Claude Code Plugins',
+        subtitle: 'Developer tools · Session clarity and team coordination',
+        tags: ['Developer Tools', 'AI', 'Plugins', 'JavaScript'],
+        links: [{ label: 'Repository', url: 'https://github.com/herman925/925-cc-plugins', icon: 'external-link' }],
+        htmlContent: `<p class="mb-4">A collection of Claude Code modifications focused on making agent-assisted work easier to follow: a Session Panel with task steps and assumptions, a Team Orchestrator for coordinating sessions in Orca tabs, and speaker-colour cues.</p><p>The work applies the same cognitive-load focus as my operational systems to the development environment itself.</p>`
+    },
+    'citereflex': {
+        type: 'simple',
+        title: 'CiteReflex',
+        subtitle: 'CTO & Chief Architect · Team formation and EASE Fund preparation',
+        tags: ['Research', 'Evidence Retrieval', 'Product Design'],
+        links: [{ label: 'About the EASE Fund', url: 'https://www.easefund.eduhk.hk/', icon: 'external-link' }],
+        htmlContent: `<p class="mb-4">A proposed research-writing workflow that retrieves candidate passages from papers an author has already saved. The author reads the source in context and decides whether it supports the draft claim.</p><p class="mb-4">As CTO &amp; Chief Architect, I am helping form the team and prepare for EdUHK's Education⁺ and Social Entrepreneurs (EASE) Fund. The proposed first-year scope is a Zotero plugin, passage retrieval, and Word-first insertion.</p><p><strong>Stage:</strong> Team formation and EASE Fund preparation, with prototype validation planned.</p>`
+    },
     // --- COMPLEX CARDS (Split-Panel Architecture) ---
     'gen0-excel': {
         type: 'complex',
@@ -109,6 +166,7 @@ const githubCardData = {
     'gen3-server': {
         type: 'complex',
         title: 'Gen 3: Hybrid Server',
+        links: [{ label: 'Repository', url: 'https://github.com/herman925/4Set-Server', icon: 'external-link' }],
         subtitle: 'The "Perfected" Infrastructure',
         tags: ['PowerShell', 'Supabase', 'Python', 'Async'],
         challenge: {
@@ -950,10 +1008,13 @@ function toggleValuation() {
  * Opens the modal with the specified card data.
  * @param {string} id - The ID of the card to open.
  */
+let projectModalTrigger;
+
 function openModal(id) {
     const data = githubCardData[id];
     if (!data) return;
 
+    projectModalTrigger = document.activeElement;
     const modal = document.getElementById('project-modal');
     const content = document.getElementById('modal-content');
     
@@ -991,7 +1052,7 @@ function openModal(id) {
         ${awardBanner}
         <div class="flex items-start justify-between mb-4">
             <div>
-                <h2 class="text-2xl font-bold text-white mb-1">${data.title}</h2>
+                <h2 id="project-modal-title" class="text-2xl font-bold text-white mb-1">${data.title}</h2>
                 <p class="text-cyber-400 font-mono text-sm">${data.subtitle}</p>
                 ${valuationButton}
                 ${renderProjectLinks(data)}
@@ -1009,6 +1070,7 @@ function openModal(id) {
     
     modal.classList.remove('hidden');
     syncBodyScrollLock(); // Prevent scrolling when any modal is open
+    modal.querySelector('[aria-label="Close project modal"]').focus({ preventScroll: true });
     
     // Re-initialize icons
     if (window.lucide) lucide.createIcons();
@@ -1019,6 +1081,7 @@ function openModal(id) {
  */
 function closeModal() {
     const modal = document.getElementById('project-modal');
+    if (!modal || modal.classList.contains('hidden')) return;
     const wrapper = document.getElementById('modal-wrapper');
     const valuationPanel = document.getElementById('valuation-panel');
     const btnText = document.getElementById('valuation-btn-text');
@@ -1037,10 +1100,27 @@ function closeModal() {
     
     modal.classList.add('hidden');
     syncBodyScrollLock(); // Restore scrolling if no other modal is open
+    if (projectModalTrigger?.isConnected) projectModalTrigger.focus({ preventScroll: true });
 }
 
 // Event Listeners
 document.addEventListener('keydown', function(event) {
+    const projectModal = document.getElementById('project-modal');
+    const keywordModal = document.getElementById('keyword-modal');
+    if (event.key === 'Tab' && projectModal && !projectModal.classList.contains('hidden') &&
+        (!keywordModal || keywordModal.classList.contains('hidden'))) {
+        const controls = [...projectModal.querySelectorAll('a[href], button:not([disabled])')]
+            .filter(control => control.getClientRects().length);
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first?.focus();
+        }
+    }
     if (event.key === "Escape") {
         const keywordModal = document.getElementById('keyword-modal');
         const keywordOpen = keywordModal && !keywordModal.classList.contains('hidden');

@@ -70,7 +70,7 @@ function initNavbar({ activePage, sections, themeColor, isDark = false }) {
             </div>
 
             <!-- Mobile Menu Button -->
-            <button id="mobile-menu-btn" class="md:hidden ${colors.textMuted} ${colors.textHover} transition-colors focus:outline-none" title="Toggle mobile menu">
+            <button id="mobile-menu-btn" class="inline-flex items-center justify-center min-w-[44px] min-h-[44px] md:hidden ${colors.textMuted} ${colors.textHover} transition-colors focus:outline-none" title="Toggle mobile menu" aria-label="Toggle mobile menu" aria-controls="mobile-menu" aria-expanded="false">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
         </div>
@@ -116,13 +116,18 @@ function setupMobileMenu() {
     if (btn && menu) {
         btn.addEventListener('click', () => {
             menu.classList.toggle('hidden');
-            const icon = btn.querySelector('i');
-            if (menu.classList.contains('hidden')) {
-                icon.setAttribute('data-lucide', 'menu');
-            } else {
-                icon.setAttribute('data-lucide', 'x');
+            const isOpen = !menu.classList.contains('hidden');
+            btn.setAttribute('aria-expanded', String(isOpen));
+            btn.innerHTML = `<i data-lucide="${isOpen ? 'x' : 'menu'}" class="w-6 h-6"></i>`;
+            if (window.lucide) lucide.createIcons();
+        });
+        menu.addEventListener('click', (event) => {
+            if (event.target.closest('a')) {
+                menu.classList.add('hidden');
+                btn.setAttribute('aria-expanded', 'false');
+                btn.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+                if (window.lucide) lucide.createIcons();
             }
-            lucide.createIcons();
         });
     }
 }

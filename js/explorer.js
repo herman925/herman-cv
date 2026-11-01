@@ -8,6 +8,21 @@ const explorerData = {
     type: 'folder',
     children: [
         {
+            name: 'Recent Work',
+            type: 'folder',
+            icon: 'sparkles',
+            description: 'GBA design, learning tools & AI workflows',
+            children: [
+                { id: 'citereflex', type: 'file', fileType: 'web' },
+                { id: 'hualong-platform', type: 'file', fileType: 'web' },
+                { id: 'teacher-companion', type: 'file', fileType: 'web' },
+                { id: 'equalplay', type: 'file', fileType: 'web' },
+                { id: 'attention-to-number', type: 'file', fileType: 'web' },
+                { id: 'minutes-master', type: 'file', fileType: 'web' },
+                { id: 'claude-code-plugins', type: 'file', fileType: 'js' }
+            ]
+        },
+        {
             name: 'Core Platforms',
             type: 'folder',
             icon: 'server',
@@ -46,7 +61,7 @@ const explorerData = {
         {
             name: 'Featured GitHub Repos',
             type: 'folder',
-            icon: 'github',
+            icon: 'folder-git-2',
             description: 'Open source projects & case studies',
             children: [
                 {
@@ -131,6 +146,7 @@ function renderExplorer() {
     const backBtn = document.getElementById('explorer-back');
     
     if (!container) return;
+    const hadFocus = document.getElementById('explorer-shell').contains(document.activeElement);
 
     // 1. Determine Current Folder
     let currentFolder = explorerData;
@@ -149,27 +165,17 @@ function renderExplorer() {
         backBtn.classList.add('opacity-0', 'pointer-events-none');
     }
 
-    // 4. Render Grid Content
-    container.innerHTML = '';
-    
-    // Animation class for transition
-    container.classList.add('opacity-0', 'translate-y-2');
-    
-    setTimeout(() => {
-        container.innerHTML = currentFolder.children.map(item => {
-            if (item.type === 'folder') {
-                return createFolderHTML(item);
-            } else {
-                return createFileHTML(item);
-            }
-        }).join('');
-        
-        // Re-initialize icons
-        if (window.lucide) lucide.createIcons();
-        
-        // Fade in
-        container.classList.remove('opacity-0', 'translate-y-2');
-    }, 150);
+    // Render synchronously so keyboard focus follows the new folder.
+    container.innerHTML = currentFolder.children.map(item =>
+        item.type === 'folder' ? createFolderHTML(item) : createFileHTML(item)
+    ).join('');
+    const count = document.getElementById('explorer-count');
+    if (count) count.textContent = `${currentFolder.children.length} items`;
+    if (window.lucide) lucide.createIcons();
+    backBtn.disabled = currentPath.length === 0;
+    if (hadFocus) {
+        container.querySelector('button')?.focus({ preventScroll: true });
+    }
 }
 
 /**
@@ -177,14 +183,14 @@ function renderExplorer() {
  */
 function createFolderHTML(folder) {
     return `
-        <div onclick="navigateTo('${folder.name}')" class="group p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:bg-slate-700/50 hover:border-cyber-500/50 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 text-center h-36 relative overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-br from-cyber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <button type="button" onclick="navigateTo('${folder.name}')" class="group w-full p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:bg-slate-700/50 hover:border-cyber-500/50 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 text-center h-36 relative overflow-hidden">
+            <span class="absolute inset-0 bg-gradient-to-br from-cyber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></span>
             <i data-lucide="${folder.icon || 'folder'}" class="w-12 h-12 text-cyber-400 group-hover:scale-110 transition-transform duration-300"></i>
-            <div>
-                <div class="font-bold text-slate-200 group-hover:text-white text-base">${folder.name}</div>
-                ${folder.description ? `<div class="text-xs text-slate-500 mt-1">${folder.description}</div>` : ''}
-            </div>
-        </div>
+            <span>
+                <span class="block font-bold text-slate-200 group-hover:text-white text-base">${folder.name}</span>
+                ${folder.description ? `<span class="block text-xs text-slate-500 mt-1">${folder.description}</span>` : ''}
+            </span>
+        </button>
     `;
 }
 
@@ -235,27 +241,27 @@ function createFileHTML(file) {
     };
     const tierStyle = hasDistinction ? (awardStyles[awardTier] || awardStyles.gold) : null;
     const distinctionBanner = hasDistinction ? `
-        <div class="absolute -top-1 -right-1 w-12 h-12 overflow-hidden rounded-tr-xl z-20">
-            <div class="absolute top-0 right-0 ${tierStyle.bannerColor} w-16 h-4 rotate-45 translate-x-4 translate-y-2 shadow-lg flex items-center justify-center">
-                <div class="w-2 h-2 ${tierStyle.dotColor} rounded-full animate-pulse"></div>
-            </div>
-        </div>
+        <span class="absolute -top-1 -right-1 w-12 h-12 overflow-hidden rounded-tr-xl z-20">
+            <span class="absolute top-0 right-0 ${tierStyle.bannerColor} w-16 h-4 rotate-45 translate-x-4 translate-y-2 shadow-lg flex items-center justify-center">
+                <span class="w-2 h-2 ${tierStyle.dotColor} rounded-full animate-pulse"></span>
+            </span>
+        </span>
     ` : '';
     const borderClass = hasDistinction ? tierStyle.borderClass : 'border-slate-800';
     const bgClass = hasDistinction && tierStyle.bgClass ? tierStyle.bgClass : 'bg-slate-900/50';
 
     return `
-        <div onclick="openModal('${file.id}')" class="group p-4 rounded-xl ${bgClass} border ${borderClass} hover:bg-slate-800 hover:border-purple-500/50 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 text-center h-36 relative overflow-hidden">
+        <button type="button" onclick="openModal('${file.id}')" class="group w-full p-4 rounded-xl ${bgClass} border ${borderClass} hover:bg-slate-800 hover:border-purple-500/50 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 text-center h-36 relative overflow-hidden">
             ${distinctionBanner}
-            <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+            <span class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                 <i data-lucide="external-link" class="w-4 h-4 text-slate-500"></i>
-            </div>
+            </span>
             <i data-lucide="${iconConfig.icon}" class="w-10 h-10 ${iconConfig.color} group-hover:scale-110 transition-transform duration-300 relative z-10"></i>
-            <div class="w-full relative z-10">
-                <div class="font-bold text-slate-300 group-hover:text-white text-sm line-clamp-2 leading-tight px-1">${title}</div>
-                <div class="text-xs font-mono text-slate-500 mt-1 group-hover:text-slate-400">.${file.fileType}</div>
-            </div>
-        </div>
+            <span class="w-full relative z-10">
+                <span class="block font-bold text-slate-300 group-hover:text-white text-sm line-clamp-2 leading-tight px-1">${title}</span>
+                <span class="block text-xs font-mono text-slate-500 mt-1 group-hover:text-slate-400">.${file.fileType}</span>
+            </span>
+        </button>
     `;
 }
 
@@ -263,14 +269,14 @@ function createFileHTML(file) {
  * Render Breadcrumbs
  */
 function renderBreadcrumbs(container) {
-    let html = `<span onclick="navigateRoot()" class="hover:text-cyber-400 cursor-pointer transition-colors flex items-center gap-1"><i data-lucide="hard-drive" class="w-3 h-3"></i> root</span>`;
+    let html = `<button type="button" onclick="navigateRoot()" class="hover:text-cyber-400 cursor-pointer transition-colors flex items-center gap-1"><i data-lucide="hard-drive" class="w-3 h-3"></i> root</button>`;
     
     currentPath.forEach((folder, index) => {
         html += ` <span class="text-slate-600">/</span> `;
         if (index === currentPath.length - 1) {
-            html += `<span class="text-cyber-400 font-bold">${folder}</span>`;
+            html += `<span aria-current="location" class="text-cyber-400 font-bold">${folder}</span>`;
         } else {
-            html += `<span onclick="navigateToLevel(${index})" class="hover:text-cyber-400 cursor-pointer transition-colors">${folder}</span>`;
+            html += `<button type="button" onclick="navigateToLevel(${index})" class="hover:text-cyber-400 cursor-pointer transition-colors">${folder}</button>`;
         }
     });
     

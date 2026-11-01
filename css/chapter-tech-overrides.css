@@ -1,7 +1,7 @@
 /* ==========================================================================
    CHAPTER 02 — technology.html override layer (load AFTER Tailwind, only here)
-   The protected injected markup (js/explorer.js, js/github-cards.js — NEVER
-   edited) keeps emitting dark utility classes. This sheet re-paints them as
+   The explorer and project data scripts emit dark utility classes.
+   This sheet adapts them to
    the SPINE paper monograph, scoped strictly under the protected containers:
    #explorer-grid, #project-modal, #keyword-modal, #broadcast-carousel.
    ========================================================================== */
@@ -229,6 +229,47 @@
 }
 #explorer-breadcrumbs { color: var(--ink-soft); }
 #explorer-breadcrumbs .hover\:text-cyber-400:hover { color: var(--accent-deep) !important; }
+
+/* Restored project terminal: ordinary document scrolling on touch screens. */
+.project-command {
+    padding: 16px 20px 0;
+    font: 13px 'Space Grotesk', monospace;
+    color: var(--ink-soft);
+    overflow-wrap: anywhere;
+}
+.project-command span { color: var(--accent-deep); }
+#explorer-grid > button {
+    height: auto;
+    min-height: 144px;
+    overflow-wrap: anywhere;
+}
+#explorer-grid > button::before { top: 8px; left: 10px; right: auto; }
+#explorer-grid button:focus-visible,
+#explorer-breadcrumbs button:focus-visible,
+#explorer-back:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+#explorer-breadcrumbs { flex-wrap: wrap; overflow: visible; }
+#explorer-breadcrumbs button { min-height: 44px; text-align: left; }
+#explorer-back { flex-shrink: 0; }
+#archive .explorer-status-bar > div { flex-wrap: wrap; gap: 8px 16px; }
+#project-modal [aria-label="Close project modal"] {
+    min-width: 44px;
+    min-height: 44px;
+    display: grid;
+    place-items: center;
+    background: var(--paper);
+}
+#modal-content { padding: 20px; overflow-wrap: anywhere; }
+#project-modal-title { padding-right: 44px; }
+@media (max-width: 639px) {
+    #origin-track > .origin-row:last-child {
+        grid-template-columns: 28px minmax(0, 1fr);
+        column-gap: 12px;
+    }
+    #origin-track > .origin-row:last-child .frame-hairline { padding: 16px; }
+}
 
 /* --- FIELD NOTES vertical scrub rule -------------------------------------- */
 .field-rule {

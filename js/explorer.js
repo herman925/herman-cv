@@ -8,21 +8,6 @@ const explorerData = {
     type: 'folder',
     children: [
         {
-            name: 'Recent Work',
-            type: 'folder',
-            icon: 'sparkles',
-            description: 'GBA design, learning tools & AI workflows',
-            children: [
-                { id: 'citereflex', type: 'file', fileType: 'web' },
-                { id: 'hualong-platform', type: 'file', fileType: 'web' },
-                { id: 'teacher-companion', type: 'file', fileType: 'web' },
-                { id: 'equalplay', type: 'file', fileType: 'web' },
-                { id: 'attention-to-number', type: 'file', fileType: 'web' },
-                { id: 'minutes-master', type: 'file', fileType: 'web' },
-                { id: 'claude-code-plugins', type: 'file', fileType: 'js' }
-            ]
-        },
-        {
             name: 'Core Platforms',
             type: 'folder',
             icon: 'server',
@@ -44,7 +29,9 @@ const explorerData = {
                     type: 'folder',
                     icon: 'smartphone',
                     children: [
-                        { id: 'imaze', type: 'file', fileType: 'mobile' }
+                        { id: 'imaze', type: 'file', fileType: 'mobile' },
+                        { id: 'hualong-platform', type: 'file', fileType: 'mobile' },
+                        { id: 'teacher-companion', type: 'file', fileType: 'web' }
                     ]
                 },
                 {
@@ -53,7 +40,8 @@ const explorerData = {
                     icon: 'settings',
                     children: [
                         { id: 'publication-records', type: 'file', fileType: 'excel' },
-                        { id: 'autosuite', type: 'file', fileType: 'script' }
+                        { id: 'autosuite', type: 'file', fileType: 'script' },
+                        { id: 'citereflex', type: 'file', fileType: 'web' }
                     ]
                 }
             ]
@@ -82,6 +70,7 @@ const explorerData = {
                             ]
                         },
                         { id: 'teacher-survey-ece-2025', type: 'file', fileType: 'python' },
+                        { id: 'attention-to-number', type: 'file', fileType: 'web' },
                         { id: 'emr-jotform-wrapper', type: 'file', fileType: 'react' }
                     ]
                 },
@@ -92,6 +81,7 @@ const explorerData = {
                     children: [
                         { id: 'ai-tier-list', type: 'file', fileType: 'web' },
                         { id: 'emr-art', type: 'file', fileType: 'react' },
+                        { id: 'minutes-master', type: 'file', fileType: 'web' },
                         { id: 'quick-dish-wizard', type: 'file', fileType: 'react' },
                         { id: 'video-tagger', type: 'file', fileType: 'cpp' }
                     ]
@@ -105,9 +95,27 @@ const explorerData = {
                         { id: 'ks-free-play-conference', type: 'file', fileType: 'web' },
                         { id: 'ks-retreat', type: 'file', fileType: 'web' },
                         { id: 'shoppingcart925', type: 'file', fileType: 'js' },
-                        { id: 'sheet-sync-combine', type: 'file', fileType: 'react' }
+                        { id: 'sheet-sync-combine', type: 'file', fileType: 'react' },
+                        { id: 'claude-code-plugins', type: 'file', fileType: 'js' }
                     ]
                 }
+            ]
+        },
+        {
+            name: 'MyAndante HK Limited',
+            type: 'folder',
+            icon: 'music',
+            description: 'EqualPlay · Sole Developer',
+            children: [
+                { id: 'equalplay', type: 'file', fileType: 'web' },
+                { id: 'equalplay-conversion', type: 'file', fileType: 'python' },
+                { id: 'equalplay-practice', type: 'file', fileType: 'web' },
+                { id: 'equalplay-teacher', type: 'file', fileType: 'web' },
+                { id: 'equalplay-games', type: 'file', fileType: 'web' },
+                { id: 'equalplay-engagement', type: 'file', fileType: 'web' },
+                { id: 'equalplay-creative', type: 'file', fileType: 'web' },
+                { id: 'equalplay-services', type: 'file', fileType: 'server' },
+                { id: 'equalplay-posture', type: 'file', fileType: 'mobile' }
             ]
         }
     ]

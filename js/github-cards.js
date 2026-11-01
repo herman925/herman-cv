@@ -20,13 +20,385 @@ const githubCardData = {
         links: [{ label: 'Repository', url: 'https://github.com/herman925/teacher-companion-agent', icon: 'external-link' }],
         htmlContent: `<p class="mb-4">A conversational companion for kindergarten teachers developing inquiry courses around local culture. It guides teachers from an initial idea through classroom evidence and reflection to a course story.</p><p class="mb-4">A staged workflow keeps the guidance tied to teacher-supplied evidence, while the conversation asks one question at a time. The demo offers offline example flows and model-adapter support.</p><p><strong>Stage:</strong> Demo and workflow development.</p>`
     },
-    'equalplay': {
-        type: 'simple',
-        title: 'EqualPlay · Piano Score Prototype',
-        subtitle: 'Inclusive music learning · Web prototype',
-        tags: ['Music', 'Education', 'HTML', 'JavaScript'],
-        links: [{ label: 'Repository', url: 'https://github.com/herman925/piano-score-generator', icon: 'external-link' }],
-        htmlContent: `<p class="mb-4">A playful music interface where children choose a feeling, major or minor key, and tempo, then view a piano score and use playback controls.</p><p class="mb-4">Built with HTML, CSS, and JavaScript. It forms the public software prototype alongside Equal Play's assistive glove concept.</p><p><strong>Stage:</strong> Web prototype alongside an assistive glove concept in development.</p>`
+    "equalplay": {
+        "type": "complex",
+        "title": "EqualPlay · MyAndante HK Limited",
+        "subtitle": "Sole Developer · Integrated piano-learning platform",
+        "tags": [
+            "Music Technology",
+            "Product Architecture",
+            "JavaScript",
+            "Python",
+            "C#"
+        ],
+        "links": [
+            {
+                "label": "My-Andante on GitHub",
+                "url": "https://github.com/My-Andante",
+                "icon": "external-link"
+            },
+            {
+                "label": "Public Conversion Demo",
+                "url": "https://my-andante.github.io/conversion-pipeline-demo/",
+                "icon": "external-link",
+                "variant": "primary"
+            }
+        ],
+        "challenge": {
+            "icon": "music",
+            "title": "The Story",
+            "text": "Learning piano involves more than displaying a score: children need feedback and a reason to keep practising, while teachers need a way to prepare material and review progress. As the <strong>sole developer for MyAndante HK Limited</strong>, I developed the EqualPlay application work across the learner experience, teacher tools, music-processing services, and supporting prototypes."
+        },
+        "solution": {
+            "icon": "layers",
+            "title": "Architecture: One Learning Loop",
+            "text": "The full-app prototype brings learning, practice, games, rewards, and creative workflows into one integration surface. Music conversion and rendering supply the scores; microphone feedback and event-log replay support practice; a separate teacher console supports review and administration. Shared API contracts connect the client and service work."
+        },
+        "features": [
+            {
+                "icon": "layout",
+                "color": "text-cyan-400",
+                "text": "<strong>Learner application:</strong> full-app prototype, lesson-map work, embedded practice modules, games, and a virtual home base."
+            },
+            {
+                "icon": "audio-lines",
+                "color": "text-purple-400",
+                "text": "<strong>Music engineering:</strong> MIDI/MusicXML conversion, backend audio transcription and sheet recognition, score engraving, playback, pitch detection, and replay."
+            },
+            {
+                "icon": "graduation-cap",
+                "color": "text-blue-400",
+                "text": "<strong>Teacher workflow:</strong> score review/editing, student practice views, assignments, and role-based administration."
+            },
+            {
+                "icon": "code",
+                "color": "text-green-400",
+                "text": "<strong>Development scope:</strong> implemented application work alongside clearly scoped prototypes and specification work. The public conversion demo is available separately."
+            }
+        ]
+    },
+    "equalplay-conversion": {
+        "type": "complex",
+        "title": "EqualPlay · Score Conversion & Rendering",
+        "subtitle": "Sole Developer · MIDI, MusicXML, audio and scanned scores",
+        "tags": [
+            "Python",
+            "FastAPI",
+            "JavaScript",
+            "MusicXML",
+            "Music Processing"
+        ],
+        "links": [
+            {
+                "label": "Try the Public Demo",
+                "url": "https://my-andante.github.io/conversion-pipeline-demo/",
+                "icon": "external-link",
+                "variant": "primary"
+            },
+            {
+                "label": "Public Demo Repository",
+                "url": "https://github.com/My-Andante/conversion-pipeline-demo",
+                "icon": "external-link"
+            }
+        ],
+        "challenge": {
+            "icon": "file-music",
+            "title": "The Story",
+            "text": "Teachers receive music in incompatible forms: MIDI, notation files, recordings, and scanned pages. Each needs to become a readable, playable score that a teacher can inspect before assigning it."
+        },
+        "solution": {
+            "icon": "workflow",
+            "title": "Architecture: Input Lanes → Score → Teacher Review",
+            "text": "Browser-side MIDI and MusicXML parsing feed a common score representation and engraving/playback interface. A Python FastAPI service handles heavier audio transcription and optical music recognition. OSMD and Verovio renderer work explores score presentation, keyboard feedback, tempo control, and practice loops."
+        },
+        "features": [
+            {
+                "icon": "file-code",
+                "color": "text-cyan-400",
+                "text": "<strong>Browser lanes:</strong> genuine MIDI and MusicXML processing, score export, and playback in the public demo."
+            },
+            {
+                "icon": "server",
+                "color": "text-blue-400",
+                "text": "<strong>Service lanes:</strong> audio transcription and scanned-sheet recognition require the backend. The public static demo uses sample results for those paths."
+            },
+            {
+                "icon": "check-check",
+                "color": "text-green-400",
+                "text": "<strong>Review gate:</strong> conversion leads to teacher review rather than treating a machine-read score as automatically correct."
+            }
+        ]
+    },
+    "equalplay-practice": {
+        "type": "complex",
+        "title": "EqualPlay · Pitch, Wait Mode & Ghost Replay",
+        "subtitle": "Sole Developer · Interactive practice and performance reconstruction",
+        "tags": [
+            "Web Audio",
+            "Pitch Detection",
+            "Web Workers",
+            "MusicXML"
+        ],
+        "challenge": {
+            "icon": "ear",
+            "title": "The Story",
+            "text": "A learner needs feedback while playing, and a teacher needs to understand what happened during practice. A pitch reading alone does not explain a wrong note, a pause, or a repeated attempt."
+        },
+        "solution": {
+            "icon": "audio-lines",
+            "title": "Architecture: Detect → Match → Log → Replay",
+            "text": "Microphone processing feeds note/chord detection and the Wait Mode score cursor, which advances on a matching event. Event logs support Ghost Replay's visual reconstruction of practice. Optional worker-based transcription and evaluation work provide a separate way to examine detection behaviour."
+        },
+        "features": [
+            {
+                "icon": "piano",
+                "color": "text-cyan-400",
+                "text": "<strong>Pitch and keyboard tools:</strong> an 88-key interface, live detection, and configurable analysis modes."
+            },
+            {
+                "icon": "pause",
+                "color": "text-amber-400",
+                "text": "<strong>Wait Mode:</strong> score-following practice that waits for the expected note or chord."
+            },
+            {
+                "icon": "history",
+                "color": "text-purple-400",
+                "text": "<strong>Ghost Replay:</strong> event-based performance review, alongside an audio-to-note reconstruction experiment. These are distinct paths."
+            },
+            {
+                "icon": "flask-conical",
+                "color": "text-green-400",
+                "text": "<strong>Evaluation:</strong> tooling and reference-material work for testing pitch/onset behaviour; no new accuracy claim is made here."
+            }
+        ]
+    },
+    "equalplay-teacher": {
+        "type": "complex",
+        "title": "EqualPlay · Teacher Dashboard",
+        "subtitle": "Sole Developer · Web console for teachers and administrators",
+        "tags": [
+            "JavaScript",
+            "Score Editing",
+            "Role-Based Access",
+            "API Integration"
+        ],
+        "challenge": {
+            "icon": "graduation-cap",
+            "title": "The Story",
+            "text": "Teachers need to see students' practice, prepare and correct scores, and assign work. Organisation administrators need broader controls without forcing teachers through the same administrative workload."
+        },
+        "solution": {
+            "icon": "layout-dashboard",
+            "title": "Architecture: Shared Console, Role-Specific Workflows",
+            "text": "A desktop web console brings student/practice views, a score library and editor, assignments, and administrative screens into one role-gated product. API-backed workflows and demo surfaces are distinguished in its capability and verification tooling."
+        },
+        "features": [
+            {
+                "icon": "users",
+                "color": "text-blue-400",
+                "text": "<strong>Teaching workflow:</strong> student views, practice requirements, and assignment management."
+            },
+            {
+                "icon": "file-pen",
+                "color": "text-cyan-400",
+                "text": "<strong>Score review:</strong> notation editing, source/score comparison, and playback verification."
+            },
+            {
+                "icon": "shield-check",
+                "color": "text-green-400",
+                "text": "<strong>Quality checks:</strong> functional browser checks, score geometry/audio checks, and capability/provenance checks support ongoing integration."
+            }
+        ]
+    },
+    "equalplay-games": {
+        "type": "complex",
+        "title": "EqualPlay · Hong Kong Piano Games",
+        "subtitle": "Sole Developer · Finger sequences, intervals and rhythm",
+        "tags": [
+            "Godot",
+            "GDScript",
+            "Web Games",
+            "Music Education"
+        ],
+        "challenge": {
+            "icon": "gamepad-2",
+            "title": "The Story",
+            "text": "Repeated piano drills can lose a child's attention. Familiar Hong Kong childhood games offer a way to practise finger sequences, intervals, and rhythm through a clear play goal."
+        },
+        "solution": {
+            "icon": "piano",
+            "title": "Architecture: Game Mechanic → Musical Skill",
+            "text": "The implemented Red Light game turns finger-number sequences into movement and stop/go decisions. Candy Toss and Squid Fishing map ascending and descending intervals into play. Godot web exports and browser modules connect these workstreams to the application prototype."
+        },
+        "features": [
+            {
+                "icon": "hand",
+                "color": "text-amber-400",
+                "text": "<strong>Red Light:</strong> hand-aware finger-sequence training with keyboard and touch controls."
+            },
+            {
+                "icon": "arrow-up-down",
+                "color": "text-cyan-400",
+                "text": "<strong>Interval games:</strong> ascending Candy Toss and descending Squid Fishing."
+            },
+            {
+                "icon": "list-checks",
+                "color": "text-green-400",
+                "text": "<strong>Scope:</strong> the wider rhythm/piano-game work includes specification-stage material; it is not all presented as shipped gameplay."
+            }
+        ]
+    },
+    "equalplay-engagement": {
+        "type": "complex",
+        "title": "EqualPlay · Rewards & My Playground",
+        "subtitle": "Sole Developer · Learning-loop prototype and economy simulation",
+        "tags": [
+            "JavaScript",
+            "Simulation",
+            "Game Systems",
+            "Product Design"
+        ],
+        "challenge": {
+            "icon": "sparkles",
+            "title": "The Story",
+            "text": "Rewards need to connect back to practice. A product also needs a way to explore whether earning, spending, and progression rules remain understandable and balanced."
+        },
+        "solution": {
+            "icon": "repeat",
+            "title": "Architecture: Practice → Earn → Spend → Personalise",
+            "text": "The app prototype's shared state links practice rewards to inventory and spending. My Playground provides a character-based room interface, while a separate token-economy simulator explores cohort, retention, and monetisation assumptions."
+        },
+        "features": [
+            {
+                "icon": "house",
+                "color": "text-cyan-400",
+                "text": "<strong>My Playground:</strong> a 2.5D room with a walking character and interactive items."
+            },
+            {
+                "icon": "coins",
+                "color": "text-amber-400",
+                "text": "<strong>Economy sandbox:</strong> adjustable earning/spending and cohort scenarios. Its outputs are simulations, not actual revenue or adoption."
+            },
+            {
+                "icon": "link",
+                "color": "text-green-400",
+                "text": "<strong>Integration:</strong> embedded modules report learning/reward events back to the host application state."
+            }
+        ]
+    },
+    "equalplay-creative": {
+        "type": "complex",
+        "title": "EqualPlay · Song & Cover Creation Workflows",
+        "subtitle": "Sole Developer · Creative UX prototypes",
+        "tags": [
+            "JavaScript",
+            "Music",
+            "Prototyping",
+            "AI Workflow Design"
+        ],
+        "challenge": {
+            "icon": "palette",
+            "title": "The Story",
+            "text": "A child-friendly creation flow needs more than a generation button: musical choices, previews, cost feedback, selection, and a clear way to save the result."
+        },
+        "solution": {
+            "icon": "wand-sparkles",
+            "title": "Architecture: Parameters → Preview → Choose → Save",
+            "text": "Separate composition and album-cover prototypes validate the interaction sequence and token-cost experience. The composition prototype uses deterministic mock output; the cover prototype uses procedural canvas artwork."
+        },
+        "features": [
+            {
+                "icon": "music",
+                "color": "text-purple-400",
+                "text": "<strong>Song workflow:</strong> musical parameters, rendered score preview, rename/regenerate, and save actions."
+            },
+            {
+                "icon": "image",
+                "color": "text-cyan-400",
+                "text": "<strong>Cover workflow:</strong> contextual inputs and a four-variant selection flow."
+            },
+            {
+                "icon": "flask-conical",
+                "color": "text-green-400",
+                "text": "<strong>Stage:</strong> workflow prototypes; these mock generators are not claimed as deployed AI inference."
+            }
+        ]
+    },
+    "equalplay-services": {
+        "type": "complex",
+        "title": "EqualPlay · Backend & API Architecture",
+        "subtitle": "Sole Developer · Service implementation and shared contracts",
+        "tags": [
+            "C#",
+            ".NET",
+            "OpenAPI",
+            "System Design"
+        ],
+        "challenge": {
+            "icon": "network",
+            "title": "The Story",
+            "text": "A learner app, a teacher console, and music-processing workflows need consistent identities, permissions, and data contracts as they evolve together."
+        },
+        "solution": {
+            "icon": "server",
+            "title": "Architecture: Clients → Shared API Contracts → Services",
+            "text": "The backend repository contains a .NET solution organised into services, shared components, and tests. The API-specification repository defines the common client, console, and processing boundaries and generates reference documentation and a request collection."
+        },
+        "features": [
+            {
+                "icon": "layers",
+                "color": "text-blue-400",
+                "text": "<strong>Service organisation:</strong> Clean Architecture and CQRS/Mediator conventions with shared infrastructure components."
+            },
+            {
+                "icon": "key-round",
+                "color": "text-amber-400",
+                "text": "<strong>Access model:</strong> role/scope contracts and identity integration across learner and administrator experiences."
+            },
+            {
+                "icon": "file-code",
+                "color": "text-green-400",
+                "text": "<strong>Contract tooling:</strong> OpenAPI specifications, generated HTML references, and a request collection. Infrastructure has its own repository; no unverified deployment claim is added."
+            }
+        ]
+    },
+    "equalplay-posture": {
+        "type": "complex",
+        "title": "EqualPlay · Posture Wearable Specification",
+        "subtitle": "MyAndante HK Limited · Hardware specification workstream",
+        "tags": [
+            "Product Specification",
+            "Sensors",
+            "Bluetooth",
+            "Music Education"
+        ],
+        "challenge": {
+            "icon": "hand",
+            "title": "The Story",
+            "text": "The broader EqualPlay concept includes a way to observe hand height and wrist angle during piano practice, alongside software feedback."
+        },
+        "solution": {
+            "icon": "ruler",
+            "title": "Architecture: Wearable Sensors → App Feedback",
+            "text": "The current workstream specifies a wrist/hand-worn sensing device and Bluetooth reporting to the app. It is a sensor-based posture concept rather than the earlier air-bag guidance description."
+        },
+        "features": [
+            {
+                "icon": "move-vertical",
+                "color": "text-cyan-400",
+                "text": "<strong>Measurements:</strong> hand height and relative wrist/hand angle."
+            },
+            {
+                "icon": "bluetooth",
+                "color": "text-blue-400",
+                "text": "<strong>Integration plan:</strong> wearable measurements delivered to the piano-learning application."
+            },
+            {
+                "icon": "clipboard-list",
+                "color": "text-amber-400",
+                "text": "<strong>Stage:</strong> specification only. No completed hardware or firmware is claimed."
+            }
+        ]
     },
     'attention-to-number': {
         type: 'simple',
@@ -805,7 +1177,7 @@ function renderComplexCard(data) {
         </li>
     `).join('');
 
-    const valuationItemsHtml = data.valuation.items.map(item => `
+    const valuationItemsHtml = (data.valuation?.items || []).map(item => `
         <div class="group">
             <div class="flex flex-wrap justify-between items-baseline gap-x-4 gap-y-1 mb-2">
                 <span class="text-sm font-bold text-slate-300 uppercase tracking-wide">${item.name}</span>
@@ -847,7 +1219,8 @@ function renderComplexCard(data) {
 
             </div>
 
-            <!-- RIGHT PANEL: Valuation (Hidden by default) -->
+            <!-- Historical AI cost estimates are present only for valued projects. -->
+            ${data.valuation ? `
             <div id="valuation-panel" tabindex="-1" role="region" aria-labelledby="valuation-title" class="hidden opacity-0 translate-x-10 flex-col w-full lg:w-[450px] min-w-0 bg-slate-950 border border-slate-800 rounded-xl p-4 sm:p-8 shadow-2xl transition-all duration-500 ease-out relative overflow-hidden">
                 <!-- Decorative Background -->
                 <div class="absolute top-0 right-0 w-40 h-40 bg-green-500/5 rounded-full blur-3xl pointer-events-none"></div>
@@ -886,6 +1259,7 @@ function renderComplexCard(data) {
                     </div>
                 </div>
             </div>
+            ` : ''}
         </div>
     `;
 }
@@ -1034,7 +1408,7 @@ function openModal(id) {
         </div>
     ` : '';
 
-    const valuationButton = data.type === 'complex' ? `
+    const valuationButton = data.valuation ? `
         <button type="button" onclick="toggleValuation()" class="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 hover:border-cyber-500/60 text-green-300 font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyber-400/60">
             <i data-lucide="panel-right-open" class="w-4 h-4"></i>
             <span id="valuation-btn-text">Project Valuation</span>

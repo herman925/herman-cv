@@ -1,161 +1,161 @@
-/**
- * SPINE page transitions — MPA accent-ink wipe between pages.
- * The veil slides up in the DESTINATION chapter's ink, a sessionStorage flag
- * hands off to the next page, which reveals top-down. Deep links and stale
- * flags never show a veil; bfcache restores clear any stuck veil.
- */
+/** Chapter ink stays continuous across documents while the destination loads. */
 (function () {
     'use strict';
 
-    var INK_BY_PATH = {
-        'index.html': 'ink',
-        'counselling.html': 'sienna',
-        'technology.html': 'tealink',
-        'project-management.html': 'oxblood',
-        'education-culture.html': 'moss'
+    const CHAPTERS = {
+        'index.html': ['ink', '00', 'The Digital Humanist'],
+        'education-culture.html': ['moss', '01', 'Education & Culture'],
+        'counselling.html': ['sienna', '02', 'Counselling'],
+        'project-management.html': ['oxblood', '03', 'Project Management'],
+        'technology.html': ['tealink', '04', 'Technology']
     };
-    var CHAPTERS = {
-        ink: ['00', 'The Digital Humanist'],
-        moss: ['01', 'Education & Culture'],
-        sienna: ['02', 'Counselling'],
-        oxblood: ['03', 'Project Management'],
-        tealink: ['04', 'Technology']
-    };
+    const FLAG = 'spine-wipe';
+    const COVER_MS = 650;
+    const HOLD_MS = 2000;
+    const REVEAL_MS = 1200;
+    const reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let busy = false;
+    let pendingHref;
+    let departureTimer, revealTimer, fallbackTimer, hideTimer;
 
-    function paintVeil(veil, ink) {
-        var chapter = CHAPTERS[ink] || CHAPTERS.ink;
-        veil.setAttribute('data-ink', CHAPTERS[ink] ? ink : 'ink');
-        veil.querySelector('.wipe-numeral').textContent = chapter[0];
-        veil.querySelector('.wipe-mark').textContent = 'CHAPTER ' + chapter[0];
-        veil.querySelector('.wipe-name').textContent = chapter[1];
-    }
-
-    var FLAG = 'spine-wipe';
-    var FRESH_MS = 2500;
-    var reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    var isFile = location.protocol === 'file:';
-
-    function getVeil() {
-        var veil = document.getElementById('wipe-veil');
+    function getVeil(chapter) {
+        let veil = document.getElementById('wipe-veil');
         if (!veil) {
             veil = document.createElement('div');
             veil.id = 'wipe-veil';
             veil.setAttribute('aria-hidden', 'true');
             veil.innerHTML = '<span class="wipe-numeral"></span><span class="wipe-mark"></span><span class="wipe-name"></span>';
-            document.body.appendChild(veil);
+            // Arrival runs in the head, before any slow third-party scripts or body paint.
+            (document.body || document.documentElement).appendChild(veil);
         }
+        veil.setAttribute('data-ink', chapter[0]);
+        veil.querySelector('.wipe-numeral').textContent = chapter[1];
+        veil.querySelector('.wipe-mark').textContent = 'CHAPTER ' + chapter[1];
+        veil.querySelector('.wipe-name').textContent = chapter[2];
         return veil;
     }
 
     function killVeil() {
-        var veil = document.getElementById('wipe-veil');
+        [departureTimer, revealTimer, fallbackTimer, hideTimer].forEach(clearTimeout);
+        const veil = document.getElementById('wipe-veil');
         if (veil) {
             veil.style.transition = 'none';
             veil.style.transform = 'translateY(100%)';
-            veil.style.opacity = '';
+            veil.setAttribute('data-state', 'hidden');
         }
+        busy = false;
+        pendingHref = null;
     }
 
-    reduceQuery.addEventListener('change', function () {
-        if (reduceQuery.matches) killVeil();
-    });
+    function clearFlag() {
+        try { sessionStorage.removeItem(FLAG); } catch (error) { /* Storage can be disabled. */ }
+    }
 
-    // --- Arrival: reveal if a fresh flag exists -----------------------------
     function onArrive() {
-        var raw = null;
-        try { raw = sessionStorage.getItem(FLAG); } catch (e) { /* ignore */ }
-        if (!raw) return;
-        try { sessionStorage.removeItem(FLAG); } catch (e) { /* ignore */ }
+        let data;
+        try { data = JSON.parse(sessionStorage.getItem(FLAG)); } catch (error) { return; }
+        clearFlag();
+        const file = location.pathname.split('/').pop() || 'index.html';
+        const chapter = CHAPTERS[file];
+        // An already-open tab may still send the previous version's handoff.
+        if (data && chapter && !data.path && data.ink === chapter[0] && Number.isFinite(data.t)) {
+            data = { path: location.pathname + location.search, coveredAt: data.t };
+        }
+        if (!data || !chapter || !Number.isFinite(data.coveredAt) || data.path !== location.pathname + location.search ||
+            Date.now() - data.coveredAt > 30000 || data.coveredAt > Date.now() + COVER_MS + 100 ||
+            reduceQuery.matches) return;
 
-        var data;
-        try { data = JSON.parse(raw); } catch (e) { return; }
-        if (!data || (Date.now() - data.t) > FRESH_MS) return; // stale → no veil
-
-        var veil = getVeil();
-        paintVeil(veil, data.ink || 'ink');
+        busy = true;
+        const veil = getVeil(chapter);
         veil.style.transform = 'translateY(0%)';
+        veil.setAttribute('data-state', 'holding');
+        let revealing = false;
 
-        var reveal = function () {
-            if (reduceQuery.matches) {
-                killVeil();
-            } else {
-                veil.style.transition = 'transform .4s cubic-bezier(0.87, 0, 0.13, 1)';
+        function reveal() {
+            if (!busy || revealing) return;
+            revealing = true;
+            clearTimeout(fallbackTimer);
+            clearTimeout(revealTimer);
+            if (reduceQuery.matches) { killVeil(); return; }
+            requestAnimationFrame(function () {
+                if (!busy) return;
+                veil.setAttribute('data-state', 'revealing');
+                veil.style.transition = 'transform ' + REVEAL_MS + 'ms cubic-bezier(.65,0,.25,1)';
                 veil.style.transform = 'translateY(-100%)';
-                setTimeout(killVeil, 460);
-            }
-        };
-        if (document.readyState === 'interactive' || document.readyState === 'complete') {
-            requestAnimationFrame(reveal);
-        } else {
-            document.addEventListener('DOMContentLoaded', function () {
-                requestAnimationFrame(reveal);
+                hideTimer = setTimeout(killVeil, REVEAL_MS + 80);
             });
         }
+
+        function ready() {
+            if (document.body && veil.parentNode !== document.body) document.body.appendChild(veil);
+            const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
+            Promise.race([fonts, new Promise(resolve => setTimeout(resolve, 1000))]).then(function () {
+                if (!busy) return;
+                revealTimer = setTimeout(reveal, Math.max(0, HOLD_MS - (Date.now() - data.coveredAt)));
+            });
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready, { once: true });
+        else ready();
+        // A stalled optional script must never trap visitors behind the title screen.
+        fallbackTimer = setTimeout(reveal, 10000);
     }
     onArrive();
 
-    // --- bfcache restore: never leave a stuck overlay -----------------------
-    window.addEventListener('pageshow', function (e) {
-        if (e.persisted) killVeil();
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) killVeil();
+    });
+    reduceQuery.addEventListener('change', function () {
+        if (!reduceQuery.matches) return;
+        const href = pendingHref;
+        killVeil();
+        clearFlag();
+        if (href) location.href = href;
     });
 
-    // --- Programmatic wipe (used by the brain cover's zoom-then-navigate) ---
-    window.spineNavigate = function (href, ink) {
-        if (isFile || reduceQuery.matches) { location.href = href; return; }
-        var dur = window.matchMedia('(min-width: 768px)').matches ? 450 : 380;
-        var veil = getVeil();
-        paintVeil(veil, ink || 'ink');
-        veil.style.transition = 'none';
-        veil.style.transform = 'translateY(100%)';
-        requestAnimationFrame(function () {
-            veil.style.transition = 'transform ' + dur + 'ms cubic-bezier(0.87, 0, 0.13, 1)';
-            veil.style.transform = 'translateY(0%)';
-            setTimeout(function () {
-                try {
-                    sessionStorage.setItem(FLAG, JSON.stringify({ ink: ink || 'ink', t: Date.now() }));
-                } catch (err) { /* ignore */ }
-                location.href = href;
-            }, dur + 30);
-        });
-    };
-
-    // --- Departure: intercept internal page links ---------------------------
-    document.addEventListener('click', function (e) {
-        if (isFile) return; // file:// — plain navigation, no veil, no storage
-        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-        var a = e.target.closest && e.target.closest('a[href]');
-        if (!a || a.target === '_blank' || a.hasAttribute('download')) return;
-        if (a.hasAttribute('data-no-wipe')) return; // element handles its own transition
-
-        var href = a.getAttribute('href');
-        if (!href || href.charAt(0) === '#') return;
-        if (/^[a-z]+:/i.test(href) && href.indexOf(location.origin) !== 0) return;
-
-        var file = (href.split('#')[0].split('?')[0].split('/').pop() || 'index.html');
-        var ink = INK_BY_PATH[file];
-        if (!ink) return;                      // not an internal chapter link
-        var currentFile = (location.pathname.split('/').pop() || 'index.html');
-        if (file === currentFile) return;      // same-page anchor
-
-        e.preventDefault();
-        var dur = reduceQuery.matches ? 0 : (window.matchMedia('(min-width: 768px)').matches ? 450 : 380);
-        var go = function () {
-            try {
-                sessionStorage.setItem(FLAG, JSON.stringify({ ink: ink, t: Date.now() }));
-            } catch (err) { /* ignore */ }
+    function navigate(href) {
+        if (busy) return;
+        const url = new URL(href, location.href);
+        const file = url.pathname.split('/').pop() || 'index.html';
+        const chapter = CHAPTERS[file];
+        if (location.protocol === 'file:' || reduceQuery.matches || !chapter || url.origin !== location.origin) {
             location.href = href;
-        };
+            return;
+        }
+        const data = { path: url.pathname + url.search, coveredAt: Date.now() + COVER_MS };
+        try { sessionStorage.setItem(FLAG, JSON.stringify(data)); }
+        catch (error) { location.href = href; return; }
 
-        if (dur === 0) { go(); return; }
-
-        var veil = getVeil();
-        paintVeil(veil, ink);
+        busy = true;
+        pendingHref = href;
+        const veil = getVeil(chapter);
+        veil.setAttribute('data-state', 'covering');
         veil.style.transition = 'none';
         veil.style.transform = 'translateY(100%)';
+        veil.getBoundingClientRect();
         requestAnimationFrame(function () {
-            veil.style.transition = 'transform ' + dur + 'ms cubic-bezier(0.87, 0, 0.13, 1)';
+            if (!busy) return;
+            veil.style.transition = 'transform ' + COVER_MS + 'ms cubic-bezier(.76,0,.24,1)';
             veil.style.transform = 'translateY(0%)';
-            setTimeout(go, dur + 30);
+            departureTimer = setTimeout(function () {
+                data.coveredAt = Date.now();
+                try { sessionStorage.setItem(FLAG, JSON.stringify(data)); } catch (error) { /* Initial flag remains usable. */ }
+                location.href = href;
+            }, COVER_MS + 40);
         });
+    }
+    // The brain's zoom uses the same handoff as every chapter link.
+    window.spineNavigate = navigate;
+
+    document.addEventListener('click', function (event) {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        const anchor = event.target.closest && event.target.closest('a[href]');
+        if (!anchor || (anchor.target && anchor.target !== '_self') || anchor.hasAttribute('download') || anchor.hasAttribute('data-no-wipe')) return;
+        const href = anchor.getAttribute('href');
+        if (!href || href.startsWith('#')) return;
+        const url = new URL(href, location.href);
+        const file = url.pathname.split('/').pop() || 'index.html';
+        if (url.origin !== location.origin || !CHAPTERS[file] || url.pathname === location.pathname && url.search === location.search) return;
+        event.preventDefault();
+        navigate(href);
     }, true);
 })();

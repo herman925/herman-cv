@@ -1,4 +1,16 @@
-tailwind.config = {
+// Rebuild: npx --yes tailwindcss@3.4.17 -i css/tailwind-input.css -o css/utilities.css --minify
+const themes = ['gold', 'sienna', 'tealink', 'oxblood', 'moss'];
+
+module.exports = {
+    content: ['./*.html', './js/*.js'],
+    // Navigation constructs these theme classes at runtime.
+    safelist: themes.flatMap(color => [
+        `text-${color}-400`, `text-${color}-500`, `text-${color}-600`,
+        `hover:text-${color}-400`, `hover:text-${color}-600`, `hover:text-${color}-800`,
+        `border-${color}-500/20`, `border-${color}-500/30`,
+        `hover:bg-${color}-100`, `hover:bg-${color}-500/10`, `hover:bg-${color}-900/30`,
+        `group-hover:border-${color}-600`, `bg-${color}-600/10`
+    ]),
     theme: {
         extend: {
             fontFamily: {

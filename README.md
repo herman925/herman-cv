@@ -15,7 +15,23 @@ Static portfolio for Herman Chan with four facet pages (counselling, project man
 
 ## Notes
 - `.gitignore` excludes personal CV documents (`Herman CV.*`) and the `PRD/` folder.
-- No build step needed; site runs on vanilla HTML/CSS/JS with Tailwind CDN.
+- The published site is plain HTML/CSS/JS. Utility CSS is compiled ahead of time;
+  visitors do not download or run the Tailwind compiler.
+
+## Updating utility styles
+
+After adding utility classes to HTML or JavaScript, rebuild and commit the CSS:
+
+```sh
+npx --yes tailwindcss@3.4.17 -i css/tailwind-input.css -o css/utilities.css --minify
+node --test tests/*.test.cjs
+```
+
+`tailwind.config.cjs` preserves the existing theme and includes the navigation's
+dynamic colour classes. GitHub Pages serves the committed CSS directly.
+`css/transitions.css` and `js/transitions.js` load first to preserve the chapter
+title screen across document navigation. It holds for about two seconds while
+the destination loads, then reveals the ready page over 1.2 seconds.
 
 ## Design system — "SPINE: A Monograph in Four Chapters"
 - Spec: `.planning/DESIGN-SPEC.md`. Theme engine: CSS custom properties in `css/spine.css`, switched per page via `<html data-chapter="cover|counselling|technology|project|education">`.

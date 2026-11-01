@@ -97,10 +97,12 @@ function initNavbar({ activePage, sections, themeColor, isDark = false }) {
     if (container) {
         container.innerHTML = navbarHTML;
         
-        // Initialize Icons
-        if (window.lucide && typeof lucide.createIcons === 'function') {
-            lucide.createIcons();
-        }
+        // Lucide downloads without blocking the HTML parser.
+        const renderIcons = () => {
+            if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+        };
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderIcons, { once: true });
+        else renderIcons();
 
         // Setup Listeners
         setupMobileMenu();

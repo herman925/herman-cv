@@ -481,24 +481,6 @@ html[data-chapter="cover"] .colophon .colophon-fine { border-top-color: var(--ha
 .chapter-dock a[data-ink="moss"]    { --dock-ink: #2F6B4F; }
 
 /* ---------------------------------------------------------------------------
-   Page-wipe veil
---------------------------------------------------------------------------- */
-#wipe-veil {
-    position: fixed;
-    inset: 0;
-    z-index: 2147483600;
-    transform: translateY(100%);
-    pointer-events: none;
-    will-change: transform;
-}
-#wipe-veil[data-ink="sienna"]  { background: #EA6A12; }
-#wipe-veil[data-ink="tealink"] { background: #0D9488; }
-#wipe-veil[data-ink="oxblood"] { background: #E11D48; }
-#wipe-veil[data-ink="moss"]    { background: #10B981; }
-#wipe-veil[data-ink="gold"]    { background: #B8965A; }
-#wipe-veil[data-ink="ink"]     { background: #16161A; }
-
-/* ---------------------------------------------------------------------------
    Gadgets (injected by motion.js — zero per-page markup)
 --------------------------------------------------------------------------- */
 #spine-progress {
@@ -671,10 +653,3 @@ html[data-chapter] #navbar #mobile-menu a { font-size: 16px; min-height: 44px; d
     .motion-ready #workflow-steps { display: none; }
 }
 #memoir-stage:not(.memoir-live) .memoir-beat + .memoir-beat { margin-top: 32px; }
-
-/* Chapter ink carries the destination name during the scene handoff. */
-#wipe-veil { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; color: #0a1512; }
-#wipe-veil[data-ink="ink"], #wipe-veil[data-ink="oxblood"] { color: #faf7f2; }
-.wipe-numeral { position: absolute; font: 600 clamp(180px, 26vw, 420px)/1 'Fraunces', Georgia, serif; opacity: .12; }
-.wipe-mark { font: 500 14px 'Space Grotesk', monospace; letter-spacing: .2em; }
-.wipe-name { position: relative; max-width: 85vw; text-align: center; text-wrap: balance; font: 600 clamp(34px, 6vw, 80px)/1.1 'Fraunces', Georgia, serif; letter-spacing: -.025em; }

@@ -1,0 +1,61 @@
+/* One responsive case component: contribution and evidence share the width. */
+.media-impact-cases { display: grid; gap: 24px; margin-top: 40px; }
+.media-exhibit.media-impact-case { padding: clamp(20px, 2vw, 28px); }
+.case-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--hairline); }
+.case-header > div { min-width: 0; }
+.case-header > .caption { flex: none; padding-top: 4px; }
+.case-title { margin-top: 8px; font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: clamp(23px, 2vw, 30px); line-height: 1.18; }
+.case-body { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); padding-block: 20px; }
+.case-body > section { min-width: 0; }
+.case-label { font-family: 'Space Grotesk', monospace; font-size: 14px; font-weight: 500; letter-spacing: .06em; color: var(--accent-deep); }
+.case-actions { list-style: disc; padding-left: 20px; margin-top: 14px; color: var(--ink-soft); font-size: clamp(17px, 1vw, 19px); line-height: 1.55; }
+.case-actions li + li { margin-top: 10px; }
+.case-actions li::marker { color: var(--accent); }
+.case-result { font-size: 16px; line-height: 1.55; color: var(--ink-soft); margin-top: 16px; }
+.case-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 12px; }
+.case-metrics > div { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; }
+.case-metrics dt { order: 1; font-size: 14px; line-height: 1.35; color: var(--ink-soft); margin-top: 6px; }
+.case-metrics dd { margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: clamp(38px, 4vw, 54px); font-weight: 600; line-height: 1; color: var(--accent-deep); }
+.case-footnote { font-size: 14px; line-height: 1.5; color: var(--ink-soft); margin-top: 16px; }
+.case-publishers { border-top: 1px solid var(--hairline); padding-top: 8px; }
+.case-publishers .press-row { margin-top: 0; row-gap: 4px; letter-spacing: .06em; }
+.case-publishers .press-row span { padding: 0 12px; }
+.case-publishers .press-row span:first-child { padding-left: 0; }
+.case-evidence { border-top: 1px solid var(--hairline); margin-top: 16px; padding-top: 14px; }
+.case-sources, .case-history { margin-top: 8px; }
+.media-impact-case .prose-measure, #research-dissemination-2026 .prose-measure { max-width: none; }
+.case-source-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 40px; }
+.case-source-list > li { min-width: 0; margin-top: 0 !important; padding-top: 16px; border-top: 1px solid var(--hairline); }
+.delivery-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; margin-top: 24px; }
+.delivery-columns h4 { font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600; }
+.delivery-columns ul { list-style: disc; padding-left: 20px; margin-top: 12px; color: var(--ink-soft); font-size: 17px; line-height: 1.55; }
+.delivery-columns li + li { margin-top: 8px; }
+#research-dissemination-2026 .pm-practice { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 32px; }
+#research-dissemination-2026 .pm-practice > p { margin-top: 0; }
+@media (max-width: 999px) {
+  .case-header { flex-direction: column; gap: 10px; }
+  .case-body { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'outcomes' 'contribution'; }
+  .case-outcomes { grid-area: outcomes; }
+  .case-contribution { grid-area: contribution; }
+  .case-source-list { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 599px) {
+  .case-body { gap: 24px; }
+  .case-header > .caption { flex: auto; }
+  .case-metrics { gap: 12px; }
+  .case-metrics dd { font-size: 38px; }
+  .case-publishers .press-row span { padding-inline: 8px; }
+  .delivery-columns, #research-dissemination-2026 .pm-practice { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Research rows use the available width for substance and contribution. */
+.research-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 36px; margin-top: 20px; }
+.research-columns > section { min-width: 0; }
+.research-columns ul { list-style: disc; padding-left: 20px; margin-top: 12px; font-size: 17px; line-height: 1.55; color: var(--ink-soft); }
+.research-columns li + li { margin-top: 10px; }
+#pecera-2026 .prose-measure, #inclusion-communication-2026 .prose-measure, #teacher-survey-communication-2025 .prose-measure { max-width: none; }
+.research-caption-count { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 16px; color: var(--ink-soft); margin-top: 20px; padding-block: 14px; border-block: 1px solid var(--hairline); }
+.research-caption-count strong { color: var(--accent-deep); font-weight: 600; }
+@media (max-width: 1099px) { .research-columns { grid-template-columns: minmax(0, 1fr); } }
+
+.media-impact-history { margin-top: 16px; }

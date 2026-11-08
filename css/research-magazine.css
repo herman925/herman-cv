@@ -1,0 +1,78 @@
+/* The impact figure is the cover; the original articles remain the no-JS edition. */
+.research-magazine-cover { grid-column: 1 / -1; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 24px 36px; align-items: center; padding: clamp(24px, 3vw, 44px); border: 1px solid var(--hairline); border-left: 5px solid var(--accent); background: var(--paper-soft); color: var(--ink); text-decoration: none; transition: border-color .25s, box-shadow .25s; }
+.research-magazine-cover:hover { border-color: var(--accent-deep); box-shadow: 0 12px 32px var(--accent-soft); }
+.magazine-cover-number { font: 600 clamp(80px, 8vw, 128px)/.9 'Fraunces', Georgia, serif; color: var(--accent-deep); }
+.magazine-cover-intro { display: grid; gap: 10px; }
+.magazine-cover-title { font: 500 clamp(24px, 2.6vw, 38px)/1.15 'Fraunces', Georgia, serif; }
+.magazine-cover-description { font-size: 17px; line-height: 1.5; color: var(--ink-soft); }
+.magazine-cover-cta { display: flex; align-items: center; gap: 16px; padding: 14px 18px; border: 1px solid var(--accent-deep); color: var(--accent-deep); font-size: 17px; font-weight: 600; }
+.magazine-cover-cta > span { font-size: 26px; transition: transform .25s; }
+.research-magazine-cover:hover .magazine-cover-cta > span { transform: translate(3px, -3px); }
+.magazine-cover-preview { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 12px 32px; padding-top: 18px; border-top: 1px solid var(--hairline); font-size: 15px; color: var(--ink-soft); }
+.magazine-cover-preview strong { color: var(--accent-deep); padding-right: 8px; }
+.magazine-chapter-deck { margin-top: 20px; font-size: clamp(19px, 1.7vw, 24px); line-height: 1.45; color: var(--ink-soft); }
+.magazine-social { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 24px; padding-block: 16px; border-top: 1px solid var(--hairline); font-size: 16px; color: var(--ink-soft); }
+.magazine-social strong { color: var(--ink); }
+.magazine-social a { margin-left: auto; }
+html.magazine-open { overflow: hidden; }
+.research-magazine { position: fixed; inset: 0; width: min(1560px, calc(100% - 64px)); height: min(1000px, calc(100% - 64px)); height: min(1000px, calc(100svh - 64px)); max-width: none; max-height: none; padding: 0; margin: auto; border: 1px solid var(--hairline); color: var(--ink); background: var(--paper); box-shadow: 0 24px 100px rgba(0,0,0,.25); overflow: hidden; }
+.research-magazine:not([open]) { display: none; }
+.research-magazine::backdrop { background: rgba(17,24,39,.65); backdrop-filter: blur(6px); }
+.magazine-shell { height: 100%; display: grid; grid-template-rows: auto auto minmax(0,1fr) auto; }
+.magazine-masthead { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px 36px; border-bottom: 2px solid var(--ink); }
+.magazine-masthead .kicker { font-size: 11px; }
+.magazine-masthead h2 { font: 500 clamp(24px, 2.5vw, 36px)/1.2 'Fraunces', Georgia, serif; margin-top: 6px; }
+.research-magazine button { cursor: pointer; font-family: inherit; }
+.magazine-close { display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 8px 12px; color: var(--ink); background: transparent; border: 1px solid var(--hairline); font-size: 16px; }
+.magazine-close span { font-size: 28px; line-height: 1; }
+.magazine-chapters { display: grid; grid-template-columns: 1fr 1fr; background: var(--paper-soft); border-bottom: 1px solid var(--hairline); }
+.magazine-chapters button { position: relative; display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; padding: 16px; min-height: 54px; border: 0; color: var(--ink-soft); background: transparent; font-size: 16px; line-height: 1.35; }
+.magazine-chapters button + button { border-left: 1px solid var(--hairline); }
+.magazine-chapters button span { font-family: 'Space Grotesk', monospace; font-size: 13px; align-self: center; }
+.magazine-chapters button[aria-pressed="true"] { background: var(--paper); color: var(--accent-deep); font-weight: 600; box-shadow: inset 0 -3px var(--accent); }
+.magazine-viewport { min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.research-magazine .media-impact-cases { display: block; margin: 0; }
+.research-magazine .media-impact-case { background: transparent; border: 0; padding: clamp(24px, 3.5vw, 56px); }
+.research-magazine [hidden] { display: none !important; }
+.research-magazine .case-header { border: 0; padding: 0; }
+.research-magazine .case-title { font-size: clamp(30px, 3.4vw, 52px); max-width: 26ch; }
+.research-magazine .case-header > .caption { max-width: 220px; flex: 0 1 220px; text-align: right; }
+.research-magazine .case-body { margin-top: 24px; padding-block: 28px; border-top: 1px solid var(--hairline); }
+.research-magazine .case-metrics dd { font-size: clamp(44px, 4vw, 64px); }
+.research-magazine .case-evidence { margin-top: 0; }
+.research-magazine .case-source-list { overflow-wrap: anywhere; }
+.magazine-pagination { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 36px; border-top: 1px solid var(--hairline); background: var(--paper-soft); font-size: 14px; }
+.magazine-pagination button { padding: 10px 0; min-height: 44px; background: transparent; border: 0; color: var(--accent-deep); font-weight: 600; }
+.magazine-pagination button:disabled { opacity: .4; cursor: default; color: var(--ink-soft); }
+.magazine-pagination p { color: var(--ink-soft); }
+.research-magazine button:hover:not(:disabled) { color: var(--accent-deep); background-color: var(--accent-soft); }
+.research-magazine :focus-visible, .research-magazine-cover:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: -3px; }
+@media (max-width: 999px) {
+  .research-magazine-cover { grid-template-columns: auto minmax(0,1fr); gap: 20px; }
+  .magazine-cover-cta { grid-column: 2; justify-self: start; }
+  .magazine-cover-preview { grid-column: 1 / -1; }
+  .research-magazine .case-header > .caption { max-width: none; flex: auto; text-align: left; }
+  .research-magazine .case-body { margin-top: 20px; }
+}
+@media (max-width: 599px) {
+  .research-magazine { width: 100%; height: 100%; height: 100svh; border: 0; }
+  .magazine-cover-number { font-size: 80px; align-self: start; }
+  .magazine-cover-intro .kicker { font-size: 12px; }
+  .magazine-cover-description { font-size: 15px; }
+  .magazine-cover-cta { grid-column: 1 / -1; justify-self: stretch; justify-content: space-between; }
+  .magazine-cover-preview { display: grid; font-size: 14px; }
+  .magazine-masthead { padding: 16px 20px; }
+  .magazine-masthead .kicker { font-size: 10px; }
+  .magazine-masthead h2 { font-size: 24px; }
+  .magazine-close { padding-inline: 8px; gap: 6px; font-size: 14px; }
+  .magazine-chapters button { display: grid; gap: 4px; padding: 10px 8px; font-size: 14px; }
+  .research-magazine .media-impact-case { padding: 24px 20px; }
+  .research-magazine .case-metrics { gap: 12px; }
+  .research-magazine .case-metrics dd { font-size: 44px; }
+  .magazine-social { display: grid; gap: 6px; }
+  .magazine-social a { margin-left: 0; }
+  .magazine-pagination { padding: 8px 16px; gap: 8px; font-size: 12px; padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .research-magazine-cover, .magazine-cover-cta > span { transition: none; }
+}

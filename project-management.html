@@ -186,6 +186,8 @@
   </style>
   <link rel="stylesheet" href="css/utilities.css?v=22">
   <link rel="stylesheet" href="css/research-cases.css?v=23">
+  <link rel="stylesheet" href="css/research-magazine.css?v=24">
+  <script defer src="js/research-magazine.js?v=24"></script>
 </head>
 <body class="antialiased overflow-x-hidden">
   <div class="running-header">HERMAN CHAN — THE DIGITAL HUMANIST — CH. 03 — PROJECT MANAGEMENT</div>
@@ -710,14 +712,26 @@
             <p class="kicker mt-4">Platform Users Reached</p>
             <p class="stat-caption mt-2">Delivered an online platform to disseminate project resources.</p>
           </div>
+          <a class="plate-reveal research-magazine-cover" id="research-magazine-trigger" href="#research-media-reader">
+            <span class="magazine-cover-number" aria-hidden="true">2</span>
+            <span class="magazine-cover-intro">
+              <span class="kicker">Research-to-public campaigns</span>
+              <span class="magazine-cover-title">Research in the public conversation</span>
+              <span class="magazine-cover-description">Analysis, media dissemination and interview coordination · 2025–2026</span>
+            </span>
+            <span class="magazine-cover-cta">Read the magazine <span aria-hidden="true">↗</span></span>
+            <span class="magazine-cover-preview"><span><strong>2025</strong> 19 publication items · 15 editorial brands</span><span><strong>2026</strong> 24 editorial items · 15 publisher groups</span></span>
+            <span class="sr-only">Two campaigns, two chapters.</span>
+          </a>
         </div>
 
-        <div class="media-impact-cases">
-          <article id="teacher-survey-coverage-2025" class="media-exhibit media-impact-case plate-reveal" aria-labelledby="teacher-survey-coverage-2025-head" style="scroll-margin-top:96px">
+        <section id="research-media-reader" class="media-impact-cases" aria-label="Research-to-public campaigns">
+          <article id="teacher-survey-coverage-2025" class="media-exhibit media-impact-case" data-magazine-chapter="2025" aria-labelledby="teacher-survey-coverage-2025-head" style="scroll-margin-top:96px">
             <header class="case-header">
               <div><p class="kicker"><span class="tick" aria-hidden="true">▪</span>2025 · ECE teacher survey</p><h3 id="teacher-survey-coverage-2025-head" class="case-title">Teacher-survey dissemination</h3></div>
               <p class="caption">ECE initiative · KeySteps-team support</p>
             </header>
+            <p class="magazine-chapter-deck">Kindergarten teachers’ workload and professional development.</p>
             <div class="case-body">
               <section class="case-contribution" aria-labelledby="case-delivery-2025">
                 <h4 id="case-delivery-2025" class="case-label">What I delivered</h4>
@@ -742,6 +756,7 @@
               <span><a class="inline-block py-2" style="min-height:44px" href="https://www.stheadline.com/daily-education/3496209/調查逾半受訪幼師每日工作10小時" aria-label="Sing Tao" target="_blank" rel="noopener noreferrer">SingTao</a></span>
               <span><a class="inline-block py-2" style="min-height:44px" href="https://jdonline.com.hk/content_99102.html" aria-label="JDOnline" target="_blank" rel="noopener noreferrer">JDOnline</a></span>
             </div></div>
+            <p class="magazine-social"><strong>Social circulation</strong><span>10 documented captions · 4 university-channel posts</span><a href="education-culture.html#teacher-survey-2025-social" class="link-editorial">View social sources ↗</a></p>
             <div class="case-evidence">
               <p class="caption">Audit: 8 November 2026 · Publication counts, not audience reach.</p>
               <details id="coverage-sources-2025" class="pm-details case-sources" style="scroll-margin-top:96px">
@@ -902,11 +917,12 @@
             </div>
           </article>
 
-          <article id="cnope-coverage-2026" class="media-exhibit media-impact-case plate-reveal" aria-labelledby="research-communication-2026-head" style="scroll-margin-top:96px">
+          <article id="cnope-coverage-2026" class="media-exhibit media-impact-case" data-magazine-chapter="2026" aria-labelledby="research-communication-2026-head" style="scroll-margin-top:96px">
             <header class="case-header">
               <div><p class="kicker"><span class="tick" aria-hidden="true">▪</span>2026 · EdUHK–CNOPE</p><h3 id="research-communication-2026-head" class="case-title">Research dissemination and interview coordination</h3></div>
               <p class="caption">Joint press conference · 11 August 2026</p>
             </header>
+            <p class="magazine-chapter-deck">Preschool inclusion and school-level support for children with special educational needs.</p>
             <div class="case-body">
               <section class="case-contribution" aria-labelledby="case-delivery-2026">
                 <h4 id="case-delivery-2026" class="case-label">What I delivered</h4>
@@ -923,6 +939,7 @@
                 <p class="case-footnote">Eva Lau: 3 · Carmen Choi: 1. Included in the 24 editorial items.</p>
               </section>
             </div>
+            <p class="magazine-social"><strong>University channels</strong><span>4 verified social posts · counted separately</span><a href="education-culture.html#university-channels-2026" class="link-editorial">View university posts ↗</a></p>
             <div class="case-evidence">
               <p class="caption">Audit: 8 November 2026 · Conservative publisher grouping; publication items, not audience reach.</p>
               <details id="coverage-sources-2026" class="pm-details case-sources" style="scroll-margin-top:96px">
@@ -1112,13 +1129,7 @@
           </details>
             </div>
           </article>
-        </div>
-        <div class="media-impact-history">
-              <details class="pm-details case-history">
-                <summary>Earlier press-release work <i data-lucide="chevron-down" class="w-4 h-4 pm-chevron" aria-hidden="true"></i></summary>
-                <div class="pm-practice body-small mt-3"><p class="caption accent-deep">EXHIBIT M — PRESS INDEX · KEYSTEPS@JC</p><p class="ink-soft mt-3">Coordinated media-recognised press releases on KeySteps@JC, engaging Department Head Prof. Eva LAU as spokesperson and securing coverage in numerous outlets (HK01, CTJobs, SCMP, DotDotNews, RTHK, SingTao, JDOnline).</p></div>
-              </details>
-        </div>
+        </section>
       </div>
     </section>
 
@@ -1298,6 +1309,26 @@
       </div>
     </section>
   </main>
+
+
+  <dialog id="research-magazine" class="research-magazine" aria-labelledby="research-magazine-title" data-lenis-prevent>
+    <div class="magazine-shell">
+      <header class="magazine-masthead">
+        <div><p class="kicker">A field journal · Herman Chan</p><h2 id="research-magazine-title">Research, made public.</h2></div>
+        <button type="button" class="magazine-close" data-magazine-close autofocus>Close <span aria-hidden="true">×</span></button>
+      </header>
+      <nav class="magazine-chapters" aria-label="Research campaign chapters">
+        <button type="button" data-magazine-page="0" aria-controls="teacher-survey-coverage-2025" aria-pressed="true"><span>01 / 2025</span> Teacher survey</button>
+        <button type="button" data-magazine-page="1" aria-controls="cnope-coverage-2026" aria-pressed="false"><span>02 / 2026</span> Preschool inclusion</button>
+      </nav>
+      <div class="magazine-viewport" tabindex="0" aria-label="Chapter content"></div>
+      <footer class="magazine-pagination">
+        <button type="button" data-magazine-previous>← Previous</button>
+        <p data-magazine-status aria-live="polite" aria-atomic="true">Chapter 1 of 2</p>
+        <button type="button" data-magazine-next>Next chapter →</button>
+      </footer>
+    </div>
+  </dialog>
 
   <!-- ================================================================
        COLOPHON

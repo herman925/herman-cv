@@ -7,6 +7,16 @@ function initProjectDesktop() {
     const grid = document.getElementById('explorer-grid');
     const dockHome = document.getElementById('desktop-show-home');
     const dockPortfolio = document.getElementById('desktop-open-portfolio');
+    const dockRecent = document.getElementById('desktop-open-recent');
+    const dockSearch = document.getElementById('desktop-search');
+    const dockButtons = [dockHome, dockPortfolio, dockRecent, dockSearch];
+    let searchRequested = false;
+    function syncDock() {
+        const selected = finder.hidden ? dockHome
+            : searchQuery || searchRequested ? dockSearch
+            : !showAllProjects && currentPath[0] === 'Recent Work' ? dockRecent : dockPortfolio;
+        dockButtons.forEach(button => button.setAttribute('aria-pressed', String(button === selected)));
+    }
     title.tabIndex = -1;
     let desktopTrigger = dockPortfolio;
 
@@ -15,8 +25,7 @@ function initProjectDesktop() {
         document.getElementById('project-desktop').setAttribute('data-view', 'finder');
         finder.hidden = false;
         desktop.hidden = true;
-        dockHome.setAttribute('aria-pressed', 'false');
-        dockPortfolio.setAttribute('aria-pressed', 'true');
+        syncDock();
         renderExplorer();
         if (focus) title.focus({ preventScroll: true });
         finder.scrollIntoView({ block: 'start', behavior: 'instant' });
@@ -26,12 +35,12 @@ function initProjectDesktop() {
         document.getElementById('project-desktop').setAttribute('data-view', 'desktop');
         finder.hidden = true;
         desktop.hidden = false;
-        dockHome.setAttribute('aria-pressed', 'true');
-        dockPortfolio.setAttribute('aria-pressed', 'false');
+        syncDock();
         (event?.currentTarget === dockHome ? dockHome : desktopTrigger).focus({ preventScroll: true });
         window.ScrollTrigger?.refresh();
     }
     function openCollection(folder, trigger) {
+        searchRequested = false;
         showFinder(trigger, false);
         navigateRoot();
         navigateTo(folder.name);
@@ -71,6 +80,7 @@ function initProjectDesktop() {
     });
     let lastView = '';
     function sync() {
+        syncDock();
         const view = JSON.stringify([currentPath, searchQuery, showAllProjects]);
         if (view !== lastView) grid.scrollTop = 0;
         lastView = view;
@@ -86,17 +96,20 @@ function initProjectDesktop() {
     document.getElementById('desktop-project-count').textContent = collectProjects().length;
     document.getElementById('desktop-minimize').addEventListener('click', showDesktop);
     dockHome.addEventListener('click', showDesktop);
-    document.getElementById('desktop-browse-all').addEventListener('click', event => { showFinder(event.currentTarget, false); document.getElementById('explorer-all').click(); title.focus({ preventScroll: true }); });
+    document.getElementById('desktop-browse-all').addEventListener('click', event => { searchRequested = false; showFinder(event.currentTarget, false); document.getElementById('explorer-all').click(); title.focus({ preventScroll: true }); });
     dockPortfolio.addEventListener('click', () => showFinder(dockPortfolio));
-    document.getElementById('desktop-open-recent').addEventListener('click', event => openCollection(explorerData.children.find(folder => folder.name === 'Recent Work'), event.currentTarget));
-    document.getElementById('desktop-search').addEventListener('click', event => {
+    dockRecent.addEventListener('click', event => openCollection(explorerData.children.find(folder => folder.name === 'Recent Work'), event.currentTarget));
+    dockSearch.addEventListener('click', event => {
+        searchRequested = true;
         showFinder(event.currentTarget, false);
         document.getElementById('explorer-search').focus({ preventScroll: true });
     });
     document.getElementById('finder-home').addEventListener('click', () => { navigateRoot(); title.focus({ preventScroll: true }); });
+    // Only explicit catalogue navigation ends an empty dock-initiated search.
+    finder.addEventListener('click', event => {
+        if (event.target.closest('#finder-home, #explorer-all, #explorer-back, #explorer-breadcrumbs button, #finder-sidebar button, .explorer-folder')) searchRequested = false;
+    }, true);
     new MutationObserver(sync).observe(grid, { childList: true });
-    dockHome.setAttribute('aria-pressed', 'true');
-    dockPortfolio.setAttribute('aria-pressed', 'false');
     sync();
     if (window.lucide) lucide.createIcons();
 }

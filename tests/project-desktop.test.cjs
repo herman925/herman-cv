@@ -16,6 +16,7 @@ function workspace() {
             removeAttribute(k) { delete attrs[k]; }, hasAttribute: k => k in attrs, toggleAttribute(k, enabled) { if (enabled) attrs[k] = ''; else delete attrs[k]; },
             contains(target) { return this === target || this.children.some(child => child.contains(target)); },
             addEventListener(k, fn) { (events[k] ||= []).push(fn); }, click() { this.onclick?.(); (events.click || []).forEach(fn => fn({ currentTarget: this })); },
+            dispatch(type, event) { (events[type] || []).forEach(fn => fn(event)); },
             focus() { document.activeElement = this; }, scrollIntoView() {}
         };
     }
@@ -28,7 +29,7 @@ function workspace() {
     ctx.renderExplorer = () => observer?.();
     elements.get('explorer-all').onclick = () => { vm.runInContext("currentPath=[]; searchQuery=''; showAllProjects=true", ctx); observer?.(); };
     ctx.initProjectDesktop();
-    return { elements, ctx, preference, state: () => JSON.parse(vm.runInContext('JSON.stringify({currentPath, searchQuery, showAllProjects})', ctx)) };
+    return { elements, ctx, preference, navigationClick(button) { elements.get('portfolio-finder').dispatch('click', { target: { closest: () => button } }); button.click(); }, state: () => JSON.parse(vm.runInContext('JSON.stringify({currentPath, searchQuery, showAllProjects})', ctx)) };
 }
 
 test('desktop launchers are the real six collections and open one canonical Finder view', () => {
@@ -71,4 +72,46 @@ test('first HTML brain is the current head artwork with four real routes and no 
     assert.doesNotMatch(html, /id="thesis"[^>]*data-reveal-lines/);
     assert.match(script, /webglcontextlost/);
     assert.match(script, /boot\(\)\.catch\(useStaticBrain\)/);
+});
+
+function assertSelected(app, id) {
+    const ids = ['desktop-show-home', 'desktop-open-portfolio', 'desktop-open-recent', 'desktop-search'];
+    assert.deepEqual(ids.map(name => app.elements.get(name).getAttribute('aria-pressed')), ids.map(name => String(name === id)));
+}
+test('all four dock states derive from desktop, recent collection and restored query views', () => {
+    const app = workspace(), get = id => app.elements.get(id);
+    assertSelected(app, 'desktop-show-home');
+    get('desktop-open-recent').click(); assertSelected(app, 'desktop-open-recent');
+    get('desktop-minimize').click(); assertSelected(app, 'desktop-show-home');
+    get('desktop-open-portfolio').click(); assertSelected(app, 'desktop-open-recent');
+    get('desktop-browse-all').click(); assertSelected(app, 'desktop-open-portfolio');
+    get('desktop-launchers').children[0].click(); assertSelected(app, 'desktop-open-recent');
+    get('finder-sidebar').children[2].click(); assertSelected(app, 'desktop-open-portfolio');
+    get('finder-sidebar').children[1].click(); assertSelected(app, 'desktop-open-recent');
+    vm.runInContext("currentPath=[];searchQuery='piano'", app.ctx); app.ctx.renderExplorer(); assertSelected(app, 'desktop-search');
+    get('desktop-show-home').click(); assertSelected(app, 'desktop-show-home');
+    get('desktop-open-portfolio').click(); assertSelected(app, 'desktop-search');
+    vm.runInContext("searchQuery=''", app.ctx); app.ctx.renderExplorer(); assertSelected(app, 'desktop-open-portfolio');
+});
+test('empty Search selection preserves its folder and survives typing or a modal render', () => {
+    const app = workspace(), get = id => app.elements.get(id);
+    get('desktop-open-recent').click();
+    const before = app.state(); get('desktop-search').click();
+    assert.deepEqual(app.state(), before); assert.equal(app.ctx.document.activeElement, get('explorer-search'));
+    assertSelected(app, 'desktop-search');
+    vm.runInContext("currentPath=[];searchQuery='piano'", app.ctx); app.ctx.renderExplorer(); assertSelected(app, 'desktop-search');
+    vm.runInContext("searchQuery=''", app.ctx); app.ctx.renderExplorer(); assertSelected(app, 'desktop-search');
+    app.ctx.renderExplorer(); assertSelected(app, 'desktop-search');
+    get('desktop-minimize').click(); assertSelected(app, 'desktop-show-home');
+    get('desktop-open-portfolio').click(); assertSelected(app, 'desktop-search');
+    app.navigationClick(get('finder-home')); assertSelected(app, 'desktop-open-portfolio');
+    get('desktop-search').click(); app.navigationClick(get('explorer-all')); assertSelected(app, 'desktop-open-portfolio');
+    get('desktop-search').click(); get('finder-sidebar').children[1].click(); assertSelected(app, 'desktop-open-recent');
+});
+test('dock markup exposes one selected native button before JavaScript runs', () => {
+    const html = read('technology.html');
+    const buttons = [...html.matchAll(/<button id="(desktop-show-home|desktop-open-portfolio|desktop-open-recent|desktop-search)"[^>]*>/g)];
+    assert.equal(buttons.length, 4);
+    buttons.forEach(match => assert(match[0].includes('aria-pressed="' + (match[1] === 'desktop-show-home') + '"')));
+    assert.match(html, /js\/project-desktop\.js\?v=28/);
 });

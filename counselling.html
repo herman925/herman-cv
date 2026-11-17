@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,144,600;1,144,500&family=Outfit:wght@300;400;500;600;800&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="global.css?v=20">
-  <link rel="stylesheet" href="css/spine.css?v=20">
+  <link rel="stylesheet" href="css/spine.css?v=26">
   <style>
     /* CH. 02 — page-scoped zen warmth. This chapter alone speaks in circles:
        the breathing ring's soft language extends to gently rounded cards. */
@@ -78,17 +78,18 @@
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
   <script defer src="https://unpkg.com/lucide@1.66.0/dist/umd/lucide.min.js"></script>
-  <script defer src="js/motion.js?v=18"></script>
+  <script defer src="js/motion.js?v=25"></script>
   <script defer src="js/cursor.js?v=18"></script>
-  <link rel="stylesheet" href="css/utilities.css?v=20">
+  <link rel="stylesheet" href="css/utilities.css?v=26">
 </head>
 <body class="antialiased overflow-x-hidden">
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <div class="running-header">HERMAN CHAN — THE DIGITAL HUMANIST — CH. 02 — THE LISTENER</div>
 
   <!-- Navigation -->
   <div id="navbar-container"></div>
 
-  <main>
+  <main id="main-content" tabindex="-1">
     <!-- ================================================================
          1 · TITLE PLATE
     ================================================================= -->
@@ -100,11 +101,72 @@
         <p class="serif-italic accent-deep text-xl md:text-2xl mt-6">Presence <span class="ink-soft">&amp;</span> Empathy</p>
         <p class="caption mt-4">MASGC (CUHK) • BSocSc (HKBU)</p>
         <p class="caption mt-2">Professional Registration of Counsellor — Hong Kong Professional Counselling Association (HKPCA) <span class="accent-deep">· in progress</span></p>
-        <p class="standfirst" data-reveal-lines>
-          Turning personal struggle into professional strength. Creating safe
-          spaces where every student feels seen, heard, and understood.
-        </p>
+        <p class="opening-summary">I support students and families through counselling-informed practice, SEN coordination and education, and bring active listening into teamwork and stakeholder conversations.</p>
+        <nav class="chapter-jumps" aria-label="Counselling practice">
+          <a class="link-editorial" href="#impact">Selected practice &amp; stories →</a>
+          <a class="link-editorial" href="#toolkit">Practice toolkit →</a>
+          <a class="link-editorial" href="#memoir">Personal journey →</a>
+        </nav>
+
         <div class="accent-bar w-32 mt-10" data-accent-bar></div>
+      </div>
+    </section>
+
+    <section id="impact" class="spine-section" aria-labelledby="impact-title">
+      <div class="spine-container">
+        <div class="section-head">
+          <hr class="section-rule">
+          <p class="kicker"><span class="tick">▪</span>CH. 02 § HOLISTIC IMPACT</p>
+          <h2 id="impact-title" class="display-m" data-reveal-lines>Stories of Change</h2>
+          <p class="standfirst">
+            Counseling isn't just a role; it's a skillset I weave into every
+            aspect of my career—from teaching to project leadership.
+          </p>
+        </div>
+
+        <div class="grid gap-8 md:grid-cols-3">
+          <!-- Story 1 -->
+          <article class="letter-card plate-reveal">
+            <header class="letter-from">
+              <span>FILE 01 — SEN COORDINATION</span>
+              <span class="letter-seal" aria-hidden="true"></span>
+            </header>
+            <h3 class="font-display font-semibold text-2xl mb-4">The Bridge for SEN</h3>
+            <dl class="practice-record">
+              <div><dt>Role</dt><dd>SEN Coordinator linking families, teachers and specialists.</dd></div>
+              <div><dt>Action</dt><dd>Prepared structured, empathetic support plans and coordinated communication around students’ needs.</dd></div>
+              <div><dt>Aim</dt><dd>Give students and families a clearer, more consistent support process.</dd></div>
+            </dl>
+          </article>
+
+          <!-- Story 2 -->
+          <article class="letter-card plate-reveal">
+            <header class="letter-from">
+              <span>FILE 02 — PROJECT LEADERSHIP</span>
+              <span class="letter-seal" aria-hidden="true"></span>
+            </header>
+            <h3 class="font-display font-semibold text-2xl mb-4">Empathetic Leadership</h3>
+            <dl class="practice-record">
+              <div><dt>Context</dt><dd>Leading diverse teams in high-pressure project environments.</dd></div>
+              <div><dt>Action</dt><dd>Applied active listening and conflict-resolution skills in stakeholder conversations and internal disagreements.</dd></div>
+              <div><dt>Aim</dt><dd>Support clearer communication and workable next steps under pressure.</dd></div>
+            </dl>
+          </article>
+
+          <!-- Story 3 -->
+          <article class="letter-card plate-reveal">
+            <header class="letter-from">
+              <span>FILE 03 — IVE &amp; MARIA COLLEGE</span>
+              <span class="letter-seal" aria-hidden="true"></span>
+            </header>
+            <h3 class="font-display font-semibold text-2xl mb-4">Holistic Education</h3>
+            <dl class="practice-record">
+              <div><dt>Context</dt><dd>Teaching at IVE and Maria College.</dd></div>
+              <div><dt>Action</dt><dd>Integrated soft-skills training and counselling-informed examples into the curriculum.</dd></div>
+              <div><dt>Aim</dt><dd>Help students practise interpersonal skills and prepare for future study and work.</dd></div>
+            </dl>
+          </article>
+        </div>
       </div>
     </section>
 
@@ -121,6 +183,10 @@
           <hr class="section-rule">
           <p class="kicker"><span class="tick">▪</span>CH. 02 § MEMOIR — THE ORIGIN</p>
           <h2 id="memoir-title" class="display-m" data-reveal-lines>From Struggle to Support</h2>
+        <p class="standfirst" data-reveal-lines>
+          Turning personal struggle into professional strength. Creating safe
+          spaces where every student feels seen, heard, and understood.
+        </p>
         </div>
       </div>
 
@@ -435,75 +501,7 @@
     <!-- ================================================================
          6 · IMPACT STORIES
     ================================================================= -->
-    <section id="impact" class="spine-section" aria-labelledby="impact-title">
-      <div class="spine-container">
-        <div class="section-head">
-          <hr class="section-rule">
-          <p class="kicker"><span class="tick">▪</span>CH. 02 § HOLISTIC IMPACT</p>
-          <h2 id="impact-title" class="display-m" data-reveal-lines>Stories of Change</h2>
-          <p class="standfirst">
-            Counseling isn't just a role; it's a skillset I weave into every
-            aspect of my career—from teaching to project leadership.
-          </p>
-        </div>
 
-        <div class="grid gap-8 md:grid-cols-3">
-          <!-- Story 1 -->
-          <article class="letter-card plate-reveal">
-            <header class="letter-from">
-              <span>FILE 01 — SEN COORDINATION</span>
-              <span class="letter-seal" aria-hidden="true"></span>
-            </header>
-            <h3 class="font-display font-semibold text-2xl mb-4">The Bridge for SEN</h3>
-            <p class="ink-soft mb-6">
-              As an SEN Coordinator, I acted as the vital link between
-              families, teachers, and specialists.
-            </p>
-            <p class="letter-excerpt">
-              "Transformed 'difficult' cases into success stories by
-              creating structured, empathetic support plans that empowered
-              both the student and the family."
-            </p>
-          </article>
-
-          <!-- Story 2 -->
-          <article class="letter-card plate-reveal">
-            <header class="letter-from">
-              <span>FILE 02 — PROJECT LEADERSHIP</span>
-              <span class="letter-seal" aria-hidden="true"></span>
-            </header>
-            <h3 class="font-display font-semibold text-2xl mb-4">Empathetic Leadership</h3>
-            <p class="ink-soft mb-6">
-              Leading diverse teams in high-pressure environments requires
-              more than just management; it requires counseling skills.
-            </p>
-            <p class="letter-excerpt">
-              "Applied active listening and conflict resolution to manage
-              stakeholders, resolving internal conflicts and boosting team
-              morale and productivity."
-            </p>
-          </article>
-
-          <!-- Story 3 -->
-          <article class="letter-card plate-reveal">
-            <header class="letter-from">
-              <span>FILE 03 — IVE &amp; MARIA COLLEGE</span>
-              <span class="letter-seal" aria-hidden="true"></span>
-            </header>
-            <h3 class="font-display font-semibold text-2xl mb-4">Holistic Education</h3>
-            <p class="ink-soft mb-6">
-              At IVE and Maria College, I integrated soft skills training
-              directly into the curriculum.
-            </p>
-            <p class="letter-excerpt">
-              "Students didn't just learn subject matter; they developed
-              emotional resilience and interpersonal skills essential for
-              their future careers."
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
   </main>
 
   <!-- ================================================================
@@ -525,9 +523,9 @@
         </div>
         <div>
           <p class="kicker">Chapters</p>
-          <nav class="mt-3 flex flex-col gap-2">
+          <nav class="mt-3 flex flex-col gap-2" aria-label="Footer facets">
             <a class="link-editorial" href="education-culture.html">01 Education &amp; Culture</a>
-            <a class="link-editorial" href="counselling.html">02 Counselling</a>
+            <a class="link-editorial" href="counselling.html" aria-current="page">02 Counselling</a>
             <a class="link-editorial" href="project-management.html">03 Project Management</a>
             <a class="link-editorial" href="technology.html">04 Technology</a>
           </nav>
@@ -541,24 +539,24 @@
   </footer>
 
   <!-- Chapter dock (mobile) -->
-  <nav class="chapter-dock" aria-label="Chapters">
+  <nav class="chapter-dock" aria-label="Facet shortcuts">
     <a href="education-culture.html" data-ink="moss" title="Education &amp; Culture"><span></span></a>
     <a href="counselling.html" data-ink="sienna" title="Counselling" aria-current="page"><span></span></a>
     <a href="project-management.html" data-ink="oxblood" title="Project Management"><span></span></a>
     <a href="technology.html" data-ink="tealink" title="Technology"><span></span></a>
   </nav>
 
-  <script src="js/navbar.js?v=20"></script>
+  <script src="js/navbar.js?v=25"></script>
   <script>
     // Initialize Navbar
     initNavbar({
       activePage: 'counselling',
       sections: [
+        { id: 'impact', label: 'Stories of Change' },
         { id: 'memoir', label: 'Memoir' },
         { id: 'philosophy', label: 'Philosophy' },
         { id: 'toolkit', label: 'Toolkit' },
-        { id: 'breath', label: 'Breathe' },
-        { id: 'impact', label: 'Stories of Change' }
+        { id: 'breath', label: 'Breathe' }
       ],
       themeColor: 'sienna',
       isDark: false

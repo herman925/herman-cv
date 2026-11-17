@@ -14,19 +14,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,144,600;1,144,500&family=Outfit:wght@300;400;500;600;800&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="global.css?v=20">
-    <link rel="stylesheet" href="css/spine.css?v=20">
+    <link rel="stylesheet" href="css/spine.css?v=27">
     <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
     <script defer src="https://unpkg.com/lucide@1.66.0/dist/umd/lucide.min.js"></script>
-    <script defer src="js/motion.js?v=18"></script>
+    <script defer src="js/motion.js?v=25"></script>
   <script defer src="js/cursor.js?v=18"></script>
     <!-- index only: three.js importmap + cover module (post-LCP, capability-gated) -->
     <script type="importmap">
       { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js" } }
     </script>
-    <script type="module" src="js/brain-cover.js?v=21"></script>
+    <script type="module" src="js/brain-cover.js?v=27"></script>
 
     <!-- Page-specific styles: gold engraving restyle of the brain SVG, cover hero,
          TOC, mobile chapter cards, chapter-spread inks, letter details -->
@@ -86,41 +86,16 @@
             z-index: 5;
         }
 
-        /* ---- The engraving: gold 1px strokes on ink ------------------------ */
-        #brainMapSVG .network-edge {
-            stroke: rgba(184, 150, 90, .38) !important;
-            stroke-width: 1 !important;
-            filter: none !important;
-        }
-        #brainMapSVG .network-node {
-            fill: #B8965A !important;
-            stroke: none !important;
-            r: 2.5;
-            filter: none !important;
-        }
-        #brainMapSVG .highlight-edge {
-            stroke: rgba(212, 178, 116, .5) !important;
-            stroke-width: 1 !important;
-            filter: none !important;
-        }
+        #brainMapSVG .connector-touch { display: none; }
         #brainMapSVG .connector-line { stroke: #B8965A !important; stroke-width: 1px; }
         #brainMapSVG .connector-dot { fill: #D4B274; }
         #brainMapSVG .brain-label-title { fill: #FAF7F2; font-family: 'Fraunces', Georgia, serif; font-weight: 600; }
         #brainMapSVG .brain-label-sub { fill: rgba(250, 247, 242, .65); }
-        #brainMapSVG .brain-section:hover .network-edge {
-            stroke: rgba(212, 178, 116, .9) !important;
-            stroke-width: 1.5 !important;
-        }
-        #brainMapSVG .brain-section:hover .network-node { fill: #D4B274 !important; r: 4; }
-        #brainMapSVG:hover .brain-section:not(:hover) { opacity: .35; filter: none; }
         /* No rectangular focus frame — focus is indicated by the lit lobe,
            the connector drawing in and the label appearing (below) */
         #brainMapSVG a.brain-section:focus,
         #brainMapSVG a.brain-section:focus-visible { outline: none; }
-        #brainMapSVG a.brain-section:focus-visible .network-edge {
-            stroke: rgba(212, 178, 116, .9) !important;
-            stroke-width: 1.5 !important;
-        }
+
         #brainMapSVG a.brain-section:focus-visible .brain-label-group { opacity: 1; }
         #brainMapSVG a.brain-section:focus-visible .connector-line { stroke-dashoffset: 0; opacity: .8; }
         #brainMapSVG a.brain-section:focus-visible .connector-dot { opacity: 1; }
@@ -141,13 +116,6 @@
 
         /* GL tier: the procedural living brain IS the art — the SVG keeps only
            keyboard focus + labels; pointer picking happens on the canvas */
-        html.brain-gl #brainMapSVG .network-edge,
-        html.brain-gl #brainMapSVG .network-node,
-        html.brain-gl #brainMapSVG .highlight-edge { opacity: 0 !important; }
-        html.brain-gl #brainMapSVG .brain-section:hover .network-edge,
-        html.brain-gl #brainMapSVG a.brain-section:focus-visible .network-edge,
-        html.brain-gl #brainMapSVG .brain-section:hover .network-node,
-        html.brain-gl #brainMapSVG a.brain-section:focus-visible .network-node { opacity: 0 !important; }
         /* The SVG must be COMPLETELY mouse-transparent in GL tier. Its
            .hit-area children set pointer-events:all (global.css), which
            re-enables them under a parent's `none` — so force every
@@ -168,24 +136,24 @@
         #brainMapSVG .brain-section.zone-hot .connector-dot { opacity: 1 !important; }
 
         /* Facet-ink hover identity — each region answers in its own colour */
-        #brainMapSVG .zone-counselling:hover .network-edge,
-        #brainMapSVG a.zone-counselling:focus-visible .network-edge { stroke: rgba(249, 115, 22, .85) !important; }
-        #brainMapSVG .zone-counselling:hover .network-node,
-        #brainMapSVG a.zone-counselling:focus-visible .network-node { fill: #FB923C !important; }
-        #brainMapSVG .zone-technology:hover .network-edge,
-        #brainMapSVG a.zone-technology:focus-visible .network-edge { stroke: rgba(45, 212, 191, .85) !important; }
-        #brainMapSVG .zone-technology:hover .network-node,
-        #brainMapSVG a.zone-technology:focus-visible .network-node { fill: #2DD4BF !important; }
-        #brainMapSVG .zone-project:hover .network-edge,
-        #brainMapSVG a.zone-project:focus-visible .network-edge { stroke: rgba(225, 29, 72, .8) !important; }
-        #brainMapSVG .zone-project:hover .network-node,
-        #brainMapSVG a.zone-project:focus-visible .network-node { fill: #FB7185 !important; }
-        #brainMapSVG .zone-education:hover .network-edge,
-        #brainMapSVG a.zone-education:focus-visible .network-edge { stroke: rgba(16, 185, 129, .85) !important; }
-        #brainMapSVG .zone-education:hover .network-node,
-        #brainMapSVG a.zone-education:focus-visible .network-node { fill: #34D399 !important; }
         /* Static tier: the SVG IS the art-directed engraving (default state above) */
         html.brain-static #brain-canvas-mount { display: none; }
+
+
+        /* Current head artwork is the first-paint and failure state; WebGL is progressive. */
+        #brain-head-outline { fill: none; stroke: var(--gold); stroke-width: 1.8; opacity: .45; }
+        #brainMapSVG .brain-current-lobe { fill: transparent; stroke: var(--gold); stroke-width: 1.6; opacity: .65; pointer-events: all; }
+        #brain-canvas-mount { opacity: 0; }
+        html.brain-gl #brain-canvas-mount { opacity: 1; }
+        html.brain-gl #brainMapSVG .brain-current-art, html.brain-gl #brainMapSVG .brain-current-lobe { opacity: 0 !important; }
+        #brainMapSVG .brain-section:hover .brain-current-lobe, #brainMapSVG .brain-section:focus-visible .brain-current-lobe { stroke: var(--lobe-ink); opacity: 1; }
+        #brainMapSVG .zone-education { --lobe-ink: #34D399; }
+        #brainMapSVG .zone-counselling { --lobe-ink: #FB923C; }
+        #brainMapSVG .zone-technology { --lobe-ink: #2DD4BF; }
+        #brainMapSVG .zone-project { --lobe-ink: #FB7185; }
+        @media (hover: none), (pointer: coarse) { #brainMapSVG .brain-current-lobe { stroke: var(--lobe-ink); opacity: .9; } }
+        @media (prefers-reduced-motion: no-preference) { #thesis { animation: title-arrive .7s ease-out both; } }
+        @keyframes title-arrive { from { opacity: .72; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
         /* ---- Table of contents (desktop) ----------------------------------- */
         #cover .cover-toc {
@@ -220,6 +188,8 @@
             #brainMapSVG .brain-section { opacity: 1 !important; filter: none !important; }
             #brainMapSVG .brain-label-group { opacity: 1 !important; visibility: visible !important; }
             html.brain-gl #brainMapSVG .brain-section:hover:not(.zone-hot):not(:focus-visible) .brain-label-group { opacity: 1 !important; }
+            #brainMapSVG .connector-desktop { display: none; }
+            #brainMapSVG .connector-touch { display: initial; }
             #brainMapSVG .connector-line { opacity: .85 !important; stroke-dasharray: none; stroke-dashoffset: 0; }
             #brainMapSVG .connector-dot { opacity: 1 !important; pointer-events: auto !important; }
             #brainMapSVG .brain-label-sub { display: none; }
@@ -231,14 +201,6 @@
             #brainMapSVG .zone-project .brain-label-group { transform: translate(410px, 364px); }
             #brainMapSVG .zone-education .brain-label-title, #brainMapSVG .zone-counselling .brain-label-title { text-anchor: start; }
             #brainMapSVG .zone-technology .brain-label-title, #brainMapSVG .zone-project .brain-label-title { text-anchor: end; }
-            #brainMapSVG .zone-education .network-edge, #brainMapSVG .zone-education .highlight-edge { stroke: #34d399 !important; }
-            #brainMapSVG .zone-counselling .network-edge, #brainMapSVG .zone-counselling .highlight-edge { stroke: #fb923c !important; }
-            #brainMapSVG .zone-technology .network-edge, #brainMapSVG .zone-technology .highlight-edge { stroke: #2dd4bf !important; }
-            #brainMapSVG .zone-project .network-edge, #brainMapSVG .zone-project .highlight-edge { stroke: #fb7185 !important; }
-            #brainMapSVG .zone-education .network-node { fill: #34d399 !important; }
-            #brainMapSVG .zone-counselling .network-node { fill: #fb923c !important; }
-            #brainMapSVG .zone-technology .network-node { fill: #2dd4bf !important; }
-            #brainMapSVG .zone-project .network-node { fill: #fb7185 !important; }
             /* Override the GL tier's mouse-transparent SVG for touch labels. */
             html.brain-gl #brainMapSVG .brain-label-group,
             html.brain-gl #brainMapSVG .brain-label-group * { pointer-events: auto !important; }
@@ -494,16 +456,17 @@
             .vask-chips li { opacity: 1 !important; transform: none !important; }
         }
     </style>
-  <link rel="stylesheet" href="css/utilities.css?v=20">
+  <link rel="stylesheet" href="css/utilities.css?v=26">
 </head>
 <body class="antialiased overflow-x-hidden">
+  <a class="skip-link" href="#main-content">Skip to content</a>
 
     <div class="running-header">HERMAN CHAN — THE DIGITAL HUMANIST — HONG KONG</div>
 
     <!-- Navigation -->
     <div id="navbar-container"></div>
 
-    <main>
+    <main id="main-content" tabindex="-1">
     <!-- ===================================================================
          THE COVER — hero / thesis / engraved brain / table of contents
          =================================================================== -->
@@ -515,11 +478,11 @@
             <!-- The thesis — compact, above the brain -->
             <div class="cover-thesis relative z-20 text-center px-2">
                 <p class="kicker mb-5"><span class="tick">▪</span>My Neural Network</p>
-                <h1 id="thesis" class="display-xl" data-reveal-lines>
+                <h1 id="thesis" class="display-xl">
                     A technologist born from <em class="text-gold">humility.</em><br>
                     A leader driven by <em class="text-gold">empathy.</em>
                 </h1>
-                <p class="standfirst mx-auto mt-6 hidden md:block">Four facets, one mind. Hover a region of the network to see it light up — click it to step inside.</p>
+                <p class="cover-purpose">I build learning experiences, research workflows and tools for students, families and teams.</p>
             </div>
 
             <div class="cover-stage">
@@ -531,41 +494,22 @@
                         <div id="brain-canvas-mount" aria-hidden="true"></div>
                         <!-- ViewBox matches the coordinate system (approx 0-400) -->
                         <svg id="brainMapSVG" viewBox="0 0 450 400" xmlns="http://www.w3.org/2000/svg">
+                            <defs><clipPath id="brain-band-0"><rect x="0.00000" y="0" width="179.74484" height="612" /></clipPath><clipPath id="brain-band-1"><rect x="179.74484" y="0" width="98.60059" height="612" /></clipPath><clipPath id="brain-band-2"><rect x="278.34544" y="0" width="94.65657" height="612" /></clipPath><clipPath id="brain-band-3"><rect x="373.00201" y="0" width="238.99799" height="612" /></clipPath></defs>
+                            <g class="brain-current-art" aria-hidden="true" transform="translate(225 200) scale(0.61072450) translate(-306.00114441 -306.00334172)">
+                                <path id="brain-head-outline" d="M542.346,235.523c-6.647-76.801-52.108-147.626-115.793-190.052c-34.9-23.249-75.336-37.519-116.84-42.917 C195.319-12.325,74.841,37.92,31.685,150.284c-37.099,96.597-0.52,192.495,65.913,265.632 c23.974,26.393,27.298,76.017,27.298,109.446v67.792c0,10.408,8.438,18.846,18.846,18.846h245.301 c9.929,0,18.135-7.704,18.806-17.61c0.903-13.335,2.386-25.062,2.386-25.062c5.129-21.996,23.884-39.634,63.768-33.231 c41.844,6.713,68.237-5.756,70.584-33.617c0.774-9.191,1.273-87.695,1.273-87.695c1.999-1.142,15.117-3.75,34.236-8.097 c14.867-3.38,20.103-21.838,9.263-32.561c-43.469-43.001-49.299-63.047-50.378-67.362 C533.598,285.327,544.296,258.049,542.346,235.523z" />
+                            </g>
                             <g transform="translate(40, 0)">
 
                             <!-- EDUCATION (Left) -->
                             <a href="education-culture.html" class="brain-section zone-education" aria-label="Open Chapter 01 — Education &amp; Culture">
-                                <path class="hit-area" d="M 5 100 L 90 100 L 90 350 L 5 350 Z" />
+                                <path class="hit-area brain-current-lobe" aria-hidden="true" data-brain-band="0" clip-path="url(#brain-band-0)" transform="translate(185 200) scale(0.61072450) translate(-306.00114441 -306.00334172)" d="M461.327,209.858c-6.039,7.651-12.918,9.146-16.556,9.346 c-1.198,0.066-2.033,1.206-1.706,2.36c1.868,6.582,3.768,24.711-28.687,31.77c-30.438,6.615-48.844,30.29-60.863,42.313 c-9.233,9.225-21.723,13.495-34.183,16.299c-12.729,2.864-25.341,5.37-35.384,14.415c-10.577,9.527-25.495,61.985-28.027,71.104 c-0.222,0.801-0.951,1.352-1.783,1.352h-15.621c-0.877,0-1.636-0.614-1.817-1.473l-7.569-35.803 c-0.318-1.504-73.698,4.534-79.347-28.22c-0.198-1.149-1.359-1.862-2.456-1.466c-7.056,2.546-29.692,8.81-41.91-10.122 c-8.663-13.423-6.362-25.955-5.155-30.282c0.25-0.896-0.2-1.828-1.055-2.196c-6.225-2.677-28.719-15.289-25.669-56.784 c2.461-33.448,25.085-48.273,21.922-53.417c-9.124-14.837-1.193-39.431,17.5-44.921c0.753-0.221,1.288-0.888,1.359-1.67 l0.789-8.719c2.596-30.743,42.991-50.226,70.455-37.445c1.059,0.493,2.318-0.032,2.67-1.145 c3.438-10.898,10.377-13.898,12.226-14.938c8.515-4.791,19.572-4.199,28.374-0.586c0.712,0.292,1.523,0.114,2.048-0.448 c2.501-2.679,12.756-11.182,29.739-11.182c17.42,0,26.275,8.465,29.371,10.835c0.569,0.435,1.334,0.513,1.972,0.188 c3.919-2.004,18.228-8.411,32.554-3.476c10.818,3.732,16.959,13.578,18.893,17.161c0.413,0.766,1.281,1.157,2.128,0.957 c5.137-1.217,22.902-4.629,37.827,2.111c15.772,7.13,20.693,17.433,21.948,20.887c0.255,0.703,0.914,1.174,1.662,1.204 c3.42,0.136,12.858,0.964,18.691,5.866c10.3,8.66,9.294,15.488,8.108,18.41c-0.361,0.89,0.038,1.91,0.901,2.333 c4.704,2.307,17.892,9.927,26.073,26.112C472.011,182.884,467.505,202.031,461.327,209.858z" />
                                 <!-- Connections -->
-                                <line class="network-edge" x1="71" y1="113" x2="63" y2="153" />
-                                <line class="network-edge" x1="71" y1="113" x2="21" y2="143" />
-                                <line class="network-edge" x1="21" y1="143" x2="63" y2="153" />
-                                <line class="network-edge" x1="21" y1="143" x2="41" y2="202" />
-                                <line class="network-edge" x1="63" y1="153" x2="82" y2="190" />
-                                <line class="network-edge" x1="63" y1="153" x2="41" y2="202" />
-                                <line class="network-edge" x1="82" y1="190" x2="41" y2="202" />
-                                <line class="network-edge" x1="82" y1="190" x2="107" y2="227" />
-                                <line class="network-edge" x1="41" y1="202" x2="9" y2="235" />
-                                <line class="network-edge" x1="41" y1="202" x2="61" y2="255" />
-                                <line class="network-edge" x1="9" y1="235" x2="61" y2="255" />
-                                <line class="network-edge" x1="61" y1="255" x2="100" y2="262" />
-                                <line class="network-edge" x1="133" y1="328" x2="91" y2="321" />
-                                <line class="network-edge" x1="91" y1="321" x2="61" y2="255" />
-                                <line class="network-edge" x1="61" y1="255" x2="9" y2="235" />
-                                <line class="network-edge" x1="9" y1="235" x2="21" y2="143" />
-                                <line class="network-edge" x1="21" y1="143" x2="110" y2="65" />
 
                                 <!-- Nodes -->
-                                <circle class="network-node" cx="71" cy="113" />
-                                <circle class="network-node" cx="21" cy="143" />
-                                <circle class="network-node" cx="63" cy="153" />
-                                <circle class="network-node" cx="82" cy="190" />
-                                <circle class="network-node" cx="41" cy="202" />
-                                <circle class="network-node" cx="9" cy="235" />
-                                <circle class="network-node" cx="61" cy="255" />
                                 <!-- Label -->
-                                <path class="connector-line" stroke="#22c55e" d="M 9 235 L -30 235 L -60 270" />
-                                <circle class="connector-dot" cx="-60" cy="270" r="3" />
+                                <path class="connector-line connector-desktop" stroke="#22c55e" d="M 81.77 147.02 L -30 235 L -60 270" />
+                                <circle class="connector-dot connector-desktop" cx="-60" cy="270" r="3" />
+                                <path class="connector-line connector-touch" d="M 81.77 147.02 L -18 318" /><circle class="connector-dot connector-touch" cx="-18" cy="318" r="3" />
                                 <g class="brain-label-group" transform="translate(-68, 270)">
                                     <rect class="brain-touch-hit" x="-4" y="-28" width="210" height="72" aria-hidden="true" />
                                     <text x="0" y="0" text-anchor="end" class="brain-label-title">Education</text>
@@ -578,60 +522,14 @@
 
                             <!-- COUNSELLING (Middle Left) -->
                             <a href="counselling.html" class="brain-section zone-counselling" aria-label="Open Chapter 02 — Counselling">
-                                <path class="hit-area" d="M 90 60 L 190 60 L 190 350 L 90 350 Z" />
+                                <path class="hit-area brain-current-lobe" aria-hidden="true" data-brain-band="1" clip-path="url(#brain-band-1)" transform="translate(185 200) scale(0.61072450) translate(-306.00114441 -306.00334172)" d="M461.327,209.858c-6.039,7.651-12.918,9.146-16.556,9.346 c-1.198,0.066-2.033,1.206-1.706,2.36c1.868,6.582,3.768,24.711-28.687,31.77c-30.438,6.615-48.844,30.29-60.863,42.313 c-9.233,9.225-21.723,13.495-34.183,16.299c-12.729,2.864-25.341,5.37-35.384,14.415c-10.577,9.527-25.495,61.985-28.027,71.104 c-0.222,0.801-0.951,1.352-1.783,1.352h-15.621c-0.877,0-1.636-0.614-1.817-1.473l-7.569-35.803 c-0.318-1.504-73.698,4.534-79.347-28.22c-0.198-1.149-1.359-1.862-2.456-1.466c-7.056,2.546-29.692,8.81-41.91-10.122 c-8.663-13.423-6.362-25.955-5.155-30.282c0.25-0.896-0.2-1.828-1.055-2.196c-6.225-2.677-28.719-15.289-25.669-56.784 c2.461-33.448,25.085-48.273,21.922-53.417c-9.124-14.837-1.193-39.431,17.5-44.921c0.753-0.221,1.288-0.888,1.359-1.67 l0.789-8.719c2.596-30.743,42.991-50.226,70.455-37.445c1.059,0.493,2.318-0.032,2.67-1.145 c3.438-10.898,10.377-13.898,12.226-14.938c8.515-4.791,19.572-4.199,28.374-0.586c0.712,0.292,1.523,0.114,2.048-0.448 c2.501-2.679,12.756-11.182,29.739-11.182c17.42,0,26.275,8.465,29.371,10.835c0.569,0.435,1.334,0.513,1.972,0.188 c3.919-2.004,18.228-8.411,32.554-3.476c10.818,3.732,16.959,13.578,18.893,17.161c0.413,0.766,1.281,1.157,2.128,0.957 c5.137-1.217,22.902-4.629,37.827,2.111c15.772,7.13,20.693,17.433,21.948,20.887c0.255,0.703,0.914,1.174,1.662,1.204 c3.42,0.136,12.858,0.964,18.691,5.866c10.3,8.66,9.294,15.488,8.108,18.41c-0.361,0.89,0.038,1.91,0.901,2.333 c4.704,2.307,17.892,9.927,26.073,26.112C472.011,182.884,467.505,202.031,461.327,209.858z" />
                                 <!-- Connections -->
-                                <line class="network-edge" x1="110" y1="65" x2="116" y2="106" />
-                                <line class="network-edge" x1="110" y1="65" x2="165" y2="83" />
-                                <line class="network-edge" x1="110" y1="65" x2="71" y2="113" />
-                                <line class="network-edge" x1="110" y1="65" x2="146" y2="119" />
                                 <!-- Blue-to-purple top hull segment -->
-                                <line class="network-edge" x1="110" y1="65" x2="221" y2="56" />
-
-                                <line class="network-edge" x1="165" y1="83" x2="200" y2="94" />
-                                <line class="network-edge" x1="165" y1="83" x2="146" y2="119" />
-                                <line class="network-edge" x1="165" y1="83" x2="199" y2="125" />
-                                <line class="network-edge" x1="165" y1="83" x2="116" y2="106" />
-                                <line class="network-edge" x1="116" y1="106" x2="146" y2="119" />
-                                <line class="network-edge" x1="116" y1="106" x2="125" y2="145" />
-                                <line class="network-edge" x1="116" y1="106" x2="71" y2="113" />
-                                <line class="network-edge" x1="146" y1="119" x2="125" y2="145" />
-                                <line class="network-edge" x1="146" y1="119" x2="199" y2="125" />
-                                <line class="network-edge" x1="125" y1="145" x2="149" y2="188" />
-                                <line class="network-edge" x1="125" y1="145" x2="82" y2="190" />
-                                <line class="network-edge" x1="149" y1="188" x2="151" y2="223" />
-                                <line class="network-edge" x1="149" y1="188" x2="107" y2="227" />
-                                <line class="network-edge" x1="151" y1="223" x2="182" y2="244" />
-                                <line class="network-edge" x1="151" y1="223" x2="107" y2="227" />
-                                <line class="network-edge" x1="151" y1="223" x2="133" y2="269" />
-                                <line class="network-edge" x1="107" y1="227" x2="100" y2="262" />
-                                <line class="network-edge" x1="107" y1="227" x2="133" y2="269" />
-                                <line class="network-edge" x1="182" y1="244" x2="133" y2="269" />
-                                <line class="network-edge" x1="182" y1="244" x2="133" y2="328" />
-
-                                <line class="network-edge" x1="100" y1="262" x2="133" y2="269" />
-                                <line class="network-edge" x1="100" y1="262" x2="116" y2="296" />
-                                <line class="network-edge" x1="133" y1="269" x2="116" y2="296" />
-                                <line class="network-edge" x1="116" y1="296" x2="91" y2="321" />
-                                <line class="network-edge" x1="116" y1="296" x2="133" y2="328" />
-                                <line class="network-edge" x1="91" y1="321" x2="133" y2="328" />
                                 <!-- Nodes -->
-                                <circle class="network-node" cx="110" cy="65" />
-                                <circle class="network-node" cx="165" cy="83" />
-                                <circle class="network-node" cx="116" cy="106" />
-                                <circle class="network-node" cx="146" cy="119" />
-                                <circle class="network-node" cx="125" cy="145" />
-                                <circle class="network-node" cx="149" cy="188" />
-                                <circle class="network-node" cx="151" cy="223" />
-                                <circle class="network-node" cx="107" cy="227" />
-                                <circle class="network-node" cx="182" cy="244" />
-                                <circle class="network-node" cx="100" cy="262" />
-                                <circle class="network-node" cx="133" cy="269" />
-                                <circle class="network-node" cx="116" cy="296" />
-                                <circle class="network-node" cx="91" cy="321" />
-                                <circle class="network-node" cx="133" cy="328" />
                                 <!-- Label -->
-                                <path class="connector-line" stroke="#f97316" d="M 110 65 L 80 30 L 20 30" />
-                                <circle class="connector-dot" cx="20" cy="30" r="3" />
+                                <path class="connector-line connector-desktop" stroke="#f97316" d="M 138.69 146.77 L 80 30 L 20 30" />
+                                <circle class="connector-dot connector-desktop" cx="20" cy="30" r="3" />
+                                <path class="connector-line connector-touch" d="M 138.69 146.77 L -18 48" /><circle class="connector-dot connector-touch" cx="-18" cy="48" r="3" />
                                 <g class="brain-label-group" transform="translate(12, 30)">
                                     <rect class="brain-touch-hit" x="-4" y="-28" width="210" height="72" aria-hidden="true" />
                                     <text x="0" y="0" text-anchor="end" class="brain-label-title">Counselling</text>
@@ -644,45 +542,13 @@
 
                             <!-- TECHNOLOGY (Middle Right) -->
                             <a href="technology.html" class="brain-section zone-technology" aria-label="Open Chapter 04 — Technology">
-                                <path class="hit-area" d="M 190 50 L 280 50 L 280 350 L 190 350 Z" />
+                                <path class="hit-area brain-current-lobe" aria-hidden="true" data-brain-band="2" clip-path="url(#brain-band-2)" transform="translate(185 200) scale(0.61072450) translate(-306.00114441 -306.00334172)" d="M461.327,209.858c-6.039,7.651-12.918,9.146-16.556,9.346 c-1.198,0.066-2.033,1.206-1.706,2.36c1.868,6.582,3.768,24.711-28.687,31.77c-30.438,6.615-48.844,30.29-60.863,42.313 c-9.233,9.225-21.723,13.495-34.183,16.299c-12.729,2.864-25.341,5.37-35.384,14.415c-10.577,9.527-25.495,61.985-28.027,71.104 c-0.222,0.801-0.951,1.352-1.783,1.352h-15.621c-0.877,0-1.636-0.614-1.817-1.473l-7.569-35.803 c-0.318-1.504-73.698,4.534-79.347-28.22c-0.198-1.149-1.359-1.862-2.456-1.466c-7.056,2.546-29.692,8.81-41.91-10.122 c-8.663-13.423-6.362-25.955-5.155-30.282c0.25-0.896-0.2-1.828-1.055-2.196c-6.225-2.677-28.719-15.289-25.669-56.784 c2.461-33.448,25.085-48.273,21.922-53.417c-9.124-14.837-1.193-39.431,17.5-44.921c0.753-0.221,1.288-0.888,1.359-1.67 l0.789-8.719c2.596-30.743,42.991-50.226,70.455-37.445c1.059,0.493,2.318-0.032,2.67-1.145 c3.438-10.898,10.377-13.898,12.226-14.938c8.515-4.791,19.572-4.199,28.374-0.586c0.712,0.292,1.523,0.114,2.048-0.448 c2.501-2.679,12.756-11.182,29.739-11.182c17.42,0,26.275,8.465,29.371,10.835c0.569,0.435,1.334,0.513,1.972,0.188 c3.919-2.004,18.228-8.411,32.554-3.476c10.818,3.732,16.959,13.578,18.893,17.161c0.413,0.766,1.281,1.157,2.128,0.957 c5.137-1.217,22.902-4.629,37.827,2.111c15.772,7.13,20.693,17.433,21.948,20.887c0.255,0.703,0.914,1.174,1.662,1.204 c3.42,0.136,12.858,0.964,18.691,5.866c10.3,8.66,9.294,15.488,8.108,18.41c-0.361,0.89,0.038,1.91,0.901,2.333 c4.704,2.307,17.892,9.927,26.073,26.112C472.011,182.884,467.505,202.031,461.327,209.858z" />
                                 <!-- Connections -->
-                                <line class="network-edge" x1="221" y1="56" x2="200" y2="94" />
-                                <line class="network-edge" x1="221" y1="56" x2="257" y2="92" />
-                                <line class="network-edge" x1="221" y1="56" x2="229" y2="111" />
-                                <line class="network-edge" x1="221" y1="56" x2="165" y2="83" />
-                                <line class="network-edge" x1="257" y1="92" x2="283" y2="111" />
-                                <line class="network-edge" x1="257" y1="92" x2="229" y2="111" />
-                                <line class="network-edge" x1="257" y1="92" x2="200" y2="94" />
-                                <line class="network-edge" x1="200" y1="94" x2="199" y2="125" />
-                                <line class="network-edge" x1="200" y1="94" x2="229" y2="111" />
-                                <line class="network-edge" x1="229" y1="111" x2="199" y2="125" />
-                                <line class="network-edge" x1="229" y1="111" x2="236" y2="149" />
-                                <line class="network-edge" x1="199" y1="125" x2="236" y2="149" />
-                                <line class="network-edge" x1="199" y1="125" x2="191" y2="175" />
-                                <line class="network-edge" x1="236" y1="149" x2="191" y2="175" />
-                                <line class="network-edge" x1="236" y1="149" x2="273" y2="195" />
-                                <line class="network-edge" x1="191" y1="175" x2="209" y2="208" />
-                                <line class="network-edge" x1="191" y1="175" x2="149" y2="188" />
-                                <line class="network-edge" x1="273" y1="195" x2="311" y2="212" />
-                                <line class="network-edge" x1="273" y1="195" x2="251" y2="232" />
-                                <line class="network-edge" x1="209" y1="208" x2="182" y2="244" />
-                                <line class="network-edge" x1="209" y1="208" x2="251" y2="232" />
-                                <line class="network-edge" x1="209" y1="208" x2="151" y2="223" />
-                                <line class="network-edge" x1="251" y1="232" x2="182" y2="244" />
                                 <!-- Nodes -->
-                                <circle class="network-node" cx="221" cy="56" />
-                                <circle class="network-node" cx="257" cy="92" />
-                                <circle class="network-node" cx="200" cy="94" />
-                                <circle class="network-node" cx="229" cy="111" />
-                                <circle class="network-node" cx="199" cy="125" />
-                                <circle class="network-node" cx="236" cy="149" />
-                                <circle class="network-node" cx="191" cy="175" />
-                                <circle class="network-node" cx="273" cy="195" />
-                                <circle class="network-node" cx="209" cy="208" />
-                                <circle class="network-node" cx="251" cy="232" />
                                 <!-- Label -->
-                                <path class="connector-line" stroke="#8064a2" d="M 221 56 L 221 10 L 280 10" />
-                                <circle class="connector-dot" cx="280" cy="10" r="3" />
+                                <path class="connector-line connector-desktop" stroke="#8064a2" d="M 195.73 129.02 L 221 10 L 280 10" />
+                                <circle class="connector-dot connector-desktop" cx="280" cy="10" r="3" />
+                                <path class="connector-line connector-touch" d="M 195.73 129.02 L 388 48" /><circle class="connector-dot connector-touch" cx="388" cy="48" r="3" />
                                 <g class="brain-label-group" transform="translate(288, 10)">
                                     <rect class="brain-touch-hit" x="-206" y="-28" width="210" height="72" aria-hidden="true" />
                                     <text x="0" y="0" text-anchor="start" class="brain-label-title">Technology</text>
@@ -691,42 +557,17 @@
                             </a>
 
                             <!-- PROJECT MGMT (Right) -->
-                            <a href="project-management.html" class="brain-section zone-project" aria-label="Open Chapter 03 — Project Management">
-                                <path class="hit-area" d="M 280 90 L 360 90 L 360 260 L 280 260 Z" />
+                            <a href="project-management.html" class="brain-section zone-project" aria-label="Project Mgmt — Project Management, Chapter 03">
+                                <path class="hit-area brain-current-lobe" aria-hidden="true" data-brain-band="3" clip-path="url(#brain-band-3)" transform="translate(185 200) scale(0.61072450) translate(-306.00114441 -306.00334172)" d="M461.327,209.858c-6.039,7.651-12.918,9.146-16.556,9.346 c-1.198,0.066-2.033,1.206-1.706,2.36c1.868,6.582,3.768,24.711-28.687,31.77c-30.438,6.615-48.844,30.29-60.863,42.313 c-9.233,9.225-21.723,13.495-34.183,16.299c-12.729,2.864-25.341,5.37-35.384,14.415c-10.577,9.527-25.495,61.985-28.027,71.104 c-0.222,0.801-0.951,1.352-1.783,1.352h-15.621c-0.877,0-1.636-0.614-1.817-1.473l-7.569-35.803 c-0.318-1.504-73.698,4.534-79.347-28.22c-0.198-1.149-1.359-1.862-2.456-1.466c-7.056,2.546-29.692,8.81-41.91-10.122 c-8.663-13.423-6.362-25.955-5.155-30.282c0.25-0.896-0.2-1.828-1.055-2.196c-6.225-2.677-28.719-15.289-25.669-56.784 c2.461-33.448,25.085-48.273,21.922-53.417c-9.124-14.837-1.193-39.431,17.5-44.921c0.753-0.221,1.288-0.888,1.359-1.67 l0.789-8.719c2.596-30.743,42.991-50.226,70.455-37.445c1.059,0.493,2.318-0.032,2.67-1.145 c3.438-10.898,10.377-13.898,12.226-14.938c8.515-4.791,19.572-4.199,28.374-0.586c0.712,0.292,1.523,0.114,2.048-0.448 c2.501-2.679,12.756-11.182,29.739-11.182c17.42,0,26.275,8.465,29.371,10.835c0.569,0.435,1.334,0.513,1.972,0.188 c3.919-2.004,18.228-8.411,32.554-3.476c10.818,3.732,16.959,13.578,18.893,17.161c0.413,0.766,1.281,1.157,2.128,0.957 c5.137-1.217,22.902-4.629,37.827,2.111c15.772,7.13,20.693,17.433,21.948,20.887c0.255,0.703,0.914,1.174,1.662,1.204 c3.42,0.136,12.858,0.964,18.691,5.866c10.3,8.66,9.294,15.488,8.108,18.41c-0.361,0.89,0.038,1.91,0.901,2.333 c4.704,2.307,17.892,9.927,26.073,26.112C472.011,182.884,467.505,202.031,461.327,209.858z" />
                                 <!-- Connections -->
-
-                                <line class="network-edge" x1="315" y1="97" x2="283" y2="111" />
-                                <line class="network-edge" x1="315" y1="97" x2="325" y2="139" />
-                                <line class="network-edge" x1="283" y1="111" x2="325" y2="139" />
-                                <line class="network-edge" x1="325" y1="139" x2="352" y2="172" />
-                                <line class="network-edge" x1="325" y1="139" x2="301" y2="175" />
-                                <line class="network-edge" x1="352" y1="172" x2="347" y2="205" />
-                                <line class="network-edge" x1="352" y1="172" x2="301" y2="175" />
-                                <line class="network-edge" x1="352" y1="172" x2="311" y2="212" />
-                                <line class="network-edge" x1="301" y1="175" x2="273" y2="195" />
-                                <line class="network-edge" x1="301" y1="175" x2="311" y2="212" />
-                                <line class="network-edge" x1="347" y1="205" x2="311" y2="212" />
-                                <line class="network-edge" x1="347" y1="205" x2="319" y2="251" />
-                                <line class="network-edge" x1="311" y1="212" x2="319" y2="251" />
                                 <!-- Purple-to-red and red-to-red top hull segments -->
-                                <line class="network-edge" x1="221" y1="56" x2="315" y2="97" />
-                                <line class="network-edge" x1="315" y1="97" x2="352" y2="172" />
                                 <!-- Mid/bottom hull segments (purple↔red boundary) -->
-                                <line class="network-edge" x1="273" y1="195" x2="319" y2="251" />
-                                <line class="network-edge" x1="251" y1="232" x2="319" y2="251" />
 
                                 <!-- Nodes -->
-                                <circle class="network-node" cx="315" cy="97" />
-                                <circle class="network-node" cx="283" cy="111" />
-                                <circle class="network-node" cx="325" cy="139" />
-                                <circle class="network-node" cx="352" cy="172" />
-                                <circle class="network-node" cx="301" cy="175" />
-                                <circle class="network-node" cx="347" cy="205" />
-                                <circle class="network-node" cx="311" cy="212" />
-                                <circle class="network-node" cx="319" cy="251" />
                                 <!-- Label -->
-                                <path class="connector-line" stroke="#c0504d" d="M 352 172 L 380 172 L 410 210" />
-                                <circle class="connector-dot" cx="410" cy="210" r="3" />
+                                <path class="connector-line connector-desktop" stroke="#c0504d" d="M 249.17 123.38 L 380 172 L 410 210" />
+                                <circle class="connector-dot connector-desktop" cx="410" cy="210" r="3" />
+                                <path class="connector-line connector-touch" d="M 249.17 123.38 L 388 324" /><circle class="connector-dot connector-touch" cx="388" cy="324" r="3" />
                                 <g class="brain-label-group" transform="translate(418, 210)">
                                     <rect class="brain-touch-hit" x="-206" y="-28" width="210" height="72" aria-hidden="true" />
                                     <text x="0" y="0" text-anchor="start" class="brain-label-title">Project Mgmt</text>
@@ -734,26 +575,6 @@
                                 </g>
                             </a>
 
-                            <!-- Highlight outline + accents -->
-                            <g class="brain-highlight" fill="none">
-                                <g class="zone-counselling">
-                                    <polyline class="highlight-edge" points="133 328 91 321 61 255" />
-                                    <polyline class="highlight-edge" points="71 113 110 65 165 83" />
-                                    <polyline class="highlight-edge" points="182 244 133 328" />
-                                </g>
-                                <g class="zone-education">
-                                    <polyline class="highlight-edge" points="61 255 9 235 21 143 71 113" />
-                                </g>
-                                <g class="zone-technology">
-                                    <polyline class="highlight-edge" points="165 83 221 56 257 92 273 195 251 232 182 244" />
-                                    <line class="highlight-edge" x1="273" y1="195" x2="251" y2="232" />
-                                </g>
-                                <g class="zone-project">
-                                    <polyline class="highlight-edge" points="257 92 315 97 352 172 347 205 319 251" />
-                                    <line class="highlight-edge" x1="273" y1="195" x2="311" y2="212" />
-                                    <line class="highlight-edge" x1="251" y1="232" x2="319" y2="251" />
-                                </g>
-                            </g>
                             </g>
                         </svg>
                     </div>
@@ -767,7 +588,7 @@
                 <span class="toc-sep" aria-hidden="true">·</span>
                 <a class="toc-entry" style="--toc-ink:#F97316" data-zone="counselling" aria-label="Chapter 02 — Counselling" href="counselling.html"><span class="toc-tick" aria-hidden="true">▪</span><span class="toc-full">02 Counselling</span><span class="toc-compact">02 Counselling</span></a>
                 <span class="toc-sep" aria-hidden="true">·</span>
-                <a class="toc-entry" style="--toc-ink:#E11D48" data-zone="project" aria-label="Chapter 03 — Project Management" href="project-management.html"><span class="toc-tick" aria-hidden="true">▪</span><span class="toc-full">03 Project Management</span><span class="toc-compact">03 Project Mgmt</span></a>
+                <a class="toc-entry" style="--toc-ink:#E11D48" data-zone="project" href="project-management.html"><span class="toc-tick" aria-hidden="true">▪</span><span class="toc-full">03 Project Management</span><span class="toc-compact">03 Project Mgmt</span></a>
                 <span class="toc-sep" aria-hidden="true">·</span>
                 <a class="toc-entry" style="--toc-ink:#2DD4BF" data-zone="technology" aria-label="Chapter 04 — Technology" href="technology.html"><span class="toc-tick" aria-hidden="true">▪</span><span class="toc-full">04 Technology</span><span class="toc-compact">04 Technology</span></a>
             </nav>
@@ -792,7 +613,7 @@
             <li>BSocSc 1ST CLASS HONOURS</li>
             <li>TRILINGUAL EN · 粵 · 普</li>
             <li>SMART WORK PRACTICE AWARD 2018/19</li>
-            <li>7 INNOVATIONS SHIPPED</li>
+            <li>7 SELECTED CONTRIBUTIONS</li>
             <li>90 WPM EN / 95 WPM 中</li>
         </ul>
         <div class="spec-marquee-viewport" aria-hidden="true">
@@ -804,7 +625,7 @@
                     <span class="spec-item">BSocSc 1ST CLASS HONOURS</span><span class="spec-tick" style="color:#10B981">▪</span>
                     <span class="spec-item">TRILINGUAL EN · 粵 · 普</span><span class="spec-tick" style="color:#F97316">▪</span>
                     <span class="spec-item">SMART WORK PRACTICE AWARD 2018/19</span><span class="spec-tick" style="color:#2DD4BF">▪</span>
-                    <span class="spec-item">7 INNOVATIONS SHIPPED</span><span class="spec-tick" style="color:#E11D48">▪</span>
+                    <span class="spec-item">7 SELECTED CONTRIBUTIONS</span><span class="spec-tick" style="color:#E11D48">▪</span>
                     <span class="spec-item">90 WPM EN / 95 WPM 中</span><span class="spec-tick" style="color:#10B981">▪</span>
                 </div>
                 <div class="spec-marquee-group">
@@ -814,7 +635,7 @@
                     <span class="spec-item">BSocSc 1ST CLASS HONOURS</span><span class="spec-tick" style="color:#10B981">▪</span>
                     <span class="spec-item">TRILINGUAL EN · 粵 · 普</span><span class="spec-tick" style="color:#F97316">▪</span>
                     <span class="spec-item">SMART WORK PRACTICE AWARD 2018/19</span><span class="spec-tick" style="color:#2DD4BF">▪</span>
-                    <span class="spec-item">7 INNOVATIONS SHIPPED</span><span class="spec-tick" style="color:#E11D48">▪</span>
+                    <span class="spec-item">7 SELECTED CONTRIBUTIONS</span><span class="spec-tick" style="color:#E11D48">▪</span>
                     <span class="spec-item">90 WPM EN / 95 WPM 中</span><span class="spec-tick" style="color:#10B981">▪</span>
                 </div>
             </div>
@@ -832,13 +653,13 @@
                 <p class="kicker"><span class="tick">▪</span>Chapter 01 — Education &amp; Culture · The Bridge</p>
             </div>
             <h2 id="spread-01-title" class="display-l max-w-4xl md:ml-auto md:text-right" data-reveal-lines>Knowledge only matters when it crosses a bridge.</h2>
-            <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption md:text-right">Nurturing &amp; Knowledge Transfer · Informative, engaging, scholarly.</p>
+            <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption md:text-right">Teaching, inclusive-education research and cross-cultural communication.</p>
             <div class="accent-bar w-44 max-w-full mt-10 md:ml-auto" data-accent-bar></div>
             <div class="spread-meta mt-12 grid gap-10 md:grid-cols-[auto_auto] md:justify-end md:items-end md:text-right" style="--spread-ink:#10B981">
                 <div class="flex flex-wrap gap-x-12 gap-y-6 md:justify-end">
                     <div><p class="stat-v"><span data-count="6" data-suffix="">6</span></p><p class="stat-c">Waypoints, three ports</p></div>
-                    <div><p class="stat-v"><span data-count="3" data-suffix="">3</span></p><p class="stat-c">Publications</p></div>
-                    <div><p class="stat-v"><span data-count="15" data-suffix="+">15+</span></p><p class="stat-c">Countries reached</p></div>
+                    <div><p class="stat-v stat-v--words">Research &amp;<br>teaching materials</p><p class="stat-c">Conference contributions and teaching packages</p></div>
+                    <div><p class="stat-v"><span data-count="15" data-suffix="+">15+</span></p><p class="stat-c">Countries represented by workshop participants</p></div>
                 </div>
                 <div>
                     <p class="kicker mb-2"><span class="tick">▪</span>In this chapter</p>
@@ -861,11 +682,11 @@
                 <p class="kicker"><span class="tick">▪</span>Chapter 02 — Counselling · The Listener</p>
             </div>
             <h2 id="spread-02-title" class="display-l max-w-4xl" data-reveal-lines>Before anything was built, someone had to be heard.</h2>
-            <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption">Development &amp; Life-Learning · Empathic, warm, accessible.</p>
+            <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption">Student and family support, SEN coordination and counselling-informed practice.</p>
             <div class="accent-bar w-44 max-w-full mt-10" data-accent-bar></div>
             <div class="spread-meta mt-12 grid gap-10 md:grid-cols-[auto_auto] md:justify-start md:items-end" style="--spread-ink:#F97316">
                 <div class="flex flex-wrap gap-x-12 gap-y-6">
-                    <div><p class="stat-v"><span data-count="200" data-suffix="+">200+</span></p><p class="stat-c">Families counselled</p></div>
+                    <div><p class="stat-v"><span data-count="200" data-suffix="+">200+</span></p><p class="stat-c">Non-Chinese-speaking students and families supported</p><p class="caption stat-note">Research interviews and counselling</p></div>
                     <div><p class="stat-v"><span data-count="30" data-suffix="+">30+</span></p><p class="stat-c">Hours freed weekly</p></div>
                     <div><p class="stat-v"><span data-count="10" data-suffix="+">10+</span></p><p class="stat-c">Years listening</p></div>
                 </div>
@@ -890,20 +711,20 @@
                 <p class="kicker"><span class="tick">▪</span>Chapter 03 — Project Management · The Architect</p>
             </div>
             <h2 id="spread-03-title" class="display-l max-w-4xl" data-reveal-lines>Foresight is a structure: anticipate, design, deliver, repeat.</h2>
-            <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption">Systems &amp; Delivery · Structured, efficient, clear.</p>
+            <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption">Research operations, stakeholder reviews and practical project delivery.</p>
             <div class="accent-bar w-44 max-w-full mt-10" data-accent-bar></div>
             <div class="spread-meta mt-12 grid gap-10 md:grid-cols-[auto_auto] md:justify-start md:items-end" style="--spread-ink:#E11D48">
                 <div class="flex flex-wrap gap-x-12 gap-y-6">
                     <div><p class="stat-v"><span data-count="3500" data-suffix="+">3,500+</span></p><p class="stat-c">Platform users</p></div>
                     <div><p class="stat-v"><span data-count="20" data-suffix="+">20+</span></p><p class="stat-c">Staff orchestrated</p></div>
-                    <div><p class="stat-v"><span data-count="7" data-suffix="">7</span></p><p class="stat-c">Press outlets</p></div>
+                    <div><p class="stat-v"><span data-count="2" data-suffix="">2</span></p><p class="stat-c">Research-to-public campaigns · 2025–2026</p><a class="link-editorial" href="project-management.html#research-media-reader">Read the campaign magazine →</a></div>
                 </div>
                 <div>
                     <p class="kicker mb-2"><span class="tick">▪</span>In this chapter</p>
                     <ul class="spread-contents">
                         <li>The Cycle Dial</li>
                         <li>Competency Board</li>
-                        <li>Press Index</li>
+                        <li>2025–2026 Campaign Magazine</li>
                     </ul>
                 </div>
             </div>
@@ -919,12 +740,12 @@
                 <p class="kicker"><span class="tick">▪</span>Chapter 04 — Technology · The Builder</p>
             </div>
             <h2 id="spread-04-title" class="display-l max-w-4xl md:ml-auto md:text-right" data-reveal-lines>Tools are empathy at scale — built precisely, shipped humbly.</h2>
-            <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption md:text-right">Accuracy, Efficiency, Automation &amp; AI · Modern, sleek, innovative.</p>
+            <p class="caption uppercase tracking-[0.14em] mt-6 spread-caption md:text-right">Platforms, research tools and automation for education and operational teams.</p>
             <div class="accent-bar w-44 max-w-full mt-10 md:ml-auto" data-accent-bar></div>
             <div class="spread-meta mt-12 grid gap-10 md:grid-cols-[auto_auto] md:justify-end md:items-end md:text-right" style="--spread-ink:#2DD4BF">
                 <div class="flex flex-wrap gap-x-12 gap-y-6 md:justify-end">
                     <div><p class="stat-v"><span data-count="8000" data-suffix="+">8,000+</span></p><p class="stat-c">Students' data</p></div>
-                    <div><p class="stat-v"><span data-count="7" data-suffix="">7</span></p><p class="stat-c">Innovations shipped</p></div>
+                    <div><p class="stat-v"><span data-count="7" data-suffix="">7</span></p><p class="stat-c">Selected contributions</p></div>
                     <div><p class="stat-v"><span data-count="110" data-suffix="+">110+</span></p><p class="stat-c">Schools served</p></div>
                 </div>
                 <div>
@@ -1180,7 +1001,7 @@
                 </div>
                 <div>
                     <p class="kicker">Chapters</p>
-                    <nav class="mt-3 flex flex-col gap-2">
+                    <nav class="mt-3 flex flex-col gap-2" aria-label="Footer facets">
                         <a class="link-editorial" href="education-culture.html">01 Education &amp; Culture</a>
                         <a class="link-editorial" href="counselling.html">02 Counselling</a>
                         <a class="link-editorial" href="project-management.html">03 Project Management</a>
@@ -1196,7 +1017,7 @@
     </footer>
 
     <!-- SCRIPTS -->
-    <script src="js/navbar.js?v=20"></script>
+    <script src="js/navbar.js?v=25"></script>
     <script>
         // Initialize Navbar
         initNavbar({

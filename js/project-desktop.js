@@ -1,0 +1,103 @@
+/* One desktop and one Finder view use the canonical explorer and project modals. */
+function initProjectDesktop() {
+    const desktop = document.getElementById('portfolio-desktop-home');
+    const finder = document.getElementById('portfolio-finder');
+    if (!desktop || !finder || typeof explorerData === 'undefined') return;
+    const title = document.getElementById('finder-window-head');
+    const grid = document.getElementById('explorer-grid');
+    const dockHome = document.getElementById('desktop-show-home');
+    const dockPortfolio = document.getElementById('desktop-open-portfolio');
+    title.tabIndex = -1;
+    let desktopTrigger = dockPortfolio;
+
+    function showFinder(trigger, focus = true) {
+        if (trigger && !finder.contains(trigger)) desktopTrigger = trigger;
+        document.getElementById('project-desktop').setAttribute('data-view', 'finder');
+        finder.hidden = false;
+        desktop.hidden = true;
+        dockHome.setAttribute('aria-pressed', 'false');
+        dockPortfolio.setAttribute('aria-pressed', 'true');
+        renderExplorer();
+        if (focus) title.focus({ preventScroll: true });
+        finder.scrollIntoView({ block: 'start', behavior: 'instant' });
+        requestAnimationFrame(() => window.ScrollTrigger?.refresh());
+    }
+    function showDesktop(event) {
+        document.getElementById('project-desktop').setAttribute('data-view', 'desktop');
+        finder.hidden = true;
+        desktop.hidden = false;
+        dockHome.setAttribute('aria-pressed', 'true');
+        dockPortfolio.setAttribute('aria-pressed', 'false');
+        (event?.currentTarget === dockHome ? dockHome : desktopTrigger).focus({ preventScroll: true });
+        window.ScrollTrigger?.refresh();
+    }
+    function openCollection(folder, trigger) {
+        showFinder(trigger, false);
+        navigateRoot();
+        navigateTo(folder.name);
+        title.focus({ preventScroll: true });
+    }
+    function collectionButton(folder, className, iconName) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = className;
+        const icon = document.createElement('i');
+        icon.setAttribute('data-lucide', iconName || folder.icon || 'folder');
+        icon.setAttribute('aria-hidden', 'true');
+        const label = document.createElement(className === 'desktop-launcher' ? 'strong' : 'span');
+        label.textContent = folder.name;
+        button.append(icon, label);
+        if (className === 'desktop-launcher') {
+            const count = document.createElement('small');
+            count.textContent = collectProjects(folder).length + ' projects';
+            button.append(count);
+        }
+        button.addEventListener('click', () => openCollection(folder, button));
+        return button;
+    }
+    const launchers = document.getElementById('desktop-launchers');
+    const sidebar = document.getElementById('finder-sidebar');
+    const collections = document.createElement('button');
+    collections.type = 'button';
+    collections.textContent = 'All collections';
+    collections.addEventListener('click', () => { navigateRoot(); title.focus({ preventScroll: true }); });
+    sidebar.append(collections);
+    const sidebarItems = [];
+    explorerData.children.filter(item => item.type === 'folder').forEach(folder => {
+        launchers.append(collectionButton(folder, 'desktop-launcher'));
+        const button = collectionButton(folder, 'finder-collection');
+        sidebar.append(button);
+        sidebarItems.push({ folder, button });
+    });
+    let lastView = '';
+    function sync() {
+        const view = JSON.stringify([currentPath, searchQuery, showAllProjects]);
+        if (view !== lastView) grid.scrollTop = 0;
+        lastView = view;
+        title.textContent = searchQuery ? 'Search results' : showAllProjects ? 'All projects' : currentPath[currentPath.length - 1] || 'Portfolio';
+        collections.toggleAttribute('data-current', !currentPath.length && !searchQuery && !showAllProjects);
+        if (collections.hasAttribute('data-current')) collections.setAttribute('aria-current', 'location');
+        else collections.removeAttribute('aria-current');
+        sidebarItems.forEach(({ folder, button }) => {
+            if (currentPath[0] === folder.name && !searchQuery && !showAllProjects) button.setAttribute('aria-current', 'location');
+            else button.removeAttribute('aria-current');
+        });
+    }
+    document.getElementById('desktop-project-count').textContent = collectProjects().length;
+    document.getElementById('desktop-minimize').addEventListener('click', showDesktop);
+    dockHome.addEventListener('click', showDesktop);
+    document.getElementById('desktop-browse-all').addEventListener('click', event => { showFinder(event.currentTarget, false); document.getElementById('explorer-all').click(); title.focus({ preventScroll: true }); });
+    dockPortfolio.addEventListener('click', () => showFinder(dockPortfolio));
+    document.getElementById('desktop-open-recent').addEventListener('click', event => openCollection(explorerData.children.find(folder => folder.name === 'Recent Work'), event.currentTarget));
+    document.getElementById('desktop-search').addEventListener('click', event => {
+        showFinder(event.currentTarget, false);
+        document.getElementById('explorer-search').focus({ preventScroll: true });
+    });
+    document.getElementById('finder-home').addEventListener('click', () => { navigateRoot(); title.focus({ preventScroll: true }); });
+    new MutationObserver(sync).observe(grid, { childList: true });
+    dockHome.setAttribute('aria-pressed', 'true');
+    dockPortfolio.setAttribute('aria-pressed', 'false');
+    sync();
+    if (window.lucide) lucide.createIcons();
+}
+document.addEventListener('DOMContentLoaded', initProjectDesktop);

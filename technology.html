@@ -7,15 +7,15 @@
   <link rel="preload" href="resources/fonts/chapter-space-grotesk-500.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/transitions.css?v=21">
   <script src="js/transitions.js?v=21"></script>
-  <title>Herman Chan | The Digital Humanist</title>
+  <title>Technology &amp; Systems | Herman Chan</title>
     <meta name="description" content="Chapter 04 — The Toolmaker. Herman Chan's technology work: the 4Set platform (8,000+ students, 110+ schools), automation systems, AI integration and a self-taught engineering journey.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,144,600;1,144,500&family=Outfit:wght@300;400;500;600;800&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="global.css?v=20">
-  <link rel="stylesheet" href="css/spine.css?v=20">
-  <link rel="stylesheet" href="css/chapter-tech-overrides.css?v=18">
+  <link rel="stylesheet" href="css/spine.css?v=27">
+  <link rel="stylesheet" href="css/chapter-tech-overrides.css?v=27">
   <style>
     /* ======================================================================
        CH. 04 page layer — DARK PHOSPHOR amplifiers (page-scoped only)
@@ -85,18 +85,19 @@
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Flip.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
   <script defer src="https://unpkg.com/lucide@1.66.0/dist/umd/lucide.min.js"></script>
-  <script defer src="js/motion.js?v=18"></script>
+  <script defer src="js/motion.js?v=25"></script>
   <script defer src="js/cursor.js?v=18"></script>
-  <link rel="stylesheet" href="css/utilities.css?v=20">
+  <link rel="stylesheet" href="css/utilities.css?v=26">
 </head>
 <body class="antialiased overflow-x-hidden">
+  <a class="skip-link" href="#main-content">Skip to content</a>
 
   <div class="running-header">HERMAN CHAN — THE DIGITAL HUMANIST — CH. 04 — THE TOOLMAKER</div>
 
   <!-- Navigation -->
   <div id="navbar-container"></div>
 
-  <main>
+  <main id="main-content" tabindex="-1">
 
     <!-- ================================================================
          01 · TITLE PLATE — Ghost 04 / The Toolmaker (terminal docked right)
@@ -117,23 +118,29 @@
         <h1 id="chapter-title" class="display-l glitch-title" data-reveal-lines>The Toolmaker</h1>
         <div class="accent-bar w-24 mt-6 mb-10" data-accent-bar></div>
 
-        <div class="grid lg:grid-cols-12 gap-12 items-start">
-          <div class="lg:col-span-7">
+        <div class="technology-opening">
+          <div class="technology-opening-copy">
             <h2 class="display-m" data-reveal-lines>Engineering for the <em class="serif-italic accent-deep">Human Mind</em></h2>
+            <p class="opening-summary">I develop platforms, research tools and automation for educators and operational teams, with an emphasis on clear workflows and usable interfaces.</p>
+            <nav class="chapter-jumps" aria-label="Technology evidence">
+              <a href="#archive" class="link-editorial">Open project workspace →</a>
+              <a href="#innovations" class="link-editorial">Contribution ledger →</a>
+              <a href="https://github.com/herman925" target="_blank" rel="noopener noreferrer" class="link-editorial">GitHub ↗</a>
+            </nav>
+            <details class="approach-background">
+              <summary>Approach and background</summary>
             <p class="standfirst mt-6">"A technologist whose skill was born from <em>humility</em>, and whose goal is to lead with <em>empathy</em>."</p>
             <p class="prose-measure ink-soft mt-8">
               I am a <strong>Digital Humanist</strong>. I take pride in my work as a harmonious blend of knowledge, thoughtfulness, and a forward-thinking mindset—and <em>then</em> AI. By bridging <strong>Psychology</strong> and <strong>Technology</strong>, I build tools &amp; systems that are not only efficient but intuitive, reducing cognitive load and empowering users.
             </p>
-            <div class="flex flex-wrap gap-x-10 gap-y-5 pt-10">
-              <a href="https://github.com/herman925" target="_blank" rel="noopener noreferrer" class="link-editorial py-2">GitHub ↗</a>
-              <a href="#archive" class="link-editorial py-2">Projects →</a>
-              <a href="#broadcast" class="link-editorial py-2">Watch Videos →</a>
-            </div>
+            </details>
 
           </div>
 
+
+
           <!-- Original terminal window, restored from d56d164. -->
-          <div class="lg:col-span-5 relative w-full flex items-start justify-center">
+          <div class="technology-terminal relative w-full flex items-start justify-center">
             <div id="career-terminal" role="region" aria-label="Live career log" class="w-full max-w-md bg-slate-900/90 border border-slate-700 rounded-lg shadow-2xl overflow-hidden backdrop-blur-md">
               <div class="bg-slate-800/80 px-4 py-2 flex items-center justify-between gap-3 border-b border-slate-700">
                 <div class="flex items-center gap-2 shrink-0" aria-hidden="true">
@@ -141,7 +148,7 @@
                   <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
                   <div class="w-3 h-3 rounded-full bg-green-500"></div>
                 </div>
-                <div class="text-xs text-slate-400 font-mono opacity-70 text-right">herman@tech-hub:~ (Live Career Log)</div>
+                <div class="terminal-title text-xs text-slate-400 font-mono text-right">herman@tech-hub:~ (Live Career Log)</div>
               </div>
               <div class="p-6 font-mono text-[13px] sm:text-sm h-[320px] overflow-y-auto scrollbar-hide" id="terminal-body" data-lenis-prevent tabindex="0" role="region" aria-label="Career log output">
                 <div id="terminal-content" class="space-y-2 text-cyber-400"></div>
@@ -153,19 +160,10 @@
               </div>
             </div>
           </div>
+
+
         </div>
 
-        <div class="frame-hairline p-6 bg-[var(--paper-soft)] plate-reveal mt-10">
-          <p class="kicker mb-3"><span class="tick">▪</span>Index of this chapter</p>
-          <ol class="font-mono text-xs tracking-[0.12em] uppercase text-[var(--ink-soft)] space-y-2">
-            <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#archive">§ Digital Ecosystem</a></li>
-            <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#innovations">§ The Workshop — Innovations Ledger</a></li>
-            <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#broadcast">§ Broadcasts</a></li>
-            <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#stories">§ Narratives &amp; Journey</a></li>
-            <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#timeline">§ Career Timeline</a></li>
-            <li><a class="hover:text-[var(--accent-deep)] transition-colors" href="#contact">§ Initiate Connection</a></li>
-          </ol>
-        </div>
 
         <p class="kicker mt-16">Scroll ↓</p>
       </div>
@@ -189,20 +187,35 @@
           </p>
         </div>
 
-        <div id="explorer-shell">
-          <div class="explorer-window-bar" aria-hidden="true"><span class="window-lights"><span></span><span></span><span></span></span></div>
-          <div class="explorer-toolbar">
-            <div class="explorer-location">
-              <button id="explorer-back" type="button" aria-label="Go back" class="invisible" disabled><i data-lucide="arrow-left" aria-hidden="true"></i></button>
-              <nav id="explorer-breadcrumbs" aria-label="Project folders"></nav>
+        <div id="project-desktop" class="project-desktop">
+          <header class="desktop-menubar"><span class="desktop-name">Herman’s workspace</span><span>Portfolio · <span id="desktop-project-count">37</span> projects</span></header>
+          <section id="portfolio-desktop-home" data-lenis-prevent class="portfolio-desktop-home" aria-labelledby="desktop-home-head">
+            <div class="desktop-intro"><h3 id="desktop-home-head">Project workspace</h3><button id="desktop-browse-all" type="button">All projects →</button></div>
+            <div id="desktop-launchers" class="desktop-launchers" aria-label="Project collections"></div>
+          </section>
+          <section id="portfolio-finder" class="portfolio-finder" aria-labelledby="finder-window-head" hidden>
+            <header class="finder-titlebar"><span class="window-lights" aria-hidden="true"><span></span><span></span><span></span></span><h3 id="finder-window-head">Portfolio</h3><button id="desktop-minimize" type="button">Desktop</button></header>
+            <div class="finder-layout" data-lenis-prevent>
+              <div class="finder-sidebar-area" data-lenis-prevent><nav id="finder-sidebar" class="finder-sidebar" aria-label="Portfolio collections"></nav></div>
+              <div id="explorer-shell">
+                <div class="explorer-toolbar">
+                  <div class="explorer-location">
+                    <button id="finder-home" type="button">Collections</button>
+                    <button id="explorer-back" type="button" aria-label="Go back" class="invisible" disabled><i data-lucide="arrow-left" aria-hidden="true"></i></button>
+                    <nav id="explorer-breadcrumbs" aria-label="Project folders"></nav>
+                  </div>
+                  <div class="explorer-actions">
+                    <button id="explorer-all" type="button" aria-pressed="false">All projects</button>
+                    <label class="explorer-search-label"><span class="sr-only">Search projects</span><i data-lucide="search" aria-hidden="true"></i><input id="explorer-search" type="search" placeholder="Search title, tool or topic…" aria-controls="explorer-grid"></label>
+                  </div>
+                </div>
+                <div id="explorer-grid" data-lenis-prevent></div>
+                <div class="explorer-status-bar"><span>Portfolio catalogue</span><span id="explorer-count" role="status"></span></div>
+              </div>
             </div>
-            <div class="explorer-actions">
-              <button id="explorer-all" type="button" aria-pressed="false">All projects</button>
-              <label class="explorer-search-label"><span class="sr-only">Search projects</span><i data-lucide="search" aria-hidden="true"></i><input id="explorer-search" type="search" placeholder="Search title, tool or topic…" aria-controls="explorer-grid"></label>
-            </div>
-          </div>
-          <div id="explorer-grid"></div>
-          <div class="explorer-status-bar"><span>● Project index</span><span id="explorer-count" role="status"></span></div>
+          </section>
+          <nav class="portfolio-dock" aria-label="Workspace dock"><button id="desktop-show-home" type="button"><i data-lucide="layout-grid" aria-hidden="true"></i><span>Desktop</span></button><button id="desktop-open-portfolio" type="button"><i data-lucide="folder-open" aria-hidden="true"></i><span>Portfolio</span></button><button id="desktop-open-recent" type="button"><i data-lucide="clock-3" aria-hidden="true"></i><span>Recent work</span></button><button id="desktop-search" type="button"><i data-lucide="search" aria-hidden="true"></i><span>Search</span></button></nav>
+          <noscript><p class="caption">Enable JavaScript to browse this interactive project workspace. The contribution ledger and career history below remain available.</p></noscript>
         </div>
         <p class="caption mt-3">Open a project for its story, architecture and cost estimate.</p>
       </div>
@@ -218,15 +231,10 @@
           <hr class="section-rule">
           <div class="flex flex-wrap gap-x-8 gap-y-2">
             <p class="kicker"><span class="tick">▪</span>CH. 04 § The Workshop — Innovations Ledger</p>
-            <p class="kicker hidden md:block">Seven Entries — All Still Running</p>
+            <p class="kicker hidden md:block">Seven Selected Contributions</p>
           </div>
           <h2 id="innovations-title" class="display-m mt-6" data-reveal-lines>The <em class="serif-italic accent-deep">Workshop</em> — Innovations Ledger</h2>
-          <p class="standfirst">
-            Every builder keeps a ledger. These are seven machines from mine — each one began as a
-            human bottleneck (a researcher drowning in video timestamps, a committee buried in
-            spreadsheets, a child fighting to remember), and each one ended as running code.
-            No procurement cycle, no vendor. One builder, one problem, one working system.
-          </p>
+          <p class="standfirst">Seven selected contributions across research systems, administrative tools and an educational game. Each began with a human bottleneck—from researchers managing video timestamps to teams coordinating study logistics. This ledger records development, operational problem-solving and audio direction, including historical work.</p>
         </div>
 
         <div class="ledger max-w-5xl mx-auto workshop-ledger">
@@ -364,7 +372,7 @@
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="chip-mono">iOS Native</span>
               </div>
-              <p class="serif-italic ink-soft">"First Chinese-character SEN gaming app; 100+ ADHD/RD students showed significant working memory improvement."</p>
+              <p class="serif-italic ink-soft">Audio direction for i-Maze (i世代之記憶迷宮), an educational game project. My contribution was the audio work within the wider project.</p>
             </div>
           </details>
 
@@ -890,11 +898,11 @@
         </div>
         <div>
           <p class="kicker">Chapters</p>
-          <nav class="mt-3 flex flex-col gap-2">
+          <nav class="mt-3 flex flex-col gap-2" aria-label="Footer facets">
             <a class="link-editorial" href="education-culture.html">01 Education &amp; Culture</a>
             <a class="link-editorial" href="counselling.html">02 Counselling</a>
             <a class="link-editorial" href="project-management.html">03 Project Management</a>
-            <a class="link-editorial" href="technology.html">04 Technology</a>
+            <a class="link-editorial" href="technology.html" aria-current="page">04 Technology</a>
           </nav>
         </div>
       </div>
@@ -951,7 +959,7 @@
   </div>
 
   <!-- Chapter dock (mobile) -->
-  <nav class="chapter-dock" aria-label="Chapters">
+  <nav class="chapter-dock" aria-label="Facet shortcuts">
     <a href="education-culture.html" data-ink="moss" title="Education &amp; Culture"><span></span></a>
     <a href="counselling.html" data-ink="sienna" title="Counselling"><span></span></a>
     <a href="project-management.html" data-ink="oxblood" title="Project Management"><span></span></a>
@@ -959,10 +967,11 @@
   </nav>
 
   <!-- Project data loads before the explorer. -->
-  <script src="js/navbar.js?v=20"></script>
+  <script src="js/navbar.js?v=25"></script>
   <script src="js/github-cards.js?v=18"></script>
   <script src="js/project-valuations.js?v=16"></script>
   <script src="js/explorer.js?v=18"></script>
+  <script src="js/project-desktop.js?v=27"></script>
   <script src="js/carousel.js?v=11"></script>
 
   <!-- Page inline script: navbar init, terminal typewriter (verbatim),

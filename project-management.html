@@ -14,13 +14,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,144,600;1,144,500&family=Outfit:wght@300;400;500;600;800&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="global.css?v=20">
-  <link rel="stylesheet" href="css/spine.css?v=20">
+  <link rel="stylesheet" href="css/spine.css?v=26">
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
   <script defer src="https://unpkg.com/lucide@1.66.0/dist/umd/lucide.min.js"></script>
-  <script defer src="js/motion.js?v=18"></script>
+  <script defer src="js/motion.js?v=25"></script>
   <script defer src="js/cursor.js?v=18"></script>
   <style>
     /* ---- Chapter 03 page-local layout (presentation only) ---- */
@@ -184,18 +184,19 @@
       }
     }
   </style>
-  <link rel="stylesheet" href="css/utilities.css?v=22">
+  <link rel="stylesheet" href="css/utilities.css?v=26">
   <link rel="stylesheet" href="css/research-cases.css?v=23">
   <link rel="stylesheet" href="css/research-magazine.css?v=24">
   <script defer src="js/research-magazine.js?v=24"></script>
 </head>
 <body class="antialiased overflow-x-hidden">
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <div class="running-header">HERMAN CHAN — THE DIGITAL HUMANIST — CH. 03 — PROJECT MANAGEMENT</div>
 
   <!-- Navigation -->
   <div id="navbar-container"></div>
 
-  <main>
+  <main id="main-content" tabindex="-1">
     <!-- ================================================================
          01 · TITLE PLATE — The Architect
     ================================================================ -->
@@ -203,59 +204,29 @@
       <div class="ghost-numeral" aria-hidden="true" style="top:.02em; right:2vw;">03</div>
 
       <div class="spine-container relative w-full">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-y-16 gap-x-12 items-start">
-          <div class="lg:col-span-7">
+        <div class="opening-grid">
+          <div class="opening-copy">
             <p class="kicker"><span class="tick">▪</span>Chapter 03 — Project Management Facet</p>
             <p class="display-m accent-deep mt-6" data-reveal-lines>The Architect</p>
             <h1 class="display-l mt-4" data-reveal-lines>Anticipating needs before they become risks.</h1>
             <div class="accent-bar w-24 mt-8" data-accent-bar></div>
-            <p class="standfirst">Accomplished leader with 10+ years driving medium to large-scale social and education initiatives for organisations and communities.</p>
-            <p class="prose-measure ink-soft text-lg leading-relaxed mt-8">
-              I view Project Management as
-              <strong class="text-inkbase font-semibold">Anticipatory Leadership</strong>.
-              It's not just about tracking tasks; it's about understanding
-              human behavior to predict friction points, align stakeholders,
-              and build systems that reduce cognitive load for everyone
-              involved.
-            </p>
-
-            <!-- Four traits — hairline-ruled 2x2 mono-labeled grid -->
-            <div class="trait-grid crop-marks grid grid-cols-1 sm:grid-cols-2 mt-12 max-w-2xl">
-              <div class="p-5 trait-card">
-                <svg class="trait-plot" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><rect class="trait-plot-rect" x="1.5" y="1.5" width="97" height="97" fill="none" stroke="var(--accent)" stroke-width="1.25" vector-effect="non-scaling-stroke"></rect></svg>
-                <p class="caption accent-deep">T.01</p>
-                <h2 class="kicker mt-2" style="color:var(--ink)">Empathic</h2>
-                <p class="body-small ink-soft mt-2">I reduce anxiety before it becomes resistance.</p>
-              </div>
-              <div class="p-5 trait-card">
-                <svg class="trait-plot" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><rect class="trait-plot-rect" x="1.5" y="1.5" width="97" height="97" fill="none" stroke="var(--accent)" stroke-width="1.25" vector-effect="non-scaling-stroke"></rect></svg>
-                <p class="caption accent-deep">T.02</p>
-                <h2 class="kicker mt-2" style="color:var(--ink)">Focused</h2>
-                <p class="body-small ink-soft mt-2">Clear priorities, clear next actions.</p>
-              </div>
-              <div class="p-5 trait-card">
-                <svg class="trait-plot" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><rect class="trait-plot-rect" x="1.5" y="1.5" width="97" height="97" fill="none" stroke="var(--accent)" stroke-width="1.25" vector-effect="non-scaling-stroke"></rect></svg>
-                <p class="caption accent-deep">T.03</p>
-                <h2 class="kicker mt-2" style="color:var(--ink)">Transparent</h2>
-                <p class="body-small ink-soft mt-2">Decisions, trade-offs, and risks stay visible.</p>
-              </div>
-              <div class="p-5 trait-card">
-                <svg class="trait-plot" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><rect class="trait-plot-rect" x="1.5" y="1.5" width="97" height="97" fill="none" stroke="var(--accent)" stroke-width="1.25" vector-effect="non-scaling-stroke"></rect></svg>
-                <p class="caption accent-deep">T.04</p>
-                <h2 class="kicker mt-2" style="color:var(--ink)">Culturally sensitive</h2>
-                <p class="body-small ink-soft mt-2">I adapt communication across communities.</p>
-              </div>
-            </div>
+            <p class="opening-summary">I coordinate research operations and stakeholder delivery for education and community organisations—from reporting workflows to academic reviews and public communication.</p>
+            <nav class="chapter-jumps" aria-label="Project management evidence">
+              <a class="link-editorial" href="#workflow">Workflow →</a>
+              <a class="link-editorial" href="#selected-delivery">Delivery example →</a>
+              <a class="link-editorial" href="#research-media-reader">Campaign magazine →</a>
+              <a class="link-editorial" href="#timeline">Career →</a>
+            </nav>
           </div>
-
-          <aside class="lg:col-span-5 lg:pl-10 lg:pt-24" style="border-left:1px solid var(--hairline)">
-            <p class="kicker"><span class="tick">▪</span>The Philosophy</p>
-            <blockquote class="pullquote mt-6" data-reveal-lines>
-              "Empathy is a strategic tool. By understanding the anxieties
-              and motivations of stakeholders, I can design workflows that
-              feel intuitive and safe, ensuring projects don't just
-              launch—they land."
-            </blockquote>
+          <aside id="selected-delivery" class="selected-preview" aria-labelledby="selected-delivery-head">
+            <p class="kicker">Selected delivery · SEC</p>
+            <h2 id="selected-delivery-head" class="preview-title">Less manual reporting. More time for the work.</h2>
+            <p class="proof-number">1hr → 10min</p>
+            <dl class="proof-record">
+              <div><dt>My role</dt><dd>Developed an automated report-generation system at SEC.</dd></div>
+              <div><dt>Recorded result</dt><dd>Report processing reduced from an hour to ten minutes.</dd></div>
+            </dl>
+            <a class="link-editorial" href="#report-processing">See the delivery evidence →</a>
           </aside>
         </div>
 
@@ -401,6 +372,57 @@
           </p>
           <p class="caption mt-3"><a class="link-editorial py-3" href="#research-dissemination-2026">2026: Supplied checkable analysis and usable spokesperson briefings.</a></p>
         </article>
+
+      </div>
+      <div class="spine-container">
+        <details id="leadership-approach" class="pm-details leadership-approach">
+          <summary>Leadership philosophy &amp; four working traits <i data-lucide="chevron-down" class="w-4 h-4 pm-chevron" aria-hidden="true"></i></summary>
+          <div class="leadership-body">
+            <p class="standfirst">Accomplished leader with 10+ years driving medium to large-scale social and education initiatives for organisations and communities.</p>
+            <p class="prose-measure ink-soft text-lg leading-relaxed mt-8">
+              I view Project Management as
+              <strong class="text-inkbase font-semibold">Anticipatory Leadership</strong>.
+              It's not just about tracking tasks; it's about understanding
+              human behavior to predict friction points, align stakeholders,
+              and build systems that reduce cognitive load for everyone
+              involved.
+            </p>
+
+            <blockquote class="pullquote mt-6" data-reveal-lines>
+              "Empathy is a strategic tool. By understanding the anxieties
+              and motivations of stakeholders, I can design workflows that
+              feel intuitive and safe, ensuring projects don't just
+              launch—they land."
+            </blockquote>
+            <!-- Four traits — hairline-ruled 2x2 mono-labeled grid -->
+            <div class="trait-grid crop-marks grid grid-cols-1 sm:grid-cols-2 mt-12 max-w-2xl">
+              <div class="p-5 trait-card">
+                <svg class="trait-plot" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><rect class="trait-plot-rect" x="1.5" y="1.5" width="97" height="97" fill="none" stroke="var(--accent)" stroke-width="1.25" vector-effect="non-scaling-stroke"></rect></svg>
+                <p class="caption accent-deep">T.01</p>
+                <h4 class="kicker mt-2" style="color:var(--ink)">Empathic</h4>
+                <p class="body-small ink-soft mt-2">I reduce anxiety before it becomes resistance.</p>
+              </div>
+              <div class="p-5 trait-card">
+                <svg class="trait-plot" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><rect class="trait-plot-rect" x="1.5" y="1.5" width="97" height="97" fill="none" stroke="var(--accent)" stroke-width="1.25" vector-effect="non-scaling-stroke"></rect></svg>
+                <p class="caption accent-deep">T.02</p>
+                <h4 class="kicker mt-2" style="color:var(--ink)">Focused</h4>
+                <p class="body-small ink-soft mt-2">Clear priorities, clear next actions.</p>
+              </div>
+              <div class="p-5 trait-card">
+                <svg class="trait-plot" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><rect class="trait-plot-rect" x="1.5" y="1.5" width="97" height="97" fill="none" stroke="var(--accent)" stroke-width="1.25" vector-effect="non-scaling-stroke"></rect></svg>
+                <p class="caption accent-deep">T.03</p>
+                <h4 class="kicker mt-2" style="color:var(--ink)">Transparent</h4>
+                <p class="body-small ink-soft mt-2">Decisions, trade-offs, and risks stay visible.</p>
+              </div>
+              <div class="p-5 trait-card">
+                <svg class="trait-plot" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><rect class="trait-plot-rect" x="1.5" y="1.5" width="97" height="97" fill="none" stroke="var(--accent)" stroke-width="1.25" vector-effect="non-scaling-stroke"></rect></svg>
+                <p class="caption accent-deep">T.04</p>
+                <h4 class="kicker mt-2" style="color:var(--ink)">Culturally sensitive</h4>
+                <p class="body-small ink-soft mt-2">I adapt communication across communities.</p>
+              </div>
+            </div>
+          </div>
+        </details>
       </div>
     </section>
 
@@ -676,7 +698,7 @@
         </div>
 
         <div id="impact-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-14" style="perspective: 900px">
-          <div class="plate-reveal impact-tile">
+          <div id="report-processing" class="plate-reveal impact-tile">
             <div class="dim-line" aria-hidden="true"><span class="dim-label">M.01</span></div>
             <div class="stat-value stat-value--text">1hr → 10min</div>
             <p class="kicker mt-4">Report Processing Time</p>
@@ -1349,10 +1371,10 @@
         </div>
         <div>
           <p class="kicker">Chapters</p>
-          <nav class="mt-3 flex flex-col gap-2">
+          <nav class="mt-3 flex flex-col gap-2" aria-label="Footer facets">
             <a class="link-editorial" href="education-culture.html">01 Education &amp; Culture</a>
             <a class="link-editorial" href="counselling.html">02 Counselling</a>
-            <a class="link-editorial" href="project-management.html">03 Project Management</a>
+            <a class="link-editorial" href="project-management.html" aria-current="page">03 Project Management</a>
             <a class="link-editorial" href="technology.html">04 Technology</a>
           </nav>
         </div>
@@ -1364,7 +1386,7 @@
     </div>
   </footer>
 
-  <script src="js/navbar.js?v=20"></script>
+  <script src="js/navbar.js?v=25"></script>
   <script>
     // Initialize Navbar
     initNavbar({
@@ -1546,7 +1568,7 @@
     });
   </script>
 
-  <nav class="chapter-dock" aria-label="Chapters">
+  <nav class="chapter-dock" aria-label="Facet shortcuts">
     <a href="education-culture.html" data-ink="moss" title="Education &amp; Culture"><span></span></a>
     <a href="counselling.html" data-ink="sienna" title="Counselling"><span></span></a>
     <a href="project-management.html" data-ink="oxblood" title="Project Management" aria-current="page"><span></span></a>

@@ -17,13 +17,14 @@
  *    connector lines at the projected lobe centroids)
  *  - click: camera dives into the lobe, facet-ink veil carries you in
  *
- * Fallback (html.brain-static): the original SVG engraving.
+ * Fallback (html.brain-static): the same current head silhouette, authored in HTML.
  */
 (function () {
     'use strict';
 
     var html = document.documentElement;
     var reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var failed = false, disposeBrain = function () {};
     var booted = false, queued = false, syncBrainMotion, aimBrainConnectors, resizeBrain;
     var touchQuery = window.matchMedia('(hover: none), (pointer: coarse)');
     const brainFrame = document.querySelector('.brain-frame');
@@ -37,7 +38,8 @@
         });
         if (resizeBrain && !reduceQuery.matches) resizeBrain();
     }
-    if (brainFrame) new ResizeObserver(fitLabels).observe(brainFrame);
+    if (brainFrame && 'ResizeObserver' in window) new ResizeObserver(fitLabels).observe(brainFrame);
+    else window.addEventListener('resize', fitLabels);
     fitLabels();
 
     var ZONES = [
@@ -84,6 +86,20 @@
     var BANDS = [0.27, 0.52, 0.76];
 
     var GROUP_SCALE = 0.74;
+
+    function useStaticBrain() {
+        failed = true;
+        html.classList.remove('brain-gl');
+        html.classList.add('brain-static');
+        const mount = document.getElementById('brain-canvas-mount');
+        if (mount) { mount.style.display = 'none'; mount.replaceChildren(); }
+        aimBrainConnectors = resizeBrain = null;
+        document.querySelectorAll('#brainMapSVG .brain-section').forEach(anchor => {
+            anchor.classList.remove('zone-hot'); anchor.removeAttribute('data-no-wipe');
+        });
+        disposeBrain();
+        layoutInputMode();
+    }
 
     function gatePasses() {
         if (reduceQuery.matches) return false;
@@ -134,13 +150,13 @@
         booted = true;
         var svg = document.getElementById('brainMapSVG');
         var mount = document.getElementById('brain-canvas-mount');
-        if (!svg || !mount) { html.classList.add('brain-static'); return; }
+        if (!svg || !mount) { useStaticBrain(); return; }
 
         var THREE;
         try {
             THREE = await import('three');
         } catch (e) {
-            html.classList.add('brain-static');
+            useStaticBrain();
             return;
         }
 
@@ -153,7 +169,7 @@
         var outerRaw = samplePathPoints(HEAD_OUTER_D, 300);
         var innerRaw = samplePathPoints(HEAD_INNER_D, 240);
         if (outerRaw.length < 50 || innerRaw.length < 50) {
-            html.classList.add('brain-static');
+            useStaticBrain();
             return;
         }
         var minX = 1e9, maxX = -1e9, minY = 1e9, maxY = -1e9;
@@ -228,7 +244,7 @@
                 nx: nx
             });
         }
-        if (pts.length < 200) { html.classList.add('brain-static'); return; }
+        if (pts.length < 200) { useStaticBrain(); return; }
         var N = pts.length;
 
         // brain bbox in GL coords (for pointer picking)
@@ -632,6 +648,8 @@
 
         /* ---- renderer ------------------------------------------------------ */
         var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
+        disposeBrain = function () { running = false; cancelAnimationFrame(frameId); window.removeEventListener('resize', resize); renderer.dispose(); };
+        renderer.domElement.addEventListener('webglcontextlost', function (event) { event.preventDefault(); useStaticBrain(); });
         renderer.setPixelRatio(DPR);
         renderer.setClearColor(0x000000, 0);
         mount.appendChild(renderer.domElement);
@@ -746,7 +764,7 @@
         };
 
         frameEl.addEventListener('pointermove', function (e) {
-            if (diving || reduceQuery.matches) return;
+            if (diving || reduceQuery.matches || !html.classList.contains('brain-gl')) return;
             // a zone anchor holding keyboard focus keeps its label pinned via
             // :focus-visible — release it once the pointer takes over
             if (zoneAnchors.indexOf(document.activeElement) !== -1) {
@@ -758,7 +776,7 @@
         });
         frameEl.addEventListener('pointerleave', function () { setHover(-1); frameEl.style.cursor = ''; });
         frameEl.addEventListener('click', function (e) {
-            if (reduceQuery.matches) return;
+            if (reduceQuery.matches || !html.classList.contains('brain-gl')) return;
             var z = pointerZone(e);
             if (z >= 0) {
                 e.preventDefault();
@@ -774,7 +792,7 @@
             a.addEventListener('blur', function () { setHover(-1); });
             a.setAttribute('data-no-wipe', '');
             a.addEventListener('click', function (e) {
-                if (reduceQuery.matches) return;
+                if (reduceQuery.matches || !html.classList.contains('brain-gl')) return;
                 if (touchQuery.matches) e.stopPropagation();
                 e.preventDefault();
                 diveInto(idx, a.getAttribute('href'));
@@ -800,8 +818,8 @@
             ZONES.forEach(function (z, idx) {
                 var a = zoneAnchors[idx];
                 if (!a) return;
-                var line = a.querySelector('.connector-line');
-                var dot = a.querySelector('.connector-dot');
+                var line = a.querySelector(touchQuery.matches ? '.connector-touch.connector-line' : '.connector-desktop.connector-line');
+                var dot = a.querySelector(touchQuery.matches ? '.connector-touch.connector-dot' : '.connector-desktop.connector-dot');
                 if (!line || !dot) return;
                 // project centroid (world = local * GROUP_SCALE) to screen px
                 var v = new THREE.Vector3(centroids[idx].x * GROUP_SCALE, centroids[idx].y * GROUP_SCALE, 0);
@@ -865,7 +883,13 @@
 
             var breath = 1 + Math.sin(t * (Math.PI * 2 / 8)) * 0.012;
             points.scale.setScalar(breath);
-            renderer.render(scene, camera);
+            try { renderer.render(scene, camera); }
+            catch (error) { useStaticBrain(); return; }
+            // The SVG only yields after an actual rendered frame is available.
+            if (!html.classList.contains('brain-gl')) {
+                html.classList.add('brain-gl');
+                html.classList.remove('brain-static');
+            }
 
             if (!degraded) {
                 if (dt > 0.024) { slowFrames++; } else { slowFrames = 0; }
@@ -877,11 +901,11 @@
             }
         }
         syncBrainMotion = function () {
+            if (failed) return;
             mount.style.display = reduceQuery.matches ? 'none' : '';
             if (!reduceQuery.matches) resize();
             mat.uniforms.uTouchPalette.value = touchQuery.matches ? 1 : 0;
-            html.classList.toggle('brain-gl', !reduceQuery.matches);
-            html.classList.toggle('brain-static', reduceQuery.matches);
+            if (reduceQuery.matches) { html.classList.remove('brain-gl'); html.classList.add('brain-static'); }
             if (reduceQuery.matches) setHover(-1);
             layoutInputMode();
             var next = !reduceQuery.matches && !document.hidden && inView;
@@ -916,10 +940,10 @@
     });
 
     function start() {
-        if (booted || queued || document.readyState !== 'complete') return;
+        if (failed || booted || queued || document.readyState !== 'complete') return;
         if (!gatePasses()) { html.classList.add('brain-static'); return; }
         queued = true;
-        function run() { queued = false; boot(); }
+        function run() { queued = false; boot().catch(useStaticBrain); }
         if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 1500 });
         else setTimeout(run, 200);
     }

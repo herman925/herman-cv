@@ -130,7 +130,9 @@
     function finishCounters() {
         document.querySelectorAll('[data-count]').forEach(function (el) {
             var value = Number(el.getAttribute('data-count'));
-            el.textContent = value.toLocaleString('en-US') + (el.getAttribute('data-suffix') || '');
+            var text = value.toLocaleString('en-US') + (el.getAttribute('data-suffix') || '');
+            if (el.__spineCounterVisual) el.__spineCounterVisual.textContent = text;
+            else el.textContent = text;
         });
     }
 
@@ -154,7 +156,21 @@
         root.querySelectorAll('[data-reveal-lines]').forEach(function (el) {
             if (el.__spineRevealed) return;
             el.__spineRevealed = true;
-            if (window.SplitText) {
+            function revealWholeElement() {
+                gsap.set(el, { visibility: 'visible' });
+                gsap.from(el, {
+                    y: 12, opacity: 0, duration: 0.4, ease: EASE_ENTER,
+                    scrollTrigger: { trigger: el, start: 'top 92%', once: true }
+                });
+            }
+            // Keep native quotations, prose and interactive descendants unsplit in the accessibility tree.
+            if (!window.SplitText || !/^H[1-6]$/.test(el.tagName) || el.querySelector('a, button, input, select, textarea, [tabindex]')) {
+                revealWholeElement();
+                return;
+            }
+            var originalHTML = el.innerHTML;
+            var originalLabel = el.getAttribute('aria-label');
+            try {
                 splitReveals.push(SplitText.create(el, {
                     type: 'lines',
                     mask: 'lines',
@@ -176,12 +192,12 @@
                         });
                     }
                 }));
-            } else {
-                gsap.set(el, { visibility: 'visible' });
-                gsap.from(el, {
-                    y: 12, opacity: 0, duration: 0.4, ease: EASE_ENTER,
-                    scrollTrigger: { trigger: el, start: 'top 92%', once: true }
-                });
+
+            } catch (error) {
+                el.innerHTML = originalHTML;
+                if (originalLabel === null) el.removeAttribute('aria-label');
+                else el.setAttribute('aria-label', originalLabel);
+                revealWholeElement();
             }
         });
 
@@ -233,17 +249,28 @@
             var target = parseFloat(el.getAttribute('data-count'));
             var suffix = el.getAttribute('data-suffix') || '';
             var obj = { val: 0 };
-            el.textContent = '0' + suffix;
-            gsap.to(obj, {
+            var finalText = target.toLocaleString('en-US') + suffix;
+            var visual = el.__spineCounterVisual;
+            if (!visual) {
+                visual = document.createElement('span');
+                visual.setAttribute('aria-hidden', 'true');
+                var accessibleValue = document.createElement('span');
+                accessibleValue.className = 'sr-only';
+                accessibleValue.textContent = finalText;
+                el.replaceChildren(visual, accessibleValue);
+                el.__spineCounterVisual = visual;
+            }
+            visual.textContent = '0' + suffix;
+            try { gsap.to(obj, {
                 val: target,
                 duration: 0.7,
                 ease: EASE_MICRO,
                 snap: { val: 1 },
                 scrollTrigger: { trigger: el, start: 'top 85%', once: true },
                 onUpdate: function () {
-                    el.textContent = obj.val.toLocaleString('en-US') + suffix;
+                    visual.textContent = obj.val.toLocaleString('en-US') + suffix;
                 }
-            });
+            }); } catch (error) { visual.textContent = finalText; }
         });
 
         // 5. Accent bars (scrubbed)
@@ -277,7 +304,7 @@
         var inner = nav.querySelector('.navbar-inner');
         if (!inner) return;
         gsap.to(inner, {
-            height: 64,
+            '--nav-min-height': '4rem',
             ease: 'none',
             scrollTrigger: { start: 0, end: 120, scrub: true }
         });

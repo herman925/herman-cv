@@ -8,28 +8,29 @@ const read = name => fs.readFileSync(path.join(__dirname, '..', name), 'utf8');
 function workspace() {
     const elements = new Map();
     let observer;
+    const effects = { scrolls: 0, refreshes: 0 };
     const document = { addEventListener() {}, activeElement: null, getElementById: id => elements.get(id), createElement: tag => element(tag) };
     function element(tag = 'div') {
         const attrs = {}, events = {};
-        return { tagName: tag.toUpperCase(), children: [], hidden: false, value: '', textContent: '', scrollTop: 0,
+        return { tagName: tag.toUpperCase(), children: [], hidden: false, value: '', textContent: '', scrollTop: 0, offsetHeight: 600,
             append(...children) { this.children.push(...children); }, setAttribute(k, v) { attrs[k] = String(v); }, getAttribute: k => attrs[k] ?? null,
             removeAttribute(k) { delete attrs[k]; }, hasAttribute: k => k in attrs, toggleAttribute(k, enabled) { if (enabled) attrs[k] = ''; else delete attrs[k]; },
             contains(target) { return this === target || this.children.some(child => child.contains(target)); },
             addEventListener(k, fn) { (events[k] ||= []).push(fn); }, click() { this.onclick?.(); (events.click || []).forEach(fn => fn({ currentTarget: this })); },
             dispatch(type, event) { (events[type] || []).forEach(fn => fn(event)); },
-            focus() { document.activeElement = this; }, scrollIntoView() {}
+            focus() { document.activeElement = this; }, scrollIntoView() { effects.scrolls++; }
         };
     }
     for (const id of ['project-desktop', 'portfolio-desktop-home', 'portfolio-finder', 'finder-window-head', 'explorer-grid', 'desktop-show-home', 'desktop-open-portfolio', 'desktop-launchers', 'finder-sidebar', 'desktop-project-count', 'desktop-minimize', 'desktop-browse-all', 'desktop-open-recent', 'desktop-search', 'finder-home', 'explorer-all', 'explorer-search']) elements.set(id, element());
     elements.get('portfolio-finder').hidden = true;
     elements.get('portfolio-finder').append(elements.get('finder-sidebar'));
     const preference = { matches: true, addEventListener(type, fn) { this.change = fn; } };
-    const ctx = vm.createContext({ document, window: { matchMedia: () => preference }, MutationObserver: class { constructor(fn) { observer = fn; } observe() {} }, requestAnimationFrame: fn => fn() });
+    const ctx = vm.createContext({ document, window: { matchMedia: () => preference, ScrollTrigger: { refresh() { effects.refreshes++; } } }, MutationObserver: class { constructor(fn) { observer = fn; } observe() {} }, requestAnimationFrame: fn => fn() });
     for (const name of ['js/github-cards.js', 'js/explorer.js', 'js/project-desktop.js']) vm.runInContext(read(name), ctx);
     ctx.renderExplorer = () => observer?.();
     elements.get('explorer-all').onclick = () => { vm.runInContext("currentPath=[]; searchQuery=''; showAllProjects=true", ctx); observer?.(); };
     ctx.initProjectDesktop();
-    return { elements, ctx, preference, navigationClick(button) { elements.get('portfolio-finder').dispatch('click', { target: { closest: () => button } }); button.click(); }, state: () => JSON.parse(vm.runInContext('JSON.stringify({currentPath, searchQuery, showAllProjects})', ctx)) };
+    return { elements, ctx, preference, effects, navigationClick(button) { elements.get('portfolio-finder').dispatch('click', { target: { closest: () => button } }); button.click(); }, state: () => JSON.parse(vm.runInContext('JSON.stringify({currentPath, searchQuery, showAllProjects})', ctx)) };
 }
 
 test('desktop launchers are the real six collections and open one canonical Finder view', () => {
@@ -113,5 +114,23 @@ test('dock markup exposes one selected native button before JavaScript runs', ()
     const buttons = [...html.matchAll(/<button id="(desktop-show-home|desktop-open-portfolio|desktop-open-recent|desktop-search)"[^>]*>/g)];
     assert.equal(buttons.length, 4);
     buttons.forEach(match => assert(match[0].includes('aria-pressed="' + (match[1] === 'desktop-show-home') + '"')));
-    assert.match(html, /js\/project-desktop\.js\?v=28/);
+    assert.match(html, /js\/project-desktop\.js\?v=29/);
+});
+
+test('bounded workspace switching never forces outer scroll or refreshes unchanged geometry', () => {
+    const app = workspace(), get = id => app.elements.get(id);
+    get('desktop-open-recent').click(); get('desktop-search').click();
+    get('desktop-show-home').click(); get('desktop-open-portfolio').click();
+    get('desktop-minimize').click(); get('desktop-browse-all').click();
+    assert.equal(app.effects.scrolls, 0);
+    assert.equal(app.effects.refreshes, 0);
+    assert.equal(app.ctx.document.activeElement, get('finder-window-head'));
+});
+test('flowing workspace refreshes only when switching really changes its outer height', () => {
+    const app = workspace(), get = id => app.elements.get(id);
+    Object.defineProperty(get('project-desktop'), 'offsetHeight', { get: () => get('portfolio-finder').hidden ? 600 : 1200 });
+    get('desktop-open-portfolio').click(); assert.equal(app.effects.refreshes, 1);
+    get('desktop-search').click(); assert.equal(app.effects.refreshes, 1);
+    get('desktop-show-home').click(); assert.equal(app.effects.refreshes, 2);
+    assert.equal(app.effects.scrolls, 0);
 });

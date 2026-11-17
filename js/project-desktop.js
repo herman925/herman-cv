@@ -5,6 +5,10 @@ function initProjectDesktop() {
     if (!desktop || !finder || typeof explorerData === 'undefined') return;
     const title = document.getElementById('finder-window-head');
     const grid = document.getElementById('explorer-grid');
+    const workspace = document.getElementById('project-desktop');
+    function refreshChangedHeight(previousHeight) {
+        if (workspace.offsetHeight !== previousHeight) window.ScrollTrigger?.refresh();
+    }
     const dockHome = document.getElementById('desktop-show-home');
     const dockPortfolio = document.getElementById('desktop-open-portfolio');
     const dockRecent = document.getElementById('desktop-open-recent');
@@ -21,6 +25,7 @@ function initProjectDesktop() {
     let desktopTrigger = dockPortfolio;
 
     function showFinder(trigger, focus = true) {
+        const previousHeight = workspace.offsetHeight;
         if (trigger && !finder.contains(trigger)) desktopTrigger = trigger;
         document.getElementById('project-desktop').setAttribute('data-view', 'finder');
         finder.hidden = false;
@@ -28,16 +33,16 @@ function initProjectDesktop() {
         syncDock();
         renderExplorer();
         if (focus) title.focus({ preventScroll: true });
-        finder.scrollIntoView({ block: 'start', behavior: 'instant' });
-        requestAnimationFrame(() => window.ScrollTrigger?.refresh());
+        refreshChangedHeight(previousHeight);
     }
     function showDesktop(event) {
+        const previousHeight = workspace.offsetHeight;
         document.getElementById('project-desktop').setAttribute('data-view', 'desktop');
         finder.hidden = true;
         desktop.hidden = false;
         syncDock();
         (event?.currentTarget === dockHome ? dockHome : desktopTrigger).focus({ preventScroll: true });
-        window.ScrollTrigger?.refresh();
+        refreshChangedHeight(previousHeight);
     }
     function openCollection(folder, trigger) {
         searchRequested = false;
